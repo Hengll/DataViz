@@ -27,7 +27,6 @@ export default {
     dataFormatError: '資料格式錯誤',
     dataSetIdInvalid: '資料集ID不符',
     dataSetNotFound: '資料集不存在',
-    gunzipFAIL: '資料解壓失敗',
     dashboardNameRequired: '儀錶版名稱必填',
     dashboardIdInvalid: '儀錶板ID不符',
     dashboardNotFound: '儀錶板不存在',

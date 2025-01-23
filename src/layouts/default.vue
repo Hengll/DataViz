@@ -7,7 +7,7 @@
         <v-btn to="/explore">{{ $t('nav.explore') }}</v-btn>
         <v-btn to="/tutorial">{{ $t('nav.tutorial') }}</v-btn>
         <v-btn to="/about">{{ $t('nav.about') }}</v-btn>
-        <v-btn>{{ $t('nav.setting') }}</v-btn>
+        <v-btn>{{ $t('nav.settings') }}</v-btn>
       </div>
       <div>
         <template v-for="nav in navs" :key="nav.to">
@@ -21,6 +21,9 @@
       <router-view></router-view>
     </v-container>
   </v-main>
+  <v-footer>
+    <v-container fluid> footer </v-container>
+  </v-footer>
 </template>
 
 <script setup>

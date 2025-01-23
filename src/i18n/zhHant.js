@@ -4,7 +4,7 @@ export default {
     explore: '探索與推薦',
     tutorial: '教學',
     about: '關於我們',
-    setting: '設定',
+    settings: '設定',
     login: '登入',
     register: '註冊',
   },

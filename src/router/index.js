@@ -8,10 +8,15 @@
 import { createRouter, createWebHashHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import i18n from '@/i18n'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
+})
+
+router.afterEach((to) => {
+  document.title = i18n.global.t(to.meta.title) + ' | DataViz'
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

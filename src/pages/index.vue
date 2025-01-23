@@ -12,3 +12,13 @@
   height: 2000px;
 }
 </style>
+
+<route lang="json">
+{
+  "meta": {
+    "login": false,
+    "admin": false,
+    "title": "nav.home"
+  }
+}
+</route>

@@ -8,6 +8,9 @@ export default {
     login: '登入',
     register: '註冊',
   },
+  login: {
+    login: '登入',
+  },
   api: {
     userNotFound: '用戶不存在',
     userAccountRequired: '用戶帳號必填',

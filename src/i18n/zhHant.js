@@ -1,4 +1,13 @@
 export default {
+  nav: {
+    home: '首頁',
+    explore: '探索與推薦',
+    tutorial: '教學',
+    about: '關於我們',
+    setting: '設定',
+    login: '登入',
+    register: '註冊',
+  },
   api: {
     userNotFound: '用戶不存在',
     userAccountRequired: '用戶帳號必填',
@@ -37,6 +46,6 @@ export default {
     chartWidthRequired: '圖表寬度必填',
     chartHeightRequired: '圖表高度必填',
     useAttributeRequired: '使用屬性必填',
-    serverError: '伺服器錯誤'
-  }
+    serverError: '伺服器錯誤',
+  },
 }

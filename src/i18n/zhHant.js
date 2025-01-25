@@ -11,6 +11,9 @@ export default {
   login: {
     login: '登入',
   },
+  register: {
+    register: '註冊',
+  },
   api: {
     userNotFound: '用戶不存在',
     userAccountRequired: '用戶帳號必填',

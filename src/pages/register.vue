@@ -8,11 +8,44 @@
         <v-spacer></v-spacer>
         <v-col cols="12">
           <v-form>
-            <v-text-field></v-text-field>
-            <v-text-field></v-text-field>
-            <v-text-field></v-text-field>
-            <v-text-field></v-text-field>
-            <v-text-field></v-text-field>
+            <v-text-field
+              v-model="account.value.value"
+              :error-messages="account.errorMessage.value"
+              :label="$t('user.account')"
+              counter
+              minlength="4"
+              maxlength="20"
+            ></v-text-field>
+            <v-text-field
+              v-model="userName.value.value"
+              :error-messages="userName.errorMessage.value"
+              :label="$t('user.userName')"
+            ></v-text-field>
+            <v-text-field
+              v-model="email.value.value"
+              :error-messages="email.errorMessage.value"
+              :label="$t('user.email')"
+            ></v-text-field>
+            <v-text-field
+              v-model="password.value.value"
+              type="password"
+              autocomplete
+              :error-messages="password.errorMessage.value"
+              :label="$t('user.password')"
+              counter
+              minlength="4"
+              maxlength="20"
+            ></v-text-field>
+            <v-text-field
+              v-model="passwordConfirm.value.value"
+              type="password"
+              autocomplete
+              :error-messages="passwordConfirm.errorMessage.value"
+              :label="$t('user.passwordConfirm')"
+              counter
+              minlength="4"
+              maxlength="20"
+            ></v-text-field>
             <div class="d-flex justify-center mt-10">
               <v-btn>{{ $t('register.register') }}</v-btn>
             </div>
@@ -45,7 +78,23 @@ const schema = yup.object({
     .string()
     .required(t('api.userEmailRequired'))
     .test('isEmail', t('api.userEmailInvalid'), (value) => validator.isEmail(value)),
+  password: yup
+    .string()
+    .required(t('api.userPasswordRequired'))
+    .min(4, t('api.userPasswordTooShort'))
+    .max(20, t('api.userPasswordTooLong')),
+  passwordConfirm: yup.string().oneOf([yup.ref('password')], t('api.userPasswordNotMatch')),
 })
+
+const { handleSubmit, isSubmitting } = useForm({
+  validationSchema: schema,
+})
+
+const account = useField('account')
+const userName = useField('userName')
+const email = useField('email')
+const password = useField('password')
+const passwordConfirm = useField('passwordConfirm')
 </script>
 
 <style lang="scss" scoped>

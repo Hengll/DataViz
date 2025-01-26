@@ -7,7 +7,7 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="12">
-          <v-form>
+          <v-form :disabled="isSubmitting" @submit.prevent="submit">
             <v-text-field
               v-model="account.value.value"
               :error-messages="account.errorMessage.value"
@@ -47,7 +47,9 @@
               maxlength="20"
             ></v-text-field>
             <div class="d-flex justify-center mt-10">
-              <v-btn>{{ $t('register.register') }}</v-btn>
+              <v-btn :loading="isSubmitting" type="submit" color="primary">{{
+                $t('register.register')
+              }}</v-btn>
             </div>
           </v-form>
         </v-col>
@@ -109,10 +111,19 @@ const submit = handleSubmit(async (value) => {
       password: value.password,
     })
     createSnackbar({
-      text:
+      text: t('register.success'),
+      snackbarProps: {
+        color: 'green',
+      },
     })
   } catch (err) {
     console.log(err)
+    createSnackbar({
+      text: t('api.' + err?.response?.data?.message || 'unknownError'),
+      snackbarProps: {
+        color: 'red',
+      },
+    })
   }
 })
 </script>

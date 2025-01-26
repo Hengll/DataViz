@@ -13,6 +13,7 @@ export default {
   },
   register: {
     register: '註冊',
+    success: '註冊成功',
   },
   user: {
     account: '帳號',
@@ -61,5 +62,6 @@ export default {
     chartHeightRequired: '圖表高度必填',
     useAttributeRequired: '使用屬性必填',
     serverError: '伺服器錯誤',
+    unknownError: '未知錯誤',
   },
 }

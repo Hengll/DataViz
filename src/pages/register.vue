@@ -62,9 +62,11 @@ import * as yup from 'yup'
 import validator from 'validator'
 import { useI18n } from 'vue-i18n'
 import { useAxios } from '@/composables/axios'
+import { useSnackbar } from 'vuetify-use-dialog'
 
 const { t } = useI18n()
 const { api } = useAxios()
+const createSnackbar = useSnackbar()
 
 const schema = yup.object({
   account: yup
@@ -100,6 +102,15 @@ const passwordConfirm = useField('passwordConfirm')
 
 const submit = handleSubmit(async (value) => {
   try {
+    await api.post('/user', {
+      account: value.account,
+      userName: value.userName,
+      email: value.email,
+      password: value.password,
+    })
+    createSnackbar({
+      text:
+    })
   } catch (err) {
     console.log(err)
   }

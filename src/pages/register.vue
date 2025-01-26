@@ -61,8 +61,10 @@ import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 import validator from 'validator'
 import { useI18n } from 'vue-i18n'
+import { useAxios } from '@/composables/axios'
 
 const { t } = useI18n()
+const { api } = useAxios()
 
 const schema = yup.object({
   account: yup
@@ -95,6 +97,13 @@ const userName = useField('userName')
 const email = useField('email')
 const password = useField('password')
 const passwordConfirm = useField('passwordConfirm')
+
+const submit = handleSubmit(async (value) => {
+  try {
+  } catch (err) {
+    console.log(err)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

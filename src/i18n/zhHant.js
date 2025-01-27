@@ -10,6 +10,7 @@ export default {
   },
   login: {
     login: '登入',
+    success: '登入成功',
   },
   register: {
     register: '註冊',

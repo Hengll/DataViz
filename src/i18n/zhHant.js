@@ -7,6 +7,8 @@ export default {
     settings: '設定',
     login: '登入',
     register: '註冊',
+    logout: '登出',
+    myWorkSpace: '我的空間',
   },
   login: {
     login: '登入',
@@ -16,12 +18,19 @@ export default {
     register: '註冊',
     success: '註冊成功',
   },
+  logout: {
+    success: '登出成功',
+  },
   user: {
     account: '帳號',
     userName: '用戶名稱',
     email: '信箱',
     password: '密碼',
     passwordConfirm: '確認密碼',
+  },
+  auth: {
+    dashboardManagement: '儀錶板管理',
+    datasetManagement: '資料集管理',
   },
   api: {
     userNotFound: '用戶不存在',

@@ -1,31 +1,42 @@
 <template>
-  <v-navigation-drawer>
+  <v-navigation-drawer v-model="drawer" width="220">
     <v-list>
-      <v-list-item
-        :prepend-avatar="
-          user.avatar || 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        "
-        :title="user.userName"
-      ></v-list-item>
+      <v-list-item>
+        <template #prepend>
+          <v-btn icon="mdi-menu" variant="text" @click.stop="drawer = !drawer"></v-btn>
+        </template>
+        <v-avatar
+          :image="
+            user.avatar ||
+            'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
+          "
+        ></v-avatar>
+        <span>
+          {{ user.userName }}
+        </span>
+      </v-list-item>
     </v-list>
     <v-divider></v-divider>
-    <v-list>
+    <v-list class="text-center">
       <v-list-item v-for="nav in navs" :key="nav.to" :title="nav.text" :to="nav.to"></v-list-item>
     </v-list>
   </v-navigation-drawer>
+
+  <v-btn class="fixed-btn" icon="mdi-menu" variant="text" @click.stop="drawer = !drawer"></v-btn>
   <v-main>
     <router-view></router-view>
   </v-main>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useI18n } from 'vue-i18n'
 
 const user = useUserStore()
 const { t } = useI18n()
 
+const drawer = ref(true)
 const navs = computed(() => {
   return [
     { to: '/auth', text: t('nav.dashboardManagement') },
@@ -36,9 +47,13 @@ const navs = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.v-list-item__prepend) {
-  & .v-avatar {
-    border: 1px solid black;
-  }
+:deep(.v-avatar) {
+  border: 1px solid black;
+  margin-right: 0.5rem;
+}
+
+.fixed-btn {
+  top: 12px;
+  left: 16px;
 }
 </style>

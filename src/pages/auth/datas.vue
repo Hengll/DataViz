@@ -1,4 +1,8 @@
-<template>datas</template>
+<template>
+  <v-container fluid>
+    <h1>資料集管理</h1>
+  </v-container>
+</template>
 
 <route lang="json">
 {

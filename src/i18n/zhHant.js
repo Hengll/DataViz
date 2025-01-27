@@ -9,6 +9,8 @@ export default {
     register: '註冊',
     logout: '登出',
     myWorkSpace: '我的空間',
+    dashboardManagement: '儀錶板管理',
+    datasetManagement: '資料集管理',
   },
   login: {
     login: '登入',

@@ -17,6 +17,9 @@
               ></v-text-field>
             </v-toolbar>
           </template>
+          <template #[`item.createdAt`]="{ value }">
+            {{ new Date(value).toLocaleString() }}
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -37,6 +40,7 @@ const headers = computed(() => {
   return [
     { title: t('dataSet.dataName'), key: 'dataName', sortable: true },
     { title: t('dataSet.dataInfo'), key: 'dataInfo', sortable: true },
+    { title: t('dataSet.createdAt'), key: 'createdAt', sortable: true },
   ]
 })
 

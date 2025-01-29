@@ -41,6 +41,7 @@ export default {
     new: '資料集上傳',
     dataName: '資料集名稱',
     dataInfo: '資料集描述',
+    createdAt: '建立時間',
   },
   api: {
     userNotFound: '用戶不存在',

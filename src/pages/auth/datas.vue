@@ -20,6 +20,12 @@
           <template #[`item.createdAt`]="{ value }">
             {{ new Date(value).toLocaleString() }}
           </template>
+          <template #[`item.edit`]>
+            <div class="d-flex justify-end">
+              <v-btn class="border" variant="text">{{ $t('dataSet.edit') }}</v-btn>
+              <v-btn class="border" variant="text">{{ $t('dataSet.delete') }}</v-btn>
+            </div>
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -41,6 +47,7 @@ const headers = computed(() => {
     { title: t('dataSet.dataName'), key: 'dataName', sortable: true },
     { title: t('dataSet.dataInfo'), key: 'dataInfo', sortable: true },
     { title: t('dataSet.createdAt'), key: 'createdAt', sortable: true },
+    { title: '', key: 'edit', sortable: false },
   ]
 })
 

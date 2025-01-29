@@ -42,6 +42,8 @@ export default {
     dataName: '資料集名稱',
     dataInfo: '資料集描述',
     createdAt: '建立時間',
+    edit: '編輯',
+    delete: '刪除',
   },
   api: {
     userNotFound: '用戶不存在',

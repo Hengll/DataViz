@@ -12,6 +12,7 @@
               <v-spacer></v-spacer>
               <v-text-field
                 v-model="search"
+                class="mr-5 mt-2"
                 prepend-inner-icon="mdi-magnify"
                 variant="underlined"
               ></v-text-field>
@@ -23,7 +24,7 @@
           <template #[`item.edit`]>
             <div class="d-flex justify-end">
               <v-btn class="border" variant="text">{{ $t('dataSet.edit') }}</v-btn>
-              <v-btn class="border" variant="text">{{ $t('dataSet.delete') }}</v-btn>
+              <v-btn class="border ms-1" variant="text">{{ $t('dataSet.delete') }}</v-btn>
             </div>
           </template>
         </v-data-table>

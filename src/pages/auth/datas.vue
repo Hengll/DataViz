@@ -33,16 +33,36 @@
   </v-container>
 
   <v-dialog v-model="dialog" persistent class="w-50">
-    <v-form>
+    <v-form :disabled="isSubmitting" @submit.prevent="submit">
       <v-card>
         <v-card-title>{{ $t('dataSet.new') }}</v-card-title>
         <v-card-text>
-          <v-text-field :label="$t('dataSet.dataName')"></v-text-field>
-          <v-textarea :label="$t('dataSet.dataInfo')"></v-textarea>
+          <v-text-field
+            v-model="dataName.value.value"
+            :error-messages="dataName.errorMessage.value"
+            :label="$t('dataSet.dataName')"
+          ></v-text-field>
+          <v-textarea
+            v-model="dataInfo.value.value"
+            :error-messages="dataInfo.errorMessage.value"
+            :label="$t('dataSet.dataInfo')"
+          ></v-textarea>
+          <VueFileAgent
+            ref="fileAgent"
+            v-model="fileRecords"
+            v-model:raw-model-value="rawFileRecords"
+            accept="application/json"
+            deletable
+            max-size="3MB"
+            :help-text="$t('fileAgent.helpText')"
+            :error-text="{ type: $t('fileAgent.errorType'), size: $t('fileAgent.errorSize') }"
+          ></VueFileAgent>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="border" @click="closeDialo">{{ $t('dataSet.cancel') }}</v-btn>
-          <v-btn class="border">{{ $t('dataSet.upload') }}</v-btn>
+          <v-btn class="border" @click="closeDialog">{{ $t('dataSet.cancel') }}</v-btn>
+          <v-btn class="border" type="submit" :loading="isSubmitting">{{
+            $t('dataSet.upload')
+          }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -53,9 +73,13 @@
 import { computed, ref } from 'vue'
 import { useAxios } from '@/composables/axios'
 import { useI18n } from 'vue-i18n'
+import { useForm, useField } from 'vee-validate'
+import * as yup from 'yup'
+import { useSnackbar } from 'vuetify-use-dialog'
 
 const { apiAuth } = useAxios()
 const { t } = useI18n()
+const createSnackbar = useSnackbar()
 
 const search = ref('')
 const items = ref([])
@@ -72,9 +96,15 @@ const dialog = ref(false)
 const openDialog = () => {
   dialog.value = true
 }
-const closeDialo = () => {
+const closeDialog = () => {
   dialog.value = false
+  resetForm()
+  fileAgent.value.deleteFileRecord()
 }
+
+const fileRecords = ref([])
+const rawFileRecords = ref([])
+const fileAgent = ref(null)
 
 const getDataSets = async () => {
   try {
@@ -85,6 +115,71 @@ const getDataSets = async () => {
   }
 }
 getDataSets()
+
+const schema = yup.object({
+  dataName: yup.string().required(t('api.dataNameRequired')),
+  dataInfo: yup.string(),
+})
+
+const { handleSubmit, isSubmitting, resetForm } = useForm({
+  validationSchema: schema,
+})
+const dataName = useField('dataName')
+const dataInfo = useField('dataInfo')
+
+const submit = handleSubmit(async (values) => {
+  if (fileRecords.value[0]?.error) return
+  if (fileRecords.value.length === 0) {
+    createSnackbar({
+      text: t('api.dataRequired'),
+      snackbarProps: {
+        color: 'red',
+      },
+    })
+    return
+  }
+
+  const fileReader = new FileReader()
+  fileReader.readAsText(fileRecords.value[0].file)
+
+  fileReader.onload = async function () {
+    const data = JSON.parse(fileReader.result)
+
+    try {
+      await apiAuth.post('/dataSet', {
+        dataName: values.dataName,
+        dataInfo: values.dataInfo,
+        data: data,
+      })
+
+      getDataSets()
+      createSnackbar({
+        text: t('dataSet.uploadSuccess'),
+        snackbarProps: {
+          color: 'green',
+        },
+      })
+      closeDialog()
+    } catch (err) {
+      console.log(err)
+      createSnackbar({
+        text: t('api.' + err?.response?.data?.message || 'unknownError'),
+        snackbarProps: {
+          color: 'red',
+        },
+      })
+    }
+  }
+
+  fileReader.onerror = function () {
+    createSnackbar({
+      text: t('fileReader.fail'),
+      snackbarProps: {
+        color: 'red',
+      },
+    })
+  }
+})
 </script>
 
 <route lang="json">

@@ -46,6 +46,15 @@ export default {
     delete: '刪除',
     upload: '上傳',
     cancel: '取消',
+    uploadSuccess: '上傳成功',
+  },
+  fileAgent: {
+    helpText: '點擊或拖曳json檔至此',
+    errorType: '檔案類型錯誤',
+    errorSize: '檔案大小超過限制',
+  },
+  fileReader: {
+    fail: '檔案讀取失敗',
   },
   api: {
     userNotFound: '用戶不存在',

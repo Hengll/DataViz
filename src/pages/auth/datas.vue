@@ -8,7 +8,7 @@
         <v-data-table :items="items" :headers="headers" :search="search">
           <template #top>
             <v-toolbar>
-              <v-btn class="border">{{ $t('dataSet.new') }}</v-btn>
+              <v-btn class="border" @click="openDialog">{{ $t('dataSet.new') }}</v-btn>
               <v-spacer></v-spacer>
               <v-text-field
                 v-model="search"
@@ -31,6 +31,22 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-dialog v-model="dialog" persistent class="w-50">
+    <v-form>
+      <v-card>
+        <v-card-title>{{ $t('dataSet.new') }}</v-card-title>
+        <v-card-text>
+          <v-text-field :label="$t('dataSet.dataName')"></v-text-field>
+          <v-textarea :label="$t('dataSet.dataInfo')"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn class="border" @click="closeDialo">{{ $t('dataSet.cancel') }}</v-btn>
+          <v-btn class="border">{{ $t('dataSet.upload') }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-form>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -51,6 +67,14 @@ const headers = computed(() => {
     { title: '', key: 'edit', sortable: false },
   ]
 })
+
+const dialog = ref(false)
+const openDialog = () => {
+  dialog.value = true
+}
+const closeDialo = () => {
+  dialog.value = false
+}
 
 const getDataSets = async () => {
   try {

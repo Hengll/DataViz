@@ -44,6 +44,8 @@ export default {
     createdAt: '建立時間',
     edit: '編輯',
     delete: '刪除',
+    upload: '上傳',
+    cancel: '取消',
   },
   api: {
     userNotFound: '用戶不存在',

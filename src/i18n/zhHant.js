@@ -1,4 +1,7 @@
+import { zhHant } from 'vuetify/locale'
+
 export default {
+  $vuetify: zhHant,
   nav: {
     home: '首頁',
     explore: '探索與推薦',
@@ -33,6 +36,9 @@ export default {
   auth: {
     dashboardManagement: '儀錶板管理',
     datasetManagement: '資料集管理',
+  },
+  dataSet: {
+    new: '資料集上傳',
   },
   api: {
     userNotFound: '用戶不存在',

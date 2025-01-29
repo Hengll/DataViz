@@ -5,7 +5,7 @@
         <h1>資料集管理</h1>
       </v-col>
       <v-col cols="12">
-        <v-data-table :items="items" :search="search">
+        <v-data-table :items="items" :headers="headers" :search="search">
           <template #top>
             <v-toolbar>
               <v-btn class="border">{{ $t('dataSet.new') }}</v-btn>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAxios } from '@/composables/axios'
 import { useI18n } from 'vue-i18n'
 
@@ -33,6 +33,12 @@ const { t } = useI18n()
 
 const search = ref('')
 const items = ref([])
+const headers = computed(() => {
+  return [
+    { title: t('dataSet.dataName'), key: 'dataName', sortable: true },
+    { title: t('dataSet.dataInfo'), key: 'dataInfo', sortable: true },
+  ]
+})
 
 const getDataSets = async () => {
   try {

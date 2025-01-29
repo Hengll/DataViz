@@ -39,6 +39,8 @@ export default {
   },
   dataSet: {
     new: '資料集上傳',
+    dataName: '資料集名稱',
+    dataInfo: '資料集描述',
   },
   api: {
     userNotFound: '用戶不存在',

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <h1>儀錶板管理</h1>
+    <h1>{{ $t('auth.dashboardManagement') }}</h1>
   </v-container>
 </template>
 

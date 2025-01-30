@@ -1,0 +1,1 @@
+<template>datas/id</template>

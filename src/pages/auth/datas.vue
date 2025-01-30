@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12">
-        <h1>資料集管理</h1>
+        <h1>{{ $t('auth.datasetManagement') }}</h1>
       </v-col>
       <v-col cols="12">
         <v-data-table :items="items" :headers="headers" :search="search">

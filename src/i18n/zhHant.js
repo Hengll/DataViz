@@ -47,6 +47,7 @@ export default {
     upload: '上傳',
     cancel: '取消',
     uploadSuccess: '上傳成功',
+    deleteSuccess: '刪除成功',
   },
   fileAgent: {
     helpText: '點擊或拖曳json檔至此',

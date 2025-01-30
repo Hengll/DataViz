@@ -21,11 +21,23 @@
           <template #[`item.createdAt`]="{ value }">
             {{ new Date(value).toLocaleString() }}
           </template>
-          <template #[`item.edit`]>
+          <template #[`item.edit`]="{ item }">
             <div class="d-flex justify-end">
               <v-btn class="border" variant="text">{{ $t('dataSet.edit') }}</v-btn>
-              <v-btn class="border ms-1" variant="text">{{ $t('dataSet.delete') }}</v-btn>
+              <v-btn class="border ms-1" variant="text" @click="confirmDialog = true">{{
+                $t('dataSet.delete')
+              }}</v-btn>
             </div>
+            <v-dialog v-model="confirmDialog" persistent class="w-25">
+              <v-card>
+                <v-card-title class="text-center">確認刪除</v-card-title>
+                <v-divider></v-divider>
+                <v-card-actions class="d-flex justify-center">
+                  <v-btn class="border" type="text" @click="deleteDataSet(item._id)">確定</v-btn>
+                  <v-btn class="border" type="text" @click="confirmDialog = false">取消</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </template>
         </v-data-table>
       </v-col>
@@ -101,6 +113,8 @@ const closeDialog = () => {
   resetForm()
   fileAgent.value.deleteFileRecord()
 }
+
+const confirmDialog = ref(false)
 
 const fileRecords = ref([])
 const rawFileRecords = ref([])
@@ -180,6 +194,29 @@ const submit = handleSubmit(async (values) => {
     })
   }
 })
+
+const deleteDataSet = async (id) => {
+  try {
+    await apiAuth.delete(`/dataSet/${id}`)
+
+    getDataSets()
+    createSnackbar({
+      text: t('dataSet.deleteSuccess'),
+      snackbarProps: {
+        color: 'green',
+      },
+    })
+    confirmDialog.value = false
+  } catch (err) {
+    console.log(err)
+    createSnackbar({
+      text: t('api.' + err?.response?.data?.message || 'unknownError'),
+      snackbarProps: {
+        color: 'red',
+      },
+    })
+  }
+}
 </script>
 
 <route lang="json">

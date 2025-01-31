@@ -57,6 +57,10 @@ export default {
   fileReader: {
     fail: '檔案讀取失敗',
   },
+  dashboard: {
+    edit: '編輯',
+    delete: '刪除',
+  },
   api: {
     userNotFound: '用戶不存在',
     userAccountRequired: '帳號必填',

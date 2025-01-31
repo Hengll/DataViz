@@ -28,7 +28,7 @@
                 $t('dataSet.delete')
               }}</v-btn>
             </div>
-            <v-dialog v-model="confirmDialog" persistent class="w-25">
+            <v-dialog v-model="confirmDialog" persistent class="w-20">
               <v-card>
                 <v-card-title class="text-center">確認刪除</v-card-title>
                 <v-divider></v-divider>
@@ -218,6 +218,12 @@ const deleteDataSet = async (id) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.w-20 {
+  width: 20%;
+}
+</style>
 
 <route lang="json">
 {

@@ -1,24 +1,34 @@
 <template>
   <v-card>
-    <v-img :src="image" height="200" cover></v-img>
-    <v-card-title>
-      <router-link :to="'/dashboard/' + _id">{{ dashboardName }}</router-link>
-    </v-card-title>
-    <v-card-subtitle>{{ user }}</v-card-subtitle>
-    <v-card-text>
-      <v-row>
-        <v-col cols="8">
-          <v-icon icon="mdi-thumb-up-outline"></v-icon>
-          <span>{{ like }}</span>
-          <v-icon icon="mdi-eye-outline"></v-icon>
-          <span>{{ view }}</span>
-        </v-col>
-        <v-col cols="4" class="d-flex flex-column">
-          <v-btn>{{ $t('dashboard.edit') }}</v-btn>
-          <v-btn @click="onDelete">{{ $t('dashboard.delete') }}</v-btn>
-        </v-col>
-      </v-row>
-    </v-card-text>
+    <v-img :src="image"></v-img>
+    <v-row>
+      <v-col cols="8">
+        <v-card-title>
+          <router-link :to="'/dashboard/' + _id" class="text-decoration-none">{{
+            dashboardName
+          }}</router-link>
+        </v-card-title>
+        <v-card-subtitle>{{ user }}</v-card-subtitle>
+        <v-card-text>
+          <v-row>
+            <v-col cols="6" class="d-flex align-end">
+              <v-icon class="me-2" icon="mdi-thumb-up-outline"></v-icon>
+              <span>{{ like }}</span>
+            </v-col>
+            <v-col cols="6" class="d-flex align-end">
+              <v-icon class="me-2" icon="mdi-eye-outline"></v-icon>
+              <span>{{ view }}</span>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-col>
+      <v-col cols="4">
+        <v-card-actions class="d-flex flex-column">
+          <v-btn class="border">{{ $t('dashboard.edit') }}</v-btn>
+          <v-btn class="border" @click="onDelete">{{ $t('dashboard.delete') }}</v-btn>
+        </v-card-actions>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 

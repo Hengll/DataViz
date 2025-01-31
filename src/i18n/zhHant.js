@@ -58,6 +58,7 @@ export default {
     fail: '檔案讀取失敗',
   },
   dashboard: {
+    new: '新增儀錶板',
     edit: '編輯',
     delete: '刪除',
   },

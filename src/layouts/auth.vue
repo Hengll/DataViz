@@ -5,12 +5,7 @@
         <template #prepend>
           <v-btn icon="mdi-menu" variant="text" @click.stop="drawer = !drawer"></v-btn>
         </template>
-        <v-avatar
-          :image="
-            user.avatar ||
-            'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-          "
-        ></v-avatar>
+        <v-avatar :image="user.avatar || userIcon"></v-avatar>
         <span>
           {{ user.userName }}
         </span>
@@ -44,6 +39,7 @@ const navs = computed(() => {
     { to: '/', text: t('nav.home') },
   ]
 })
+const userIcon = new URL('@/assets/Sample_User_Icon.png', import.meta.url).href
 </script>
 
 <style lang="scss" scoped>

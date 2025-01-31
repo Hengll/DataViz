@@ -9,29 +9,15 @@
       </v-col>
       <v-col cols="12">
         <v-row>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
-          </v-col>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
-          </v-col>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
-          </v-col>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
-          </v-col>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
-          </v-col>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
-          </v-col>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
-          </v-col>
-          <v-col class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
-            <dashboard-card v-bind="dashboard" @delete="onDelete(dashboard._id)"></dashboard-card>
+          <v-col
+            v-for="dashboard in dashboards"
+            :key="dashboard._id"
+            class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
+          >
+            <dashboard-card
+              v-bind="dashboard"
+              @delete="deleteDashboard(dashboard._id)"
+            ></dashboard-card>
           </v-col>
         </v-row>
       </v-col>
@@ -40,20 +26,48 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useAxios } from '@/composables/axios'
 import DashboardCard from '@/components/DashboardCard.vue'
+import { useI18n } from 'vue-i18n'
+import { useSnackbar } from 'vuetify-use-dialog'
 
-const onDelete = (id) => {
-  console.log(id + ' delete')
+const { apiAuth } = useAxios()
+const { t } = useI18n()
+const createSnackbar = useSnackbar()
+
+const dashboards = ref([])
+
+const getDashboards = async () => {
+  try {
+    const { data } = await apiAuth.get('/dashboard')
+    dashboards.value = data.result
+  } catch (err) {
+    console.log(err)
+  }
 }
+getDashboards()
 
-const dashboard = {
-  _id: '123',
-  dashboardName: 'ABC',
-  user: 'aaaa',
-  like: 200,
-  view: 300,
-  image:
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Aspect-ratio-16x9.svg/1920px-Aspect-ratio-16x9.svg.png',
+const deleteDashboard = async (id) => {
+  try {
+    await apiAuth.delete(`/dashboard/${id}`)
+
+    getDashboards()
+    createSnackbar({
+      text: t('dashboard.deleteSuccess'),
+      snackbarProps: {
+        color: 'green',
+      },
+    })
+  } catch (err) {
+    console.log(err)
+    createSnackbar({
+      text: t('dashboard.' + err?.response?.data?.message || 'unknownError'),
+      snackbarProps: {
+        color: 'red',
+      },
+    })
+  }
 }
 </script>
 

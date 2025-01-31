@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-img :src="image"></v-img>
+    <v-img class="border ma-1" :src="image || whiteImg"></v-img>
     <v-row>
       <v-col cols="8">
         <v-card-title>
@@ -8,7 +8,7 @@
             dashboardName
           }}</router-link>
         </v-card-title>
-        <v-card-subtitle>{{ user }}</v-card-subtitle>
+        <v-card-subtitle>{{ user.userName }}</v-card-subtitle>
         <v-card-text>
           <v-row>
             <v-col cols="6" class="d-flex align-end">
@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+const whiteImg = new URL('@/assets/white.png', import.meta.url).href
 defineProps({
   // eslint-disable-next-line vue/prop-name-casing
   _id: {
@@ -44,8 +45,8 @@ defineProps({
     default: '',
   },
   user: {
-    type: String,
-    default: '',
+    type: Object,
+    default: () => {},
   },
   like: {
     type: Number,

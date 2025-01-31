@@ -61,6 +61,7 @@ export default {
     new: '新增儀錶板',
     edit: '編輯',
     delete: '刪除',
+    deleteSuccess: '刪除成功',
   },
   api: {
     userNotFound: '用戶不存在',

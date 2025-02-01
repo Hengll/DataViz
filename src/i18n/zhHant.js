@@ -63,6 +63,9 @@ export default {
     delete: '刪除',
     deleteSuccess: '刪除成功',
   },
+  editor: {
+    linkData: '連結資料',
+  },
   api: {
     userNotFound: '用戶不存在',
     userAccountRequired: '帳號必填',

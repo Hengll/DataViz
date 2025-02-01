@@ -98,8 +98,8 @@ const deleteDashboard = async (id) => {
 
 const createDashboard = async () => {
   try {
-    await apiAuth.post('/dashboard')
-    getDashboards()
+    const { data } = await apiAuth.post('/dashboard')
+    router.push(`/editor/data/${data.result._id}`)
   } catch (err) {
     console.log(err)
     createSnackbar({

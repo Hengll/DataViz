@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12">
-        <h1>{{ $t('auth.datasetManagement') }}</h1>
+        <h1>{{ $t('auth.myDataSets') }}</h1>
       </v-col>
       <v-col cols="12">
         <v-data-table :items="items" :headers="headers" :search="search">
@@ -76,7 +76,7 @@
       <v-divider></v-divider>
       <v-card-actions class="d-flex justify-center">
         <v-btn class="border" type="text" @click="deleteDataSet(confirmDialog.id)">確定</v-btn>
-        <v-btn class="border" type="text" @click="closeConfirmDialog()">取消</v-btn>
+        <v-btn class="border" type="text" @click="closeConfirmDialog">取消</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -243,7 +243,7 @@ const deleteDataSet = async (id) => {
     "layout": "auth",
     "login": true,
     "admin": false,
-    "title": "auth.datasetManagement"
+    "title": "auth.myDataSets"
   }
 }
 </route>

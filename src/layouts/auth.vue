@@ -34,8 +34,8 @@ const { t } = useI18n()
 const drawer = ref(true)
 const navs = computed(() => {
   return [
-    { to: '/auth', text: t('nav.dashboardManagement') },
-    { to: '/auth/datas', text: t('nav.datasetManagement') },
+    { to: '/auth', text: t('nav.myDashboards') },
+    { to: '/auth/datas', text: t('nav.myDataSets') },
     { to: '/', text: t('nav.home') },
   ]
 })

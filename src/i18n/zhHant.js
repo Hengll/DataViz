@@ -12,8 +12,8 @@ export default {
     register: '註冊',
     logout: '登出',
     myWorkSpace: '我的空間',
-    dashboardManagement: '儀錶板管理',
-    datasetManagement: '資料集管理',
+    myDashboards: '我的儀錶板',
+    myDataSets: '我的資料集',
   },
   login: {
     login: '登入',
@@ -34,8 +34,8 @@ export default {
     passwordConfirm: '確認密碼',
   },
   auth: {
-    dashboardManagement: '儀錶板管理',
-    datasetManagement: '資料集管理',
+    myDashboards: '我的儀錶板',
+    myDataSets: '我的資料集',
   },
   dataSet: {
     new: '資料集上傳',
@@ -58,7 +58,7 @@ export default {
     fail: '檔案讀取失敗',
   },
   dashboard: {
-    new: '新增儀錶板',
+    new: '建立儀錶板',
     edit: '編輯',
     delete: '刪除',
     deleteSuccess: '刪除成功',
@@ -92,7 +92,6 @@ export default {
     dataFormatError: '資料格式錯誤',
     dataSetIdInvalid: '資料集ID不符',
     dataSetNotFound: '資料集不存在',
-    dashboardNameRequired: '儀錶版名稱必填',
     dashboardIdInvalid: '儀錶板ID不符',
     dashboardNotFound: '儀錶板不存在',
     chartCategoryRequired: '圖表種類必填',

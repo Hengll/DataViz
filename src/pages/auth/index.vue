@@ -2,10 +2,10 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12">
-        <h1>{{ $t('auth.dashboardManagement') }}</h1>
+        <h1>{{ $t('auth.myDashboards') }}</h1>
       </v-col>
       <v-col cols="12">
-        <v-btn>{{ $t('dashboard.new') }}</v-btn>
+        <v-btn @click="createDashboard">{{ $t('dashboard.new') }}</v-btn>
       </v-col>
       <v-col cols="12">
         <v-row>
@@ -30,7 +30,7 @@
       <v-divider></v-divider>
       <v-card-actions class="d-flex justify-center">
         <v-btn class="border" type="text" @click="deleteDashboard(confirmDialog.id)">確定</v-btn>
-        <v-btn class="border" type="text" @click="closeConfirmDialog()">取消</v-btn>
+        <v-btn class="border" type="text" @click="closeConfirmDialog">取消</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -42,10 +42,12 @@ import { useAxios } from '@/composables/axios'
 import DashboardCard from '@/components/DashboardCard.vue'
 import { useI18n } from 'vue-i18n'
 import { useSnackbar } from 'vuetify-use-dialog'
+import { useRouter } from 'vue-router'
 
 const { apiAuth } = useAxios()
 const { t } = useI18n()
 const createSnackbar = useSnackbar()
+const router = useRouter()
 
 const dashboards = ref([])
 const confirmDialog = ref({
@@ -93,6 +95,21 @@ const deleteDashboard = async (id) => {
     })
   }
 }
+
+const createDashboard = async () => {
+  try {
+    await apiAuth.post('/dashboard')
+    getDashboards()
+  } catch (err) {
+    console.log(err)
+    createSnackbar({
+      text: t('dashboard.' + err?.response?.data?.message || 'unknownError'),
+      snackbarProps: {
+        color: 'red',
+      },
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -107,7 +124,7 @@ const deleteDashboard = async (id) => {
     "layout": "auth",
     "login": true,
     "admin": false,
-    "title": "auth.dashboardManagement"
+    "title": "auth.myDashboards"
   }
 }
 </route>

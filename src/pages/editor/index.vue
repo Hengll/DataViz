@@ -1,4 +1,4 @@
-<template>...</template>
+<template>editor</template>
 
 <script setup>
 import { useRouter } from 'vue-router'

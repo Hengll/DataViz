@@ -24,7 +24,12 @@
     </v-row>
   </v-container>
 
-  <v-dialog v-model="confirmDialog.isOpen" persistent class="w-250">
+  <v-dialog
+    v-model="confirmDialog.isOpen"
+    persistent
+    class="w-250"
+    @keydown.enter.once="deleteDashboard(confirmDialog.id)"
+  >
     <v-card>
       <v-card-title class="text-center">確認刪除</v-card-title>
       <v-divider></v-divider>

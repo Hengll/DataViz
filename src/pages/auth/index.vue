@@ -16,13 +16,24 @@
           >
             <dashboard-card
               v-bind="dashboard"
-              @delete="deleteDashboard(dashboard._id)"
+              @delete="openConfirmDialog(dashboard._id)"
             ></dashboard-card>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
   </v-container>
+
+  <v-dialog v-model="confirmDialog.isOpen" persistent class="w-250">
+    <v-card>
+      <v-card-title class="text-center">確認刪除</v-card-title>
+      <v-divider></v-divider>
+      <v-card-actions class="d-flex justify-center">
+        <v-btn class="border" type="text" @click="deleteDashboard(confirmDialog.id)">確定</v-btn>
+        <v-btn class="border" type="text" @click="closeConfirmDialog()">取消</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -37,6 +48,18 @@ const { t } = useI18n()
 const createSnackbar = useSnackbar()
 
 const dashboards = ref([])
+const confirmDialog = ref({
+  isOpen: false,
+  id: '',
+})
+const openConfirmDialog = (id) => {
+  confirmDialog.value.id = id
+  confirmDialog.value.isOpen = true
+}
+const closeConfirmDialog = () => {
+  confirmDialog.value.id = ''
+  confirmDialog.value.isOpen = false
+}
 
 const getDashboards = async () => {
   try {
@@ -59,6 +82,7 @@ const deleteDashboard = async (id) => {
         color: 'green',
       },
     })
+    closeConfirmDialog()
   } catch (err) {
     console.log(err)
     createSnackbar({
@@ -70,6 +94,12 @@ const deleteDashboard = async (id) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.w-250 {
+  width: 250px;
+}
+</style>
 
 <route lang="json">
 {

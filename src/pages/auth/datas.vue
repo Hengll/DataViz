@@ -24,20 +24,10 @@
           <template #[`item.edit`]="{ item }">
             <div class="d-flex justify-end">
               <v-btn class="border" variant="text">{{ $t('dataSet.edit') }}</v-btn>
-              <v-btn class="border ms-1" variant="text" @click="confirmDialog = true">{{
+              <v-btn class="border ms-1" variant="text" @click="openConfirmDialog(item._id)">{{
                 $t('dataSet.delete')
               }}</v-btn>
             </div>
-            <v-dialog v-model="confirmDialog" persistent class="w-20">
-              <v-card>
-                <v-card-title class="text-center">確認刪除</v-card-title>
-                <v-divider></v-divider>
-                <v-card-actions class="d-flex justify-center">
-                  <v-btn class="border" type="text" @click="deleteDataSet(item._id)">確定</v-btn>
-                  <v-btn class="border" type="text" @click="confirmDialog = false">取消</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </template>
         </v-data-table>
       </v-col>
@@ -79,6 +69,17 @@
       </v-card>
     </v-form>
   </v-dialog>
+
+  <v-dialog v-model="confirmDialog.isOpen" persistent class="w-250">
+    <v-card>
+      <v-card-title class="text-center">確認刪除</v-card-title>
+      <v-divider></v-divider>
+      <v-card-actions class="d-flex justify-center">
+        <v-btn class="border" type="text" @click="deleteDataSet(confirmDialog.id)">確定</v-btn>
+        <v-btn class="border" type="text" @click="closeConfirmDialog()">取消</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -114,7 +115,18 @@ const closeDialog = () => {
   fileAgent.value.deleteFileRecord()
 }
 
-const confirmDialog = ref(false)
+const confirmDialog = ref({
+  isOpen: false,
+  id: '',
+})
+const openConfirmDialog = (id) => {
+  confirmDialog.value.id = id
+  confirmDialog.value.isOpen = true
+}
+const closeConfirmDialog = () => {
+  confirmDialog.value.id = ''
+  confirmDialog.value.isOpen = false
+}
 
 const fileRecords = ref([])
 const rawFileRecords = ref([])
@@ -206,7 +218,7 @@ const deleteDataSet = async (id) => {
         color: 'green',
       },
     })
-    confirmDialog.value = false
+    closeConfirmDialog()
   } catch (err) {
     console.log(err)
     createSnackbar({
@@ -220,8 +232,8 @@ const deleteDataSet = async (id) => {
 </script>
 
 <style lang="scss" scoped>
-.w-20 {
-  width: 20%;
+.w-250 {
+  width: 250px;
 }
 </style>
 

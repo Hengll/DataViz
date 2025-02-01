@@ -14,6 +14,9 @@ export default {
     myWorkSpace: '我的空間',
     myDashboards: '我的儀錶板',
     myDataSets: '我的資料集',
+    linkData: '連結資料',
+    editDashboard: '儀錶板編輯',
+    previewDashboard: '儀錶板預覽',
   },
   login: {
     login: '登入',
@@ -65,6 +68,8 @@ export default {
   },
   editor: {
     linkData: '連結資料',
+    editDashboard: '儀錶板編輯',
+    previewDashboard: '儀錶板預覽',
   },
   api: {
     userNotFound: '用戶不存在',

@@ -18,8 +18,6 @@ const router = createRouter({
   routes: setupLayouts(routes),
 })
 
-console.log(router.options.routes)
-
 router.beforeEach(async (to, from, next) => {
   const { apiAuth } = useAxios()
   const user = useUserStore()

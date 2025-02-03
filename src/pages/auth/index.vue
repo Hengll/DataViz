@@ -16,6 +16,7 @@
           >
             <dashboard-card
               v-bind="dashboard"
+              @edit="$router.push(`/editor/dashboard/${dashboard._id}`)"
               @delete="openConfirmDialog(dashboard._id)"
             ></dashboard-card>
           </v-col>

@@ -11,6 +11,7 @@ import { routes } from 'vue-router/auto-routes'
 import i18n from '@/i18n'
 import { useAxios } from '@/composables/axios'
 import { useUserStore } from '@/stores/user'
+import { useEditorStore } from '@/stores/editor'
 import { START_LOCATION } from 'vue-router'
 
 const router = createRouter({
@@ -21,6 +22,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const { apiAuth } = useAxios()
   const user = useUserStore()
+  const editor = useEditorStore()
 
   if (from === START_LOCATION && user.isLoggedIn) {
     try {
@@ -34,6 +36,20 @@ router.beforeEach(async (to, from, next) => {
 
   if (user.isLoggedIn && ['/login', '/register'].includes(to.path)) {
     next('/')
+  } else if (
+    user.isLoggedIn &&
+    ['/editor/data/', '/editor/dashboard/', '/editor/preview/'].some((path) =>
+      to.path.includes(path),
+    ) &&
+    editor.dashboard._id != to.params.id
+  ) {
+    try {
+      await editor.getDashboardWithAPI(to.params.id)
+      next()
+    } catch (err) {
+      console.log(err)
+      next('/')
+    }
   } else if (to.meta.login && !user.isLoggedIn) {
     next('/login')
   } else if (to.meta.admin && !user.isAdmin) {

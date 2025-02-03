@@ -24,7 +24,7 @@
       </v-col>
       <v-col cols="4">
         <v-card-actions class="d-flex flex-column">
-          <v-btn class="border">{{ $t('dashboard.edit') }}</v-btn>
+          <v-btn class="border" @click="$emit('edit')">{{ $t('dashboard.edit') }}</v-btn>
           <v-btn class="border" @click="$emit('delete')">{{ $t('dashboard.delete') }}</v-btn>
         </v-card-actions>
       </v-col>
@@ -62,5 +62,5 @@ defineProps({
   },
 })
 
-defineEmits(['delete'])
+defineEmits(['edit', 'delete'])
 </script>

@@ -1,1 +1,3 @@
-<template>tutorial</template>
+<template>
+  <v-container> tutorial </v-container>
+</template>

@@ -17,6 +17,7 @@ export default {
     linkData: '連結資料',
     editDashboard: '儀錶板編輯',
     previewDashboard: '儀錶板預覽',
+    saveAndBack: '保存並返回',
   },
   login: {
     login: '登入',
@@ -70,6 +71,11 @@ export default {
     linkData: '連結資料',
     editDashboard: '儀錶板編輯',
     previewDashboard: '儀錶板預覽',
+  },
+  linkData: {
+    new: '資料集上傳',
+    linkDataSelect: '選擇連結資料集',
+    save: '儲存修改',
   },
   api: {
     userNotFound: '用戶不存在',

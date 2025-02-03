@@ -1,1 +1,3 @@
-<template>about</template>
+<template>
+  <v-container> about </v-container>
+</template>

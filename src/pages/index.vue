@@ -1,6 +1,8 @@
 <template>
-  index
-  <div id="d1"></div>
+  <v-container>
+    index
+    <div id="d1"></div>
+  </v-container>
 </template>
 
 <script setup>

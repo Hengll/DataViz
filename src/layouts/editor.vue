@@ -30,15 +30,32 @@
 import { useEditorStore } from '@/stores/editor'
 import { useDisplay } from 'vuetify'
 import { useRouter } from 'vue-router'
+import { useAxios } from '@/composables/axios'
+import { useSnackbar } from 'vuetify-use-dialog'
+import { useI18n } from 'vue-i18n'
 
 const editor = useEditorStore()
 const { mobile } = useDisplay()
 const router = useRouter()
+const { apiAuth } = useAxios()
+const createSnackbar = useSnackbar()
+const { t } = useI18n()
 
-editor.drawer = mobile ? false : true
+editor.drawer = !mobile.value
 
-const saveAndBack = () => {
-  router.push('/auth')
+const saveAndBack = async () => {
+  try {
+    await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, editor.dashboard)
+    router.push('/auth')
+  } catch (err) {
+    console.log(err)
+    createSnackbar({
+      text: t('api.' + err?.response?.data?.message || 'unknownError'),
+      snackbarProps: {
+        color: 'red',
+      },
+    })
+  }
 }
 </script>
 

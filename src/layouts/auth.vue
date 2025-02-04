@@ -27,11 +27,13 @@
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useI18n } from 'vue-i18n'
+import { useDisplay } from 'vuetify'
 
 const user = useUserStore()
 const { t } = useI18n()
+const { mobile } = useDisplay()
 
-const drawer = ref(true)
+const drawer = ref(!mobile.value)
 const navs = computed(() => {
   return [
     { to: '/auth', text: t('nav.myDashboards') },

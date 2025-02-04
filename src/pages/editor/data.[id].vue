@@ -2,9 +2,31 @@
   <v-navigation-drawer v-model="editor.drawer" width="200" :permanent="false">
     <v-list>
       <v-list-item></v-list-item>
-      <v-list-item></v-list-item>
-      <v-list-item></v-list-item>
-      <v-list-item></v-list-item>
+      <v-divider></v-divider>
+      <v-list-item
+        class="d-flex align-center border-b"
+        :title="$t('linkData.newRow')"
+        prepend-icon="mdi-plus"
+        @click="console.log(1)"
+      ></v-list-item>
+      <v-list-item
+        class="d-flex align-center border-b"
+        :title="$t('linkData.newCol')"
+        prepend-icon="mdi-plus"
+        @click="console.log(1)"
+      ></v-list-item>
+      <v-list-item
+        class="d-flex align-center border-b"
+        :title="$t('linkData.editName')"
+        prepend-icon="mdi-pencil"
+        @click="console.log(1)"
+      ></v-list-item>
+      <v-list-item
+        class="d-flex align-center border-b"
+        :title="$t('linkData.editInfo')"
+        prepend-icon="mdi-pencil"
+        @click="console.log(1)"
+      ></v-list-item>
     </v-list>
   </v-navigation-drawer>
 
@@ -13,7 +35,7 @@
       <v-col cols="12">
         <h1 class="text-center">{{ $t('editor.linkData') }}</h1>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="3">
         <v-btn @click="openDialog">{{ $t('linkData.new') }}</v-btn>
       </v-col>
       <v-col cols="6">
@@ -184,6 +206,12 @@ const linkData = async (dataId) => {
   try {
     await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, { dataSet: dataId })
     await editor.getDashboardWithAPI(editor.dashboard._id)
+    createSnackbar({
+      text: t('linkData.linkDataSuccess'),
+      snackbarProps: {
+        color: 'green',
+      },
+    })
   } catch (err) {
     console.log(err)
     createSnackbar({

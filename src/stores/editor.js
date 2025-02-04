@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useAxios } from '@/composables/axios'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -9,6 +9,14 @@ export const useEditorStore = defineStore('editor', () => {
   const drawer = ref(true)
 
   const dashboard = ref({})
+
+  const dataAttribute = computed(() => {
+    if (dashboard.value.dataSet) {
+      return Object.keys(dashboard.value.dataSet.data[0])
+    } else {
+      return []
+    }
+  })
 
   const getDashboardWithAPI = async (id) => {
     try {
@@ -19,5 +27,5 @@ export const useEditorStore = defineStore('editor', () => {
     }
   }
 
-  return { drawer, dashboard, getDashboardWithAPI }
+  return { drawer, dashboard, dataAttribute, getDashboardWithAPI }
 })

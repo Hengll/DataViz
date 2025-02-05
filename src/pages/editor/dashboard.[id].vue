@@ -3,7 +3,73 @@
     <v-list>
       <v-list-item></v-list-item>
       <v-divider></v-divider>
+      <v-list-group v-for="(nav, navIndex) in navs" :key="nav" class="text-center" fluid>
+        <template #activator="{ props }">
+          <v-list-item
+            class="user-select-none"
+            v-bind="props"
+            :title="$t('editDashboard.' + nav.text)"
+          ></v-list-item>
+          <v-divider></v-divider>
+        </template>
+
+        <v-btn ref="test">test</v-btn>
+        <v-menu :activator="test">
+          <p>123</p>
+        </v-menu>
+
+        <v-menu
+          v-for="(menu, menuIndex) in nav.menus"
+          :key="menu"
+          v-model="menu.isOpen"
+          :close-on-content-click="false"
+          location="end"
+        >
+          <template #activator="{ props }">
+            <v-list-item
+              append-icon="mdi-plus"
+              :prepend-icon="menu.icon"
+              class="user-select-none"
+              :title="$t('editDashboard.' + menu.text)"
+              v-bind="props"
+            ></v-list-item>
+          </template>
+
+          <v-card min-width="300">
+            <v-list>
+              <v-list-item :title="$t('editDashboard.' + menu.text)"></v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list>
+              <v-list-item>
+                <v-text-field></v-text-field>
+              </v-list-item>
+              <v-list-item>
+                <v-select></v-select>
+              </v-list-item>
+              <v-list-item>
+                <v-select></v-select>
+              </v-list-item>
+            </v-list>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn variant="text" @click="menu.isOpen = false">取消</v-btn>
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="newChart(menu.text, navIndex, menuIndex)"
+                >新增</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-menu>
+
+        <v-divider></v-divider>
+      </v-list-group>
     </v-list>
+  </v-navigation-drawer>
+
+  <v-navigation-drawer v-model="rightDrawer" :permanent="true" location="right">
   </v-navigation-drawer>
 
   <v-container fluid>
@@ -20,12 +86,11 @@
       <v-col cols="12">
         <div id="area" ref="area">
           <DraggableResizable
+            v-for="(chart, index) in editor.dashboard.charts"
+            :key="chart"
             :container-width="areaWidth"
             :container-height="areaHeight"
-          ></DraggableResizable>
-          <DraggableResizable
-            :container-width="areaWidth"
-            :container-height="areaHeight"
+            :index-of-charts="index"
           ></DraggableResizable>
         </div>
       </v-col>
@@ -74,6 +139,39 @@ const { apiAuth } = useAxios()
 const { t } = useI18n()
 const createSnackbar = useSnackbar()
 
+const test = ref(null)
+
+// 右側 navbar 開關
+const rightDrawer = ref(false)
+
+// 左側 navbar 資訊
+const navs = ref([
+  {
+    text: 'dataChart',
+    menus: [
+      {
+        isOpen: false,
+        text: 'barChart',
+        icon: 'mdi-chart-bar',
+      },
+      {
+        isOpen: false,
+        text: 'lineChart',
+        icon: 'mdi-chart-line',
+      },
+    ],
+  },
+  {
+    text: 'statistics',
+    menus: [],
+  },
+  {
+    text: 'dataFilter',
+    menus: [],
+  },
+])
+
+// 編輯儀錶板資訊對話框
 const dialog = ref(false)
 const openDialog = () => {
   dashboardName.value.value = editor.dashboard.dashboardName
@@ -85,6 +183,7 @@ const closeDialog = () => {
   resetForm()
 }
 
+// 編輯儀錶板資訊表單
 const schema = yup.object({
   dashboardName: yup.string().required(t('api.dashboardNameRequired')),
   dashboardInfo: yup.string(),
@@ -121,6 +220,34 @@ const submit = handleSubmit(async (values) => {
   }
 })
 
+// 新增chart表單
+const schemaNewChart = yup.object({
+  category: yup
+    .string()
+    .required(t('api.chartCategoryRequired'))
+    .oneOf(['barChart', 'lineChart'], t('api.chartCategoryInvalid')),
+  chartTitle: yup.string(),
+  useAttribute: yup.array().of(yup.string()).required(t('api.useAttributeRequired')),
+})
+
+const {
+  handleSubmit: handleSubmitNewChart,
+  isSubmitting: isSubmittingNewChart,
+  resetForm: resetFormNewChart,
+} = useForm({
+  validationSchema: schemaNewChart,
+})
+
+const category = useField('category')
+const chartTitle = useField('chartTitle')
+const useAttribute = useField('useAttribute')
+
+const newChart = (category, navIndex, menuIndex) => {
+  console.log(category)
+  navs.value[navIndex].menus[menuIndex].isOpen = false
+}
+
+// 保存dashboard
 const saveDashboard = async () => {
   try {
     await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, editor.dashboard)
@@ -142,7 +269,7 @@ const saveDashboard = async () => {
   }
 }
 
-// area尺寸
+// 畫布尺寸
 const area = ref(null)
 const areaWidth = ref(0)
 const areaHeight = ref(0)
@@ -168,8 +295,8 @@ onMounted(() => {
   background: white;
 }
 
-.grid-snap {
-  background: red;
+.user-select-none {
+  user-select: none;
 }
 </style>
 

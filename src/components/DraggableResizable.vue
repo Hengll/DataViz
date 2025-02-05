@@ -1,31 +1,43 @@
 <template>
-  <div
-    ref="element"
-    class="draggable-resizable"
-    :style="{
-      width: elementInfo.chartWidth * containerWidth + 'px',
-      height: elementInfo.chartHeight * containerHeight + 'px',
-      transform:
-        'translate(' +
-        elementInfo.chartPosX * containerWidth +
-        'px, ' +
-        elementInfo.chartPosY * containerHeight +
-        'px)',
-    }"
-    :data-x="elementInfo.chartPosX * containerWidth"
-    :data-y="elementInfo.chartPosY * containerHeight"
-  >
-    <slot></slot>
-    <p>w : {{ elementInfo.chartWidth * containerWidth }}</p>
-    <p>h : {{ elementInfo.chartHeight * containerHeight }}</p>
-    <p>x : {{ elementInfo.chartPosX }}</p>
-    <p>y : {{ elementInfo.chartPosY }}</p>
-    <p>{{ containerWidth }}</p>
-  </div>
+  <v-hover v-slot="{ isHovering, props: prop }">
+    <div
+      v-bind="prop"
+      ref="element"
+      :class="{ 'draggable-resizable': true, 'hover-style': isHovering }"
+      :style="{
+        width: elementInfo.chartWidth * containerWidth + 'px',
+        height: elementInfo.chartHeight * containerHeight + 'px',
+        transform:
+          'translate(' +
+          elementInfo.chartPosX * containerWidth +
+          'px, ' +
+          elementInfo.chartPosY * containerHeight +
+          'px)',
+      }"
+      :data-x="elementInfo.chartPosX * containerWidth"
+      :data-y="elementInfo.chartPosY * containerHeight"
+    >
+      <div>{{ indexOfCharts }}</div>
+      <div v-if="isHovering" class="position-absolute top-0 right-0">
+        <v-btn
+          class="border opacity-60 radius-10 me-1 mt-1 btn-size pb-1"
+          variant="text"
+          icon="mdi-pencil"
+          @click="$emit('edit')"
+        ></v-btn>
+        <v-btn
+          class="border opacity-60 radius-10 me-1 mt-1 btn-size"
+          variant="text"
+          icon="mdi-close"
+          @click="$emit('delete')"
+        ></v-btn>
+      </div>
+    </div>
+  </v-hover>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import interact from 'interactjs'
 
 const props = defineProps({
@@ -43,11 +55,14 @@ const props = defineProps({
   },
 })
 
+defineEmits(['edit', 'delete'])
+
 const element = ref(null)
+let interactable = null
 
 const gridSizeDivisor = {
-  x: 2,
-  y: 2,
+  x: 32,
+  y: 18,
 }
 
 const elementInfo = ref({
@@ -58,8 +73,13 @@ const elementInfo = ref({
   chartPosY: 0,
 })
 
-onMounted(() => {
-  const interactInstance = interact(element.value)
+const setupInteract = () => {
+  if (interactable) {
+    interactable.draggable(false)
+    interactable.resizable(false)
+  }
+
+  interactable = interact(element.value)
     .draggable({
       modifiers: [
         interact.modifiers.snap({
@@ -108,6 +128,12 @@ onMounted(() => {
         interact.modifiers.restrictEdges({
           outer: 'parent',
         }),
+        interact.modifiers.restrictSize({
+          min: {
+            width: props.containerWidth / gridSizeDivisor.x,
+            height: props.containerHeight / gridSizeDivisor.y,
+          },
+        }),
       ],
       listeners: {
         move(event) {
@@ -124,8 +150,12 @@ onMounted(() => {
         },
       },
     })
-  console.log(1)
-  console.log(interactInstance)
+}
+
+onMounted(setupInteract)
+
+watch([() => props.containerWidth, () => props.containerHeight], () => {
+  setupInteract()
 })
 </script>
 
@@ -135,5 +165,20 @@ onMounted(() => {
   text-align: center;
   position: absolute;
   user-select: none;
+}
+
+.hover-style {
+  outline: 1px solid rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.radius-10 {
+  border-radius: 10%;
+}
+
+.btn-size {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
 }
 </style>

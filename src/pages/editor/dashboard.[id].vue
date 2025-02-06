@@ -13,11 +13,6 @@
           <v-divider></v-divider>
         </template>
 
-        <v-btn ref="test">test</v-btn>
-        <v-menu :activator="test">
-          <p>123</p>
-        </v-menu>
-
         <v-menu
           v-for="(menu, menuIndex) in nav.menus"
           :key="menu"
@@ -35,33 +30,49 @@
             ></v-list-item>
           </template>
 
-          <v-card min-width="300">
-            <v-list>
-              <v-list-item :title="$t('editDashboard.' + menu.text)"></v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <v-list>
-              <v-list-item>
-                <v-text-field></v-text-field>
-              </v-list-item>
-              <v-list-item>
-                <v-select></v-select>
-              </v-list-item>
-              <v-list-item>
-                <v-select></v-select>
-              </v-list-item>
-            </v-list>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn variant="text" @click="menu.isOpen = false">取消</v-btn>
-              <v-btn
-                color="primary"
-                variant="text"
-                @click="newChart(menu.text, navIndex, menuIndex)"
-                >新增</v-btn
-              >
-            </v-card-actions>
-          </v-card>
+          <v-form
+            :disabled="isSubmittingNewChart"
+            @submit.prevent="newChart(menu.text, navIndex, menuIndex)"
+          >
+            <v-card min-width="300">
+              <v-list>
+                <v-list-item :title="$t('editDashboard.' + menu.text)"></v-list-item>
+              </v-list>
+              <v-divider></v-divider>
+              <v-list>
+                <v-list-item>
+                  <v-text-field
+                    v-model="chartTitle.value.value"
+                    :label="$t('editDashboard.chartTitle')"
+                    :error-messages="chartTitle.errorMessage.value"
+                  ></v-text-field>
+                </v-list-item>
+                <v-list-item>
+                  <v-select
+                    v-model="useVariables.value.value[0]"
+                    :items="editor.dataVariables"
+                    :label="$t('editDashboard.variables1')"
+                    :error-messages="useVariables.errorMessage.value"
+                  ></v-select>
+                </v-list-item>
+                <v-list-item>
+                  <v-select
+                    v-model="useVariables.value.value[1]"
+                    :items="editor.dataVariables"
+                    :label="$t('editDashboard.variables2')"
+                    :error-messages="useVariables.errorMessage.value"
+                  ></v-select>
+                </v-list-item>
+              </v-list>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn variant="text" @click="menu.isOpen = false">取消</v-btn>
+                <v-btn type="submit" color="primary" variant="text" :loading="isSubmittingNewChart"
+                  >新增</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-form>
         </v-menu>
 
         <v-divider></v-divider>
@@ -69,7 +80,13 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-navigation-drawer v-model="rightDrawer" :permanent="true" location="right">
+  <v-navigation-drawer v-model="rightDrawer" :permanent="true" location="right" width="200">
+    <v-container fluid>
+      <v-btn @click="closeRightDrawer">close</v-btn>
+      <v-color-picker></v-color-picker>
+      <!-- 可抄 -->
+      <!-- https://codepen.io/JamieCurnow/pen/KKPjraK -->
+    </v-container>
   </v-navigation-drawer>
 
   <v-container fluid>
@@ -90,7 +107,9 @@
             :key="chart"
             :container-width="areaWidth"
             :container-height="areaHeight"
-            :index-of-charts="index"
+            :index-of-chart="index"
+            @edit="openRightDrawer(index)"
+            @delete="editor.deleteChart(index)"
           ></DraggableResizable>
         </div>
       </v-col>
@@ -139,10 +158,15 @@ const { apiAuth } = useAxios()
 const { t } = useI18n()
 const createSnackbar = useSnackbar()
 
-const test = ref(null)
-
 // 右側 navbar 開關
 const rightDrawer = ref(false)
+const openRightDrawer = (index) => {
+  console.log(index)
+  rightDrawer.value = true
+}
+const closeRightDrawer = () => {
+  rightDrawer.value = false
+}
 
 // 左側 navbar 資訊
 const navs = ref([
@@ -227,7 +251,7 @@ const schemaNewChart = yup.object({
     .required(t('api.chartCategoryRequired'))
     .oneOf(['barChart', 'lineChart'], t('api.chartCategoryInvalid')),
   chartTitle: yup.string(),
-  useAttribute: yup.array().of(yup.string()).required(t('api.useAttributeRequired')),
+  useVariables: yup.array().of(yup.string().notOneOf([''], t('api.useVariablesRequired'))),
 })
 
 const {
@@ -236,15 +260,40 @@ const {
   resetForm: resetFormNewChart,
 } = useForm({
   validationSchema: schemaNewChart,
+  initialValues: {
+    useVariables: ['', ''],
+  },
 })
 
 const category = useField('category')
 const chartTitle = useField('chartTitle')
-const useAttribute = useField('useAttribute')
+const useVariables = useField('useVariables')
 
-const newChart = (category, navIndex, menuIndex) => {
-  console.log(category)
-  navs.value[navIndex].menus[menuIndex].isOpen = false
+const newChart = async (categoryValue, navIndex, menuIndex) => {
+  category.value.value = categoryValue
+  if (!chartTitle.value.value) {
+    chartTitle.value.value = categoryValue
+  }
+  try {
+    await handleSubmitNewChart((value) => {
+      const chart = {
+        category: value.category,
+        chartTitle: value.chartTitle,
+        chartPosX: 0,
+        chartPosY: 0,
+        chartWidth: 0.5,
+        chartHeight: 0.5,
+        useVariables: [].concat(value.useVariables),
+      }
+
+      editor.newChart(chart)
+
+      navs.value[navIndex].menus[menuIndex].isOpen = false
+      resetFormNewChart()
+    })()
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // 保存dashboard

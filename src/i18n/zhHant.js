@@ -94,6 +94,9 @@ export default {
     lineChart: '折線圖',
     statistics: '統計量',
     dataFilter: '篩選器',
+    chartTitle: '標題',
+    variables1: '變量1',
+    variables2: '變量2',
   },
   api: {
     userNotFound: '用戶不存在',
@@ -133,7 +136,7 @@ export default {
     chartPosYRequired: '圖表位置Y必填',
     chartWidthRequired: '圖表寬度必填',
     chartHeightRequired: '圖表高度必填',
-    useAttributeRequired: '請選擇變量',
+    useVariablesRequired: '請選擇變量',
     serverError: '伺服器錯誤',
     unknownError: '未知錯誤',
   },

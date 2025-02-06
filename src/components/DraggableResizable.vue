@@ -5,28 +5,29 @@
       ref="element"
       :class="{ 'draggable-resizable': true, 'hover-style': isHovering }"
       :style="{
-        width: elementInfo.chartWidth * containerWidth + 'px',
-        height: elementInfo.chartHeight * containerHeight + 'px',
+        width: editor.dashboard.charts[indexOfChart].chartWidth * containerWidth + 'px',
+        height: editor.dashboard.charts[indexOfChart].chartHeight * containerHeight + 'px',
         transform:
           'translate(' +
-          elementInfo.chartPosX * containerWidth +
+          editor.dashboard.charts[indexOfChart].chartPosX * containerWidth +
           'px, ' +
-          elementInfo.chartPosY * containerHeight +
+          editor.dashboard.charts[indexOfChart].chartPosY * containerHeight +
           'px)',
       }"
-      :data-x="elementInfo.chartPosX * containerWidth"
-      :data-y="elementInfo.chartPosY * containerHeight"
+      :data-x="editor.dashboard.charts[indexOfChart].chartPosX * containerWidth"
+      :data-y="editor.dashboard.charts[indexOfChart].chartPosY * containerHeight"
     >
-      <div>{{ indexOfCharts }}</div>
+      <component :is="chartCategory" :index-of-chart="indexOfChart"></component>
+
       <div v-if="isHovering" class="position-absolute top-0 right-0">
         <v-btn
-          class="border opacity-60 radius-10 me-1 mt-1 btn-size pb-1"
+          class="border radius-10 me-1 mt-1 btn-size pb-1"
           variant="text"
           icon="mdi-pencil"
           @click="$emit('edit')"
         ></v-btn>
         <v-btn
-          class="border opacity-60 radius-10 me-1 mt-1 btn-size"
+          class="border radius-10 me-1 mt-1 btn-size"
           variant="text"
           icon="mdi-close"
           @click="$emit('delete')"
@@ -37,8 +38,12 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, markRaw } from 'vue'
 import interact from 'interactjs'
+import { useEditorStore } from '@/stores/editor'
+import BarChart from './BarChart.vue'
+
+const editor = useEditorStore()
 
 const props = defineProps({
   containerWidth: {
@@ -49,7 +54,7 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  indexOfCharts: {
+  indexOfChart: {
     type: Number,
     default: 0,
   },
@@ -57,21 +62,20 @@ const props = defineProps({
 
 defineEmits(['edit', 'delete'])
 
+const chartCategory = ref(null)
+if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
+  chartCategory.value = markRaw(BarChart)
+} else {
+  console.log('err')
+}
+
 const element = ref(null)
 let interactable = null
 
 const gridSizeDivisor = {
-  x: 32,
-  y: 18,
+  x: 96,
+  y: 54,
 }
-
-const elementInfo = ref({
-  category: 'barChart',
-  chartWidth: 0.5,
-  chartHeight: 0.5,
-  chartPosX: 0,
-  chartPosY: 0,
-})
 
 const setupInteract = () => {
   if (interactable) {
@@ -107,8 +111,7 @@ const setupInteract = () => {
           target.setAttribute('data-x', x)
           target.setAttribute('data-y', y)
 
-          elementInfo.value.chartPosX = x / props.containerWidth
-          elementInfo.value.chartPosY = y / props.containerHeight
+          editor.moveChart(props.indexOfChart, x / props.containerWidth, y / props.containerHeight)
         },
       },
     })
@@ -130,8 +133,8 @@ const setupInteract = () => {
         }),
         interact.modifiers.restrictSize({
           min: {
-            width: props.containerWidth / gridSizeDivisor.x,
-            height: props.containerHeight / gridSizeDivisor.y,
+            width: (5 * props.containerWidth) / gridSizeDivisor.x,
+            height: (5 * props.containerHeight) / gridSizeDivisor.y,
           },
         }),
       ],
@@ -143,10 +146,13 @@ const setupInteract = () => {
           event.target.setAttribute('data-x', x)
           event.target.setAttribute('data-y', y)
 
-          elementInfo.value.chartWidth = event.rect.width / props.containerWidth
-          elementInfo.value.chartHeight = event.rect.height / props.containerHeight
-          elementInfo.value.chartPosX = x / props.containerWidth
-          elementInfo.value.chartPosY = y / props.containerHeight
+          editor.resizeChart(
+            props.indexOfChart,
+            event.rect.width / props.containerWidth,
+            event.rect.height / props.containerHeight,
+          )
+
+          editor.moveChart(props.indexOfChart, x / props.containerWidth, y / props.containerHeight)
         },
       },
     })
@@ -161,14 +167,11 @@ watch([() => props.containerWidth, () => props.containerHeight], () => {
 
 <style lang="scss" scoped>
 .draggable-resizable {
-  background-color: lightgreen;
-  text-align: center;
   position: absolute;
-  user-select: none;
 }
 
 .hover-style {
-  outline: 1px solid rgba(0, 0, 0, 0.5);
+  outline: 1px solid rgba(0, 0, 0, 1);
   z-index: 100;
 }
 

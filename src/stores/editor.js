@@ -10,7 +10,7 @@ export const useEditorStore = defineStore('editor', () => {
 
   const dashboard = ref({})
 
-  const dataAttribute = computed(() => {
+  const dataVariables = computed(() => {
     if (dashboard.value.dataSet) {
       return Object.keys(dashboard.value.dataSet.data[0])
     } else {
@@ -27,5 +27,37 @@ export const useEditorStore = defineStore('editor', () => {
     }
   }
 
-  return { drawer, dashboard, dataAttribute, getDashboardWithAPI }
+  const newChart = (chart) => {
+    dashboard.value.charts.push(chart)
+  }
+
+  const deleteChart = (index) => {
+    dashboard.value.charts.splice(index, 1)
+  }
+
+  const editChart = (index, chart) => {
+    dashboard.value.charts.splice(index, 1, chart)
+  }
+
+  const moveChart = (index, chartPosX, chartPosY) => {
+    dashboard.value.charts[index].chartPosX = chartPosX
+    dashboard.value.charts[index].chartPosY = chartPosY
+  }
+
+  const resizeChart = (index, chartWidth, chartHeight) => {
+    dashboard.value.charts[index].chartWidth = chartWidth
+    dashboard.value.charts[index].chartHeight = chartHeight
+  }
+
+  return {
+    drawer,
+    dashboard,
+    dataVariables,
+    getDashboardWithAPI,
+    newChart,
+    deleteChart,
+    editChart,
+    moveChart,
+    resizeChart,
+  }
 })

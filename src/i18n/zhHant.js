@@ -59,6 +59,9 @@ export default {
     errorSize: '檔案大小超過限制',
   },
   fileReader: {
+    array: 'JSON 格式錯誤：最外層必須是陣列',
+    object: 'JSON 格式錯誤：陣列內的元素必須是物件',
+    nested: 'JSON 格式錯誤：物件內部不可有巢狀結構',
     fail: '檔案讀取失敗',
   },
   dashboard: {

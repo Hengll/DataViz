@@ -25,14 +25,22 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  gridWidth: {
+    type: Number,
+    default: 0,
+  },
 })
 
 // 選項
-const fontSize = 12
+const fontSize = 1
 const backgroundColor = '#FFFFFF'
 const color = '#666666'
-const barColor = 'lightblue'
+const barColor = ['lightblue']
 const borderColor = 'rgba(0,0,0,0.12)'
+const paddingLeft = 0
+const paddingRight = 0
+const paddingTop = 0
+const paddingBottom = 0
 
 const style = computed(() => {
   return {
@@ -41,86 +49,97 @@ const style = computed(() => {
   }
 })
 
-// type: Object,
-// required: true,
-// default: () => {
-//   return {
-//     labels: [],
-//     datasets: [{
-//       label: '圖例',
-//       data: []
-//     }]
-//   }
-// }
-// },
+const data = computed(() => {
+  const Variables0 = editor.dashboard.dataSet?.data.map(
+    (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[0]],
+  )
+  const Variables1 = editor.dashboard.dataSet?.data.map(
+    (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[1]],
+  )
+  const data = {}
+
+  for (let i = 0; i < Variables0.length; i++) {
+    if (!data[Variables0[i]]) {
+      data[Variables0[i]] = Variables1[i] * 1
+    } else {
+      data[Variables0[i]] += Variables1[i] * 1
+    }
+  }
+
+  return data
+})
 
 const chartData = {
-  labels: editor.dashboard.dataSet?.data.map(
-    (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[0]],
-  ),
+  labels: Object.keys(data.value),
   datasets: [
     {
       label: editor.dashboard.charts[props.indexOfChart].useVariables[1],
-      data: editor.dashboard.dataSet?.data.map(
-        (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[1]],
-      ),
+      data: Object.values(data.value),
     },
   ],
 }
+const chartOptions = computed(() => {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: true,
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-
-  layout: {
-    padding: 10,
-  },
-
-  elements: {
-    bar: {
-      backgroundColor: barColor,
+    layout: {
+      padding: {
+        left: paddingLeft * props.gridWidth,
+        right: paddingRight * props.gridWidth,
+        top: paddingTop * props.gridWidth,
+        bottom: paddingBottom * props.gridWidth,
+      },
     },
-  },
 
-  scales: {
-    x: {
-      ticks: {
-        font: {
-          size: fontSize,
+    elements: {
+      bar: {
+        backgroundColor: barColor,
+      },
+    },
+
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: fontSize * props.gridWidth,
+          },
+          color: color,
         },
-        color: color,
       },
-    },
-    y: {
-      ticks: {
-        font: {
-          size: fontSize,
+      y: {
+        ticks: {
+          font: {
+            size: fontSize * props.gridWidth,
+          },
+          color: color,
         },
-        color: color,
       },
     },
-  },
 
-  plugins: {
-    legend: {
-      labels: {
-        font: {
-          size: fontSize,
+    plugins: {
+      legend: {
+        labels: {
+          font: {
+            size: fontSize * props.gridWidth,
+          },
+          color: color,
         },
-        color: color,
+      },
+      title: {
+        display: true,
+        text: editor.dashboard.charts[props.indexOfChart].chartTitle,
+      },
+      tooltip: {
+        titleFont: {
+          size: fontSize * props.gridWidth,
+        },
+        bodyFont: {
+          size: fontSize * props.gridWidth,
+        },
       },
     },
-    tooltip: {
-      titleFont: {
-        size: fontSize,
-      },
-      bodyFont: {
-        size: fontSize,
-      },
-    },
-    customCanvasBackgroundColor: {
-      color: 'lightGreen',
-    },
-  },
-}
+  }
+})
 </script>

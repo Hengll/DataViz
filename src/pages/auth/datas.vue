@@ -53,7 +53,7 @@
             ref="fileAgent"
             v-model="fileRecords"
             v-model:raw-model-value="rawFileRecords"
-            accept="application/json"
+            accept="application/json,text/csv"
             deletable
             max-size="3MB"
             :help-text="$t('fileAgent.helpText')"
@@ -89,6 +89,7 @@ import { useI18n } from 'vue-i18n'
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 import { useSnackbar } from 'vuetify-use-dialog'
+import Papa from 'papaparse'
 
 const { apiAuth } = useAxios()
 const { t } = useI18n()
@@ -169,7 +170,48 @@ const submit = handleSubmit(async (values) => {
   fileReader.readAsText(fileRecords.value[0].file)
 
   fileReader.onload = async function () {
-    const data = JSON.parse(fileReader.result)
+    let data
+    if (fileRecords.value[0].file.type === 'text/csv') {
+      data = Papa.parse(fileReader.result, { header: true, skipEmptyLines: true }).data
+    } else if (fileRecords.value[0].file.type === 'application/json') {
+      data = JSON.parse(fileReader.result)
+
+      // 檢查JSON格式
+      if (!Array.isArray(data)) {
+        createSnackbar({
+          text: t('fileReader.array'),
+          snackbarProps: {
+            color: 'red',
+          },
+        })
+        return
+      }
+      for (const item of data) {
+        if (typeof item !== 'object' || item === null || Array.isArray(item)) {
+          createSnackbar({
+            text: t('fileReader.object'),
+            snackbarProps: {
+              color: 'red',
+            },
+          })
+          return
+        }
+
+        for (const key in item) {
+          if (typeof item[key] === 'object' && item[key] !== null) {
+            createSnackbar({
+              text: t('fileReader.nested'),
+              snackbarProps: {
+                color: 'red',
+              },
+            })
+            return
+          }
+        }
+      }
+    } else {
+      return
+    }
 
     try {
       await apiAuth.post('/dataSet', {

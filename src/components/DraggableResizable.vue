@@ -17,7 +17,11 @@
       :data-x="editor.dashboard.charts[indexOfChart].chartPosX * containerWidth"
       :data-y="editor.dashboard.charts[indexOfChart].chartPosY * containerHeight"
     >
-      <component :is="chartCategory" :index-of-chart="indexOfChart"></component>
+      <component
+        :is="chartCategory"
+        :index-of-chart="indexOfChart"
+        :grid-width="containerWidth / gridSizeDivisor.x"
+      ></component>
 
       <div v-if="isHovering" class="position-absolute top-0 right-0">
         <v-btn

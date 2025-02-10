@@ -35,8 +35,16 @@ export const useEditorStore = defineStore('editor', () => {
     dashboard.value.charts.splice(index, 1)
   }
 
-  const editChart = (index, chart) => {
+  const editChartTitle = (index, chartTitle) => {
+    dashboard.value.charts[index].chartTitle = chartTitle
+  }
+
+  const createChartOption = (index, chart) => {
     dashboard.value.charts.splice(index, 1, chart)
+  }
+
+  const editChartOption = (index, key, value) => {
+    dashboard.value.charts[index].chartOption[key] = value
   }
 
   const moveChart = (index, chartPosX, chartPosY) => {
@@ -56,7 +64,9 @@ export const useEditorStore = defineStore('editor', () => {
     getDashboardWithAPI,
     newChart,
     deleteChart,
-    editChart,
+    editChartTitle,
+    createChartOption,
+    editChartOption,
     moveChart,
     resizeChart,
   }

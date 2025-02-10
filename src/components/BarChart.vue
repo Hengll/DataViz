@@ -1,9 +1,14 @@
 <template>
+  <v-progress-circular
+    v-if="progress"
+    class="progress-circular"
+    indeterminate
+  ></v-progress-circular>
   <Bar id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Bar>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -31,23 +36,7 @@ const props = defineProps({
   },
 })
 
-// 選項
-const fontSize = 1
-const backgroundColor = '#FFFFFF'
-const color = '#666666'
-const barColor = ['lightblue']
-const borderColor = 'rgba(0,0,0,0.12)'
-const paddingLeft = 0
-const paddingRight = 0
-const paddingTop = 0
-const paddingBottom = 0
-
-const style = computed(() => {
-  return {
-    backgroundColor: backgroundColor,
-    outline: '1px solid ' + borderColor,
-  }
-})
+const progress = ref(true)
 
 const data = computed(() => {
   const Variables0 = editor.dashboard.dataSet?.data.map(
@@ -69,33 +58,119 @@ const data = computed(() => {
   return data
 })
 
-const chartData = {
-  labels: Object.keys(data.value),
-  datasets: [
-    {
-      label: editor.dashboard.charts[props.indexOfChart].useVariables[1],
-      data: Object.values(data.value),
+const chartData = computed(() => {
+  return {
+    labels: Object.keys(data.value),
+    datasets: [
+      {
+        label: editor.dashboard.charts[props.indexOfChart].useVariables[1],
+        data: Object.values(data.value),
+      },
+    ],
+  }
+})
+
+if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
+  const chart = editor.dashboard.charts[props.indexOfChart]
+  chart.chartOption = {
+    typography: {
+      fontSize: 1,
+      color: '#666666',
+      backgroundColor: '#FFFFFF',
+      borderColor: 'rgba(0,0,0,0.12)',
+      padding: {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+      },
     },
-  ],
+    barChart: {
+      indexAxis: 'x',
+      barColor: ['lightblue'],
+      barBorderWidth: 0,
+      barBorderColor: 'rgba(0,0,0,0.12)',
+      barBorderRadius: {
+        topLeft: 0,
+        topRight: 0,
+        bottomLeft: 0,
+        bottomRight: 0,
+      },
+      inflateAmount: 'auto',
+    },
+    title: {
+      titleDisplay: true,
+      titlePosition: 'top',
+      titleAlign: 'center',
+      titleColor: '#666666',
+      titleFont: {
+        weight: 'bold',
+      },
+    },
+    label: {
+      labelDisplay: true,
+      labelPosition: 'top',
+      labelAlign: 'center',
+      labelMaxHeight: 0,
+      labelMaxWidth: 0,
+      labelColor: '#666666',
+    },
+  }
+  editor.createChartOption(props.indexOfChart, chart)
 }
+
+const style = computed(() => {
+  return {
+    backgroundColor:
+      editor.dashboard.charts[props.indexOfChart].chartOption.typography.backgroundColor,
+    outline:
+      '1px solid ' + editor.dashboard.charts[props.indexOfChart].chartOption.typography.borderColor,
+  }
+})
+
 const chartOptions = computed(() => {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    animation: true,
+    animation: {
+      duration: 1000,
+      onComplete: function () {
+        progress.value = false
+      },
+    },
+    devicePixelRatio: 2,
+
+    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis,
 
     layout: {
       padding: {
-        left: paddingLeft * props.gridWidth,
-        right: paddingRight * props.gridWidth,
-        top: paddingTop * props.gridWidth,
-        bottom: paddingBottom * props.gridWidth,
+        left:
+          editor.dashboard.charts[props.indexOfChart].chartOption.typography.padding.left *
+          props.gridWidth,
+        right:
+          editor.dashboard.charts[props.indexOfChart].chartOption.typography.padding.right *
+          props.gridWidth,
+        top:
+          editor.dashboard.charts[props.indexOfChart].chartOption.typography.padding.top *
+          props.gridWidth,
+        bottom:
+          editor.dashboard.charts[props.indexOfChart].chartOption.typography.padding.bottom *
+          props.gridWidth,
       },
     },
 
     elements: {
       bar: {
-        backgroundColor: barColor,
+        backgroundColor: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barColor,
+        borderWidth:
+          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderWidth *
+          props.gridWidth,
+        borderColor:
+          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderColor,
+        borderRadius:
+          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius,
+        inflateAmount:
+          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.inflateAmount,
       },
     },
 
@@ -103,43 +178,75 @@ const chartOptions = computed(() => {
       x: {
         ticks: {
           font: {
-            size: fontSize * props.gridWidth,
+            size:
+              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+              props.gridWidth,
           },
-          color: color,
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
         },
       },
       y: {
         ticks: {
           font: {
-            size: fontSize * props.gridWidth,
+            size:
+              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+              props.gridWidth,
           },
-          color: color,
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
         },
       },
     },
 
     plugins: {
       legend: {
+        display: editor.dashboard.charts[props.indexOfChart].chartOption.label.labelDisplay,
+        position: editor.dashboard.charts[props.indexOfChart].chartOption.label.labelPosition,
+        align: editor.dashboard.charts[props.indexOfChart].chartOption.label.labelAlign,
+        maxHeight:
+          editor.dashboard.charts[props.indexOfChart].chartOption.label.labelMaxHeight *
+          props.gridWidth,
+        maxWidth:
+          editor.dashboard.charts[props.indexOfChart].chartOption.label.labelMaxWidth *
+          props.gridWidth,
         labels: {
           font: {
-            size: fontSize * props.gridWidth,
+            size:
+              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+              props.gridWidth,
           },
-          color: color,
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.label.labelColor,
         },
       },
       title: {
-        display: true,
+        display: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleDisplay,
+        align: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleAlign,
+        color: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleColor,
+        position: editor.dashboard.charts[props.indexOfChart].chartOption.title.titlePosition,
+        font: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFont,
         text: editor.dashboard.charts[props.indexOfChart].chartTitle,
       },
       tooltip: {
         titleFont: {
-          size: fontSize * props.gridWidth,
+          size:
+            editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+            props.gridWidth,
         },
         bodyFont: {
-          size: fontSize * props.gridWidth,
+          size:
+            editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+            props.gridWidth,
         },
       },
     },
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.progress-circular {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>

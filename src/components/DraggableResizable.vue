@@ -106,6 +106,9 @@ const setupInteract = () => {
           elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
         }),
       ],
+      cursorChecker() {
+        return null
+      },
       listeners: {
         move(event) {
           const target = event.target

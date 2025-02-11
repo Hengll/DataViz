@@ -1,9 +1,7 @@
 <template>
-  <v-progress-circular
-    v-if="progress"
-    class="progress-circular"
-    indeterminate
-  ></v-progress-circular>
+  <div v-if="progress" class="cover">
+    <v-progress-circular class="progress-circular" indeterminate></v-progress-circular>
+  </div>
   <Bar id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Bar>
 </template>
 
@@ -77,7 +75,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       fontSize: 1,
       color: '#666666',
       backgroundColor: '#FFFFFF',
-      borderColor: 'rgba(0,0,0,0.12)',
+      borderColor: '#00000012',
       padding: {
         left: 0,
         right: 0,
@@ -86,26 +84,24 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       },
     },
     barChart: {
-      indexAxis: 'x',
-      barColor: ['lightblue'],
+      indexAxis: true,
+      barColor: ['#90D5FF'],
       barBorderWidth: 0,
-      barBorderColor: 'rgba(0,0,0,0.12)',
+      barBorderColor: '#00000012',
       barBorderRadius: {
         topLeft: 0,
         topRight: 0,
         bottomLeft: 0,
         bottomRight: 0,
       },
-      inflateAmount: 'auto',
+      inflateAmount: 0,
     },
     title: {
       titleDisplay: true,
       titlePosition: 'top',
       titleAlign: 'center',
       titleColor: '#666666',
-      titleFont: {
-        weight: 'bold',
-      },
+      titleFontWeight: 700,
     },
     label: {
       labelDisplay: true,
@@ -140,7 +136,9 @@ const chartOptions = computed(() => {
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis,
+    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis
+      ? 'x'
+      : 'y',
 
     layout: {
       padding: {
@@ -222,7 +220,9 @@ const chartOptions = computed(() => {
         align: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleAlign,
         color: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleColor,
         position: editor.dashboard.charts[props.indexOfChart].chartOption.title.titlePosition,
-        font: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFont,
+        font: {
+          weight: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontWeight,
+        },
         text: editor.dashboard.charts[props.indexOfChart].chartTitle,
       },
       tooltip: {
@@ -243,10 +243,16 @@ const chartOptions = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.progress-circular {
+.cover {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

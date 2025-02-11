@@ -5,22 +5,22 @@
       ref="element"
       :class="{ 'draggable-resizable': true, 'hover-style': isHovering }"
       :style="{
-        width: editor.dashboard.charts[indexOfChart].chartWidth * containerWidth + 'px',
-        height: editor.dashboard.charts[indexOfChart].chartHeight * containerHeight + 'px',
+        width: editor.dashboard.charts[indexOfChart].chartWidth * gridWidth + 'px',
+        height: editor.dashboard.charts[indexOfChart].chartHeight * gridWidth + 'px',
         transform:
           'translate(' +
-          editor.dashboard.charts[indexOfChart].chartPosX * containerWidth +
+          editor.dashboard.charts[indexOfChart].chartPosX * gridWidth +
           'px, ' +
-          editor.dashboard.charts[indexOfChart].chartPosY * containerHeight +
+          editor.dashboard.charts[indexOfChart].chartPosY * gridWidth +
           'px)',
       }"
-      :data-x="editor.dashboard.charts[indexOfChart].chartPosX * containerWidth"
-      :data-y="editor.dashboard.charts[indexOfChart].chartPosY * containerHeight"
+      :data-x="editor.dashboard.charts[indexOfChart].chartPosX * gridWidth"
+      :data-y="editor.dashboard.charts[indexOfChart].chartPosY * gridWidth"
     >
       <component
         :is="chartCategory"
         :index-of-chart="indexOfChart"
-        :grid-width="containerWidth / gridSizeDivisor.x"
+        :grid-width="gridWidth"
       ></component>
 
       <div v-if="isHovering" class="position-absolute top-0 right-0">
@@ -58,6 +58,14 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  gridWidth: {
+    type: Number,
+    default: 0,
+  },
+  gridHeight: {
+    type: Number,
+    default: 0,
+  },
   indexOfChart: {
     type: Number,
     default: 0,
@@ -76,11 +84,6 @@ if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
 const element = ref(null)
 let interactable = null
 
-const gridSizeDivisor = {
-  x: 96,
-  y: 54,
-}
-
 const setupInteract = () => {
   if (interactable) {
     interactable.draggable(false)
@@ -93,8 +96,8 @@ const setupInteract = () => {
         interact.modifiers.snap({
           targets: [
             interact.snappers.grid({
-              x: props.containerWidth / gridSizeDivisor.x,
-              y: props.containerHeight / gridSizeDivisor.y,
+              x: props.gridWidth,
+              y: props.gridHeight,
             }),
           ],
           range: Infinity,
@@ -118,7 +121,11 @@ const setupInteract = () => {
           target.setAttribute('data-x', x)
           target.setAttribute('data-y', y)
 
-          editor.moveChart(props.indexOfChart, x / props.containerWidth, y / props.containerHeight)
+          editor.moveChart(
+            props.indexOfChart,
+            Math.round(x / props.gridWidth),
+            Math.round(y / props.gridWidth),
+          )
         },
       },
     })
@@ -128,8 +135,8 @@ const setupInteract = () => {
         interact.modifiers.snapSize({
           targets: [
             interact.snappers.grid({
-              width: props.containerWidth / gridSizeDivisor.x,
-              height: props.containerHeight / gridSizeDivisor.y,
+              width: props.gridWidth,
+              height: props.gridHeight,
             }),
           ],
           range: Infinity,
@@ -140,8 +147,8 @@ const setupInteract = () => {
         }),
         interact.modifiers.restrictSize({
           min: {
-            width: (5 * props.containerWidth) / gridSizeDivisor.x,
-            height: (5 * props.containerHeight) / gridSizeDivisor.y,
+            width: 10 * props.gridWidth,
+            height: 10 * props.gridHeight,
           },
         }),
       ],
@@ -155,11 +162,15 @@ const setupInteract = () => {
 
           editor.resizeChart(
             props.indexOfChart,
-            event.rect.width / props.containerWidth,
-            event.rect.height / props.containerHeight,
+            Math.round(event.rect.width / props.gridWidth),
+            Math.round(event.rect.height / props.gridWidth),
           )
 
-          editor.moveChart(props.indexOfChart, x / props.containerWidth, y / props.containerHeight)
+          editor.moveChart(
+            props.indexOfChart,
+            Math.round(x / props.gridWidth),
+            Math.round(y / props.gridWidth),
+          )
         },
       },
     })

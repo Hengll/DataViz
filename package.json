@@ -15,6 +15,7 @@
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "interactjs": "^1.10.27",
+    "maska": "^3.1.0",
     "papaparse": "^5.5.2",
     "pinia-plugin-persistedstate": "^4.2.0",
     "roboto-fontface": "*",

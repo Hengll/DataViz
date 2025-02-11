@@ -80,80 +80,16 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-navigation-drawer v-model="editDrawer.isOpen" :permanent="true" location="right" width="300">
+  <v-navigation-drawer v-model="editDrawer.isOpen" :permanent="true" location="right" width="320">
     <!-- <v-color-picker></v-color-picker> -->
-    <v-list>
-      <v-list-item class="d-flex justify-end">
-        <v-btn
-          variant="text"
-          icon="mdi-close"
-          class="close-btn border"
-          @click="closeEditDrawer"
-        ></v-btn>
-      </v-list-item>
-      <v-list-item>
-        <h3 class="mb-4">{{ $t('editDrawer.customOptions') }}</h3>
-        <v-row>
-          <v-col cols="6" class="d-flex justify-end align-center py-0"
-            >{{ $t('editDrawer.chartTitle') }} :</v-col
-          >
-          <v-col cols="6" class="py-0">
-            <v-text-field density="compact"></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="8" class="d-flex justify-end align-center py-0"
-            >{{ $t('editDrawer.chartPosX') }} :</v-col
-          >
-          <v-col cols="4" class="py-0">
-            <v-text-field density="compact"></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="8" class="d-flex justify-end align-center py-0"
-            >{{ $t('editDrawer.chartPosY') }} :</v-col
-          >
-          <v-col cols="4" class="py-0">
-            <v-text-field density="compact"></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="8" class="d-flex justify-end align-center py-0"
-            >{{ $t('editDrawer.chartWidth') }} :</v-col
-          >
-          <v-col cols="4" class="py-0">
-            <v-text-field density="compact"></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="8" class="d-flex justify-end align-center py-0"
-            >{{ $t('editDrawer.chartHeight') }} :</v-col
-          >
-          <v-col cols="4" class="py-0">
-            <v-text-field density="compact"></v-text-field>
-          </v-col>
-        </v-row>
-      </v-list-item>
-      <v-list-item
-        v-for="(values, kind) in editor.dashboard.charts[editDrawer.indexOfChart]?.chartOption"
-        :key="kind"
-        class="border"
-      >
-        <h3 class="mb-2">{{ $t(`editDrawer.${kind}`) }}</h3>
-        <v-row v-for="(value, key) in values" :key="key">
-          <template v-if="!(typeof value === 'object')">
-            <v-col cols="8" class="d-flex justify-end align-center py-0"
-              >{{ $t(`editDrawer.${key}`) }} :</v-col
-            >
-            <v-col cols="4" class="py-0">
-              <v-text-field density="compact"></v-text-field>
-            </v-col>
-          </template>
-        </v-row>
-      </v-list-item>
-    </v-list>
-    <!-- 可抄 -->
     <!-- https://codepen.io/JamieCurnow/pen/KKPjraK -->
+    <EditorBar
+      v-if="editDrawer.isOpen"
+      :index-of-chart="editDrawer.indexOfChart"
+      :grid-width="areaWidth / gridSizeDivisor.x"
+      :grid-height="areaHeight / gridSizeDivisor.y"
+      @close="closeEditDrawer"
+    ></EditorBar>
   </v-navigation-drawer>
 
   <v-container fluid>
@@ -175,8 +111,10 @@
             :container-width="areaWidth"
             :container-height="areaHeight"
             :index-of-chart="index"
+            :grid-width="areaWidth / gridSizeDivisor.x"
+            :grid-height="areaHeight / gridSizeDivisor.y"
             @edit="openEditDrawer(index)"
-            @delete="editor.deleteChart(index)"
+            @delete="deleteChart(index)"
           ></DraggableResizable>
         </div>
       </v-col>
@@ -219,6 +157,7 @@ import { useSnackbar } from 'vuetify-use-dialog'
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 import DraggableResizable from '@/components/DraggableResizable.vue'
+import EditorBar from '@/components/EditorBar.vue'
 
 const editor = useEditorStore()
 const { apiAuth } = useAxios()
@@ -227,7 +166,7 @@ const createSnackbar = useSnackbar()
 
 // 右側 navbar 開關
 const editDrawer = ref({
-  indexOfChart: 0,
+  indexOfChart: null,
   isOpen: false,
 })
 const openEditDrawer = (index) => {
@@ -236,6 +175,7 @@ const openEditDrawer = (index) => {
 }
 const closeEditDrawer = () => {
   editDrawer.value.isOpen = false
+  editDrawer.value.indexOfChart = null
 }
 
 // 左側 navbar 資訊
@@ -351,8 +291,8 @@ const newChart = async (categoryValue, navIndex, menuIndex) => {
         chartTitle: value.chartTitle,
         chartPosX: 0,
         chartPosY: 0,
-        chartWidth: 0.5,
-        chartHeight: 0.5,
+        chartWidth: gridSizeDivisor.x / 2,
+        chartHeight: gridSizeDivisor.y / 2,
         useVariables: [].concat(value.useVariables),
       }
 
@@ -388,6 +328,12 @@ const saveDashboard = async () => {
   }
 }
 
+// 刪除chart
+const deleteChart = (index) => {
+  closeEditDrawer()
+  editor.deleteChart(index)
+}
+
 // 畫布尺寸
 const area = ref(null)
 const areaWidth = ref(0)
@@ -404,6 +350,12 @@ onMounted(() => {
     box: 'content-box',
   })
 })
+
+// 網格數
+const gridSizeDivisor = {
+  x: 96,
+  y: 54,
+}
 </script>
 
 <style lang="scss" scoped>
@@ -434,12 +386,6 @@ onMounted(() => {
     background: var(--sb-thumb-color);
     border-radius: 5px;
   }
-}
-
-.close-btn {
-  border-radius: 5px;
-  width: 30px;
-  height: 30px;
 }
 </style>
 

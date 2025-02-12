@@ -314,14 +314,19 @@ const saveDashboard = async () => {
   try {
     const canvas = await html2canvas(area.value, {
       allowTaint: true,
+      logging: false,
       scale: 2,
     })
 
     canvas.toBlob(async (blob) => {
-      console.log(blob)
-      editor.dashboard.image = blob
+      const file = new File([blob], 'thumbnail.png', { type: 'image/png' })
+      const fd = new FormData()
 
-      await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, editor.dashboard)
+      fd.append('image', file)
+      fd.append('_id', editor.dashboard._id)
+      fd.append('charts', JSON.stringify(editor.dashboard.charts))
+
+      await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
       await editor.getDashboardWithAPI(editor.dashboard._id)
       createSnackbar({
         text: t('editDashboard.saveSuccess'),

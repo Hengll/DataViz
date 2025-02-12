@@ -222,8 +222,12 @@ const chartOptions = computed(() => {
         position: editor.dashboard.charts[props.indexOfChart].chartOption.title.titlePosition,
         font: {
           weight: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontWeight,
+          size:
+            editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+            props.gridWidth,
         },
         text: editor.dashboard.charts[props.indexOfChart].chartTitle,
+        padding: props.gridWidth,
       },
       tooltip: {
         titleFont: {

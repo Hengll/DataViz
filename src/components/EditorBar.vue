@@ -15,7 +15,12 @@
           $t('editDrawer.chartTitle')
         }}</v-col>
         <v-col cols="6" class="py-0">
-          <v-text-field density="compact" variant="outlined"></v-text-field>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            :model-value="editor.dashboard.charts[indexOfChart].chartTitle"
+            @change="editor.editChartTitle(indexOfChart, $event.target.value)"
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row>
@@ -24,11 +29,19 @@
         }}</v-col>
         <v-col cols="6" class="py-0">
           <v-text-field
-            v-model="editor.dashboard.charts[indexOfChart].chartPosX"
-            v-maska="customOptionsMask"
+            v-maska="customOptionsPosXMask"
+            suffix="grid"
             density="compact"
             variant="outlined"
             placeholder="grid"
+            :model-value="editor.dashboard.charts[indexOfChart].chartPosX"
+            @change="
+              editor.moveChart(
+                indexOfChart,
+                $event.target.value * 1,
+                editor.dashboard.charts[indexOfChart].chartPosY,
+              )
+            "
           ></v-text-field>
         </v-col>
       </v-row>
@@ -37,7 +50,21 @@
           $t('editDrawer.chartPosY')
         }}</v-col>
         <v-col cols="6" class="py-0">
-          <v-text-field density="compact" variant="outlined" placeholder="grid"></v-text-field>
+          <v-text-field
+            v-maska="customOptionsPosYMask"
+            density="compact"
+            variant="outlined"
+            placeholder="grid"
+            suffix="grid"
+            :model-value="editor.dashboard.charts[indexOfChart].chartPosY"
+            @change="
+              editor.moveChart(
+                indexOfChart,
+                editor.dashboard.charts[indexOfChart].chartPosX,
+                $event.target.value * 1,
+              )
+            "
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row>
@@ -45,7 +72,21 @@
           $t('editDrawer.chartWidth')
         }}</v-col>
         <v-col cols="6" class="py-0">
-          <v-text-field density="compact" variant="outlined" placeholder="grid"></v-text-field>
+          <v-text-field
+            v-maska="customOptionsWidthMask"
+            density="compact"
+            variant="outlined"
+            placeholder="grid"
+            suffix="grid"
+            :model-value="editor.dashboard.charts[indexOfChart].chartWidth"
+            @change="
+              editor.resizeChart(
+                indexOfChart,
+                $event.target.value * 1,
+                editor.dashboard.charts[indexOfChart].chartHeight,
+              )
+            "
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row>
@@ -53,7 +94,21 @@
           $t('editDrawer.chartHeight')
         }}</v-col>
         <v-col cols="6" class="py-0">
-          <v-text-field density="compact" variant="outlined" placeholder="grid"></v-text-field>
+          <v-text-field
+            v-maska="customOptionsHeightMask"
+            density="compact"
+            variant="outlined"
+            placeholder="grid"
+            suffix="grid"
+            :model-value="editor.dashboard.charts[indexOfChart].chartHeight"
+            @change="
+              editor.resizeChart(
+                indexOfChart,
+                editor.dashboard.charts[indexOfChart].chartWidth,
+                $event.target.value * 1,
+              )
+            "
+          ></v-text-field>
         </v-col>
       </v-row>
     </v-list-item>
@@ -78,6 +133,7 @@
               density="compact"
               variant="outlined"
               placeholder="grid"
+              suffix="grid"
             ></v-text-field>
             <!-- 如果是顏色 -->
             <v-text-field
@@ -182,13 +238,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useEditorStore } from '@/stores/editor'
 import { vMaska } from 'maska/vue'
 
 const editor = useEditorStore()
 
-defineProps({
+const props = defineProps({
   indexOfChart: {
     type: Number,
     default: 0,
@@ -201,10 +257,84 @@ defineProps({
     type: Number,
     default: 0,
   },
+  gridSizeDivisorX: {
+    type: Number,
+    default: 0,
+  },
+  gridSizeDivisorY: {
+    type: Number,
+    default: 0,
+  },
 })
 defineEmits(['close'])
 
-const customOptionsMask = () => {}
+const customOptionsPosXMask = computed(() => {
+  return {
+    mask: '##',
+    eager: true,
+    preProcess: (val) => {
+      const num = parseInt(val, 10)
+
+      if (isNaN(num)) return 0
+      if (num > props.gridSizeDivisorX - editor.dashboard.charts[props.indexOfChart].chartWidth)
+        return props.gridSizeDivisorX - editor.dashboard.charts[props.indexOfChart].chartWidth
+      if (num < 0) return 0
+
+      return num
+    },
+  }
+})
+
+const customOptionsPosYMask = computed(() => {
+  return {
+    mask: '##',
+    eager: true,
+    preProcess: (val) => {
+      const num = parseInt(val, 10)
+
+      if (isNaN(num)) return 0
+      if (num > props.gridSizeDivisorY - editor.dashboard.charts[props.indexOfChart].chartHeight)
+        return props.gridSizeDivisorY - editor.dashboard.charts[props.indexOfChart].chartHeight
+      if (num < 0) return 0
+
+      return num
+    },
+  }
+})
+
+const customOptionsWidthMask = computed(() => {
+  return {
+    mask: '##',
+    eager: true,
+    preProcess: (val) => {
+      const num = parseInt(val, 10)
+
+      if (isNaN(num)) return 0
+      if (num > props.gridSizeDivisorX - editor.dashboard.charts[props.indexOfChart].chartPosX)
+        return props.gridSizeDivisorX - editor.dashboard.charts[props.indexOfChart].chartPosX
+      if (num < 0) return 0
+
+      return num
+    },
+  }
+})
+
+const customOptionsHeightMask = computed(() => {
+  return {
+    mask: '##',
+    eager: true,
+    preProcess: (val) => {
+      const num = parseInt(val, 10)
+
+      if (isNaN(num)) return 0
+      if (num > props.gridSizeDivisorY - editor.dashboard.charts[props.indexOfChart].chartPosY)
+        return props.gridSizeDivisorY - editor.dashboard.charts[props.indexOfChart].chartPosY
+      if (num < 0) return 0
+
+      return num
+    },
+  }
+})
 
 const positionItems = ['top', 'left', 'bottom', 'right']
 const alignItems = ['start', 'center', 'end']

@@ -88,6 +88,8 @@
       :index-of-chart="editDrawer.indexOfChart"
       :grid-width="areaWidth / gridSizeDivisor.x"
       :grid-height="areaHeight / gridSizeDivisor.y"
+      :grid-size-divisor-x="gridSizeDivisor.x"
+      :grid-size-divisor-y="gridSizeDivisor.y"
       @close="closeEditDrawer"
     ></EditorBar>
   </v-navigation-drawer>
@@ -158,6 +160,7 @@ import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 import DraggableResizable from '@/components/DraggableResizable.vue'
 import EditorBar from '@/components/EditorBar.vue'
+import html2canvas from 'html2canvas'
 
 const editor = useEditorStore()
 const { apiAuth } = useAxios()
@@ -309,13 +312,23 @@ const newChart = async (categoryValue, navIndex, menuIndex) => {
 // 保存dashboard
 const saveDashboard = async () => {
   try {
-    await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, editor.dashboard)
-    await editor.getDashboardWithAPI(editor.dashboard._id)
-    createSnackbar({
-      text: t('editDashboard.saveSuccess'),
-      snackbarProps: {
-        color: 'green',
-      },
+    const canvas = await html2canvas(area.value, {
+      allowTaint: true,
+      scale: 2,
+    })
+
+    canvas.toBlob(async (blob) => {
+      console.log(blob)
+      editor.dashboard.image = blob
+
+      await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, editor.dashboard)
+      await editor.getDashboardWithAPI(editor.dashboard._id)
+      createSnackbar({
+        text: t('editDashboard.saveSuccess'),
+        snackbarProps: {
+          color: 'green',
+        },
+      })
     })
   } catch (err) {
     console.log(err)

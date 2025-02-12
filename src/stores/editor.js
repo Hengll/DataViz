@@ -53,8 +53,8 @@ export const useEditorStore = defineStore('editor', () => {
   }
 
   const resizeChart = (index, chartWidth, chartHeight) => {
-    dashboard.value.charts[index].chartWidth = chartWidth
-    dashboard.value.charts[index].chartHeight = chartHeight
+    dashboard.value.charts[index].chartWidth = chartWidth > 10 ? chartWidth : 10
+    dashboard.value.charts[index].chartHeight = chartHeight > 10 ? chartHeight : 10
   }
 
   return {

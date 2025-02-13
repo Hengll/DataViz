@@ -84,7 +84,7 @@
     <!-- <v-color-picker></v-color-picker> -->
     <!-- https://codepen.io/JamieCurnow/pen/KKPjraK -->
     <EditorBar
-      v-if="editDrawer.isOpen"
+      v-if="editDrawer.isOpen && editor.dashboard.charts"
       :index-of-chart="editDrawer.indexOfChart"
       :grid-width="areaWidth / gridSizeDivisor.x"
       :grid-height="areaHeight / gridSizeDivisor.y"
@@ -103,7 +103,9 @@
         <v-btn @click="openDialog">{{ $t('editDashboard.edit') }}</v-btn>
       </v-col>
       <v-col cols="2" class="ms-auto d-flex justify-end">
-        <v-btn @click="saveDashboard">{{ $t('editDashboard.save') }}</v-btn>
+        <v-btn :loading="editor.saveLoading" @click="saveDashboard">{{
+          $t('editDashboard.save')
+        }}</v-btn>
       </v-col>
       <v-col cols="12">
         <div id="area" ref="area">
@@ -138,6 +140,11 @@
             :error-messages="dashboardInfo.errorMessage.value"
             :label="$t('editDashboard.dashboardInfo')"
           ></v-textarea>
+          <v-switch
+            v-model="dashboardPublic.value.value"
+            color="primary"
+            :label="$t('editDashboard.public')"
+          ></v-switch>
         </v-card-text>
         <v-card-actions>
           <v-btn class="border" @click="closeDialog">{{ $t('editDashboard.cancel') }}</v-btn>
@@ -213,6 +220,7 @@ const dialog = ref(false)
 const openDialog = () => {
   dashboardName.value.value = editor.dashboard.dashboardName
   dashboardInfo.value.value = editor.dashboard.dashboardInfo
+  dashboardPublic.value.value = editor.dashboard.public
   dialog.value = true
 }
 const closeDialog = () => {
@@ -224,6 +232,7 @@ const closeDialog = () => {
 const schema = yup.object({
   dashboardName: yup.string().required(t('api.dashboardNameRequired')),
   dashboardInfo: yup.string(),
+  public: yup.boolean(),
 })
 
 const { handleSubmit, isSubmitting, resetForm } = useForm({
@@ -231,13 +240,17 @@ const { handleSubmit, isSubmitting, resetForm } = useForm({
 })
 const dashboardName = useField('dashboardName')
 const dashboardInfo = useField('dashboardInfo')
+const dashboardPublic = useField('public')
 
 const submit = handleSubmit(async (values) => {
   try {
-    await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, {
-      dashboardName: values.dashboardName,
-      dashboardInfo: values.dashboardInfo,
-    })
+    const fd = new FormData()
+
+    fd.append('dashboardName', values.dashboardName)
+    fd.append('dashboardInfo', values.dashboardInfo)
+    fd.append('public', values.public)
+
+    await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
     await editor.getDashboardWithAPI(editor.dashboard._id)
     createSnackbar({
       text: t('editDashboard.saveSuccess'),
@@ -311,11 +324,12 @@ const newChart = async (categoryValue, navIndex, menuIndex) => {
 
 // 保存dashboard
 const saveDashboard = async () => {
+  editor.saveLoading = true
   try {
     const canvas = await html2canvas(area.value, {
       allowTaint: true,
       logging: false,
-      scale: 2,
+      scale: 1,
     })
 
     canvas.toBlob(async (blob) => {
@@ -323,17 +337,16 @@ const saveDashboard = async () => {
       const fd = new FormData()
 
       fd.append('image', file)
-      fd.append('_id', editor.dashboard._id)
       fd.append('charts', JSON.stringify(editor.dashboard.charts))
 
       await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
-      await editor.getDashboardWithAPI(editor.dashboard._id)
       createSnackbar({
         text: t('editDashboard.saveSuccess'),
         snackbarProps: {
           color: 'green',
         },
       })
+      editor.saveLoading = false
     })
   } catch (err) {
     console.log(err)
@@ -343,6 +356,7 @@ const saveDashboard = async () => {
         color: 'red',
       },
     })
+    editor.saveLoading = false
   }
 }
 
@@ -374,6 +388,10 @@ const gridSizeDivisor = {
   x: 96,
   y: 54,
 }
+
+defineExpose({
+  area,
+})
 </script>
 
 <style lang="scss" scoped>

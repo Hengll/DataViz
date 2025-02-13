@@ -35,6 +35,7 @@ const props = defineProps({
 })
 
 const progress = ref(true)
+editor.saveLoading = true
 
 const data = computed(() => {
   const Variables0 = editor.dashboard.dataSet?.data.map(
@@ -69,8 +70,7 @@ const chartData = computed(() => {
 })
 
 if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
-  const chart = editor.dashboard.charts[props.indexOfChart]
-  chart.chartOption = {
+  const chartOption = {
     typography: {
       fontSize: 1,
       color: '#666666',
@@ -84,7 +84,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       },
     },
     barChart: {
-      indexAxis: true,
+      indexAxis: 'x',
       barColor: ['#90D5FF'],
       barBorderWidth: 0,
       barBorderColor: '#00000012',
@@ -112,7 +112,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       labelColor: '#666666',
     },
   }
-  editor.createChartOption(props.indexOfChart, chart)
+  editor.createChartOption(props.indexOfChart, chartOption)
 }
 
 const style = computed(() => {
@@ -132,14 +132,12 @@ const chartOptions = computed(() => {
       duration: 1000,
       onComplete: function () {
         progress.value = false
+        editor.saveLoading = false
       },
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis
-      ? 'x'
-      : 'y',
-
+    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis,
     layout: {
       padding: {
         left:

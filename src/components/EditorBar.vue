@@ -113,7 +113,7 @@
       </v-row>
     </v-list-item>
     <v-list-item
-      v-for="(options, type) in editor.dashboard.charts[indexOfChart]?.chartOption"
+      v-for="(options, type) in editor.dashboard.charts[indexOfChart].chartOption"
       :key="type"
       class="border"
     >
@@ -126,14 +126,24 @@
           }}</v-col>
           <v-col cols="6" class="py-0">
             <!-- 如果是布林值 -->
-            <v-switch v-if="typeof optionValue === 'boolean'" hide-details></v-switch>
+            <v-switch
+              v-if="typeof optionValue === 'boolean'"
+              v-model="options[optionKey]"
+              color="primary"
+              :label="`${options[optionKey]}`"
+              hide-details
+            ></v-switch>
             <!-- 如果是數字 -->
             <v-text-field
               v-else-if="typeof optionValue === 'number'"
+              :model-value="options[optionKey]"
               density="compact"
               variant="outlined"
               placeholder="grid"
               suffix="grid"
+              @change="
+                editor.editChartOption(indexOfChart, type, optionKey, $event.target.value * 1)
+              "
             ></v-text-field>
             <!-- 如果是顏色 -->
             <v-text-field
@@ -153,6 +163,15 @@
               </template>
             </v-text-field>
             <!-- 如果是文字不是顏色 -->
+            <v-switch
+              v-else-if="optionKey === 'indexAxis'"
+              v-model="options[optionKey]"
+              color="primary"
+              :label="`${options[optionKey]}-axis`"
+              true-value="x"
+              false-value="y"
+              hide-details
+            ></v-switch>
             <v-select
               v-else-if="positionItems.includes(optionValue)"
               variant="outlined"

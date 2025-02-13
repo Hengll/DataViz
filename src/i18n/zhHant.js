@@ -89,6 +89,7 @@ export default {
     edit: '編輯儀錶板資訊',
     dashboardName: '儀錶板名稱',
     dashboardInfo: '儀錶板資訊',
+    public: '公開',
     cancel: '取消',
     save: '保存修改',
     saveSuccess: '保存成功',

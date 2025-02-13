@@ -7,6 +7,7 @@ export const useEditorStore = defineStore('editor', () => {
   const { apiAuth } = useAxios()
 
   const drawer = ref(true)
+  const saveLoading = ref(false)
 
   const dashboard = ref({})
 
@@ -27,6 +28,10 @@ export const useEditorStore = defineStore('editor', () => {
     }
   }
 
+  const clearDashboard = () => {
+    dashboard.value = {}
+  }
+
   const newChart = (chart) => {
     dashboard.value.charts.push(chart)
   }
@@ -39,12 +44,12 @@ export const useEditorStore = defineStore('editor', () => {
     dashboard.value.charts[index].chartTitle = chartTitle
   }
 
-  const createChartOption = (index, chart) => {
-    dashboard.value.charts.splice(index, 1, chart)
+  const createChartOption = (index, chartOption) => {
+    dashboard.value.charts[index].chartOption = chartOption
   }
 
-  const editChartOption = (index, key, value) => {
-    dashboard.value.charts[index].chartOption[key] = value
+  const editChartOption = (index, type, key, value) => {
+    dashboard.value.charts[index].chartOption[type][key] = value
   }
 
   const moveChart = (index, chartPosX, chartPosY) => {
@@ -59,9 +64,11 @@ export const useEditorStore = defineStore('editor', () => {
 
   return {
     drawer,
+    saveLoading,
     dashboard,
     dataVariables,
     getDashboardWithAPI,
+    clearDashboard,
     newChart,
     deleteChart,
     editChartTitle,

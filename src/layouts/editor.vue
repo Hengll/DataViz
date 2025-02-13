@@ -16,23 +16,30 @@
       <v-btn class="pa-1 h-25 me-1 border" :to="'/editor/preview/' + $route.params.id">{{
         $t('nav.previewDashboard')
       }}</v-btn>
-      <v-btn class="pa-1 h-25 border ms-auto bg-primary" @click="saveAndBack">{{
-        $t('nav.saveAndBack')
-      }}</v-btn>
+      <v-btn
+        class="pa-1 h-25 border ms-auto bg-primary"
+        :loading="editor.saveLoading"
+        @click="saveAndBack"
+        >{{ $t('nav.saveAndBack') }}</v-btn
+      >
     </v-container>
   </v-app-bar>
-  <v-main>
-    <router-view></router-view>
+  <v-main ref="captureArea">
+    <router-view v-slot="{ Component }">
+      <component :is="Component" ref="childComponent"></component>
+    </router-view>
   </v-main>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useEditorStore } from '@/stores/editor'
 import { useDisplay } from 'vuetify'
 import { useRouter } from 'vue-router'
 import { useAxios } from '@/composables/axios'
 import { useSnackbar } from 'vuetify-use-dialog'
 import { useI18n } from 'vue-i18n'
+import html2canvas from 'html2canvas'
 
 const editor = useEditorStore()
 const { mobile } = useDisplay()
@@ -41,12 +48,47 @@ const { apiAuth } = useAxios()
 const createSnackbar = useSnackbar()
 const { t } = useI18n()
 
+const childComponent = ref(null)
+const area = ref(null)
+
+onMounted(() => {
+  area.value = childComponent.value.area
+})
+
 editor.drawer = !mobile.value
 
 const saveAndBack = async () => {
   try {
-    await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, editor.dashboard)
-    router.push('/auth')
+    editor.saveLoading = true
+    if (area.value) {
+      const canvas = await html2canvas(area.value, {
+        allowTaint: true,
+        logging: false,
+        scale: 1,
+      })
+
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], 'thumbnail.png', { type: 'image/png' })
+        const fd = new FormData()
+
+        fd.append('image', file)
+        fd.append('charts', JSON.stringify(editor.dashboard.charts))
+
+        await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
+        editor.saveLoading = false
+        editor.clearDashboard()
+        router.push('/auth')
+      })
+    } else {
+      const fd = new FormData()
+
+      fd.append('charts', JSON.stringify(editor.dashboard.charts))
+
+      await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
+      editor.saveLoading = false
+      editor.clearDashboard()
+      router.push('/auth')
+    }
   } catch (err) {
     console.log(err)
     createSnackbar({
@@ -55,6 +97,7 @@ const saveAndBack = async () => {
         color: 'red',
       },
     })
+    editor.saveLoading = false
   }
 }
 </script>

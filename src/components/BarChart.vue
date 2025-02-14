@@ -73,8 +73,8 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
   const chartOption = {
     typography: {
       fontSize: 1,
-      color: '#666666',
-      backgroundColor: '#FFFFFF',
+      color: '#666666FF',
+      backgroundColor: '#FFFFFFFF',
       borderColor: '#00000012',
       padding: {
         left: 0,
@@ -83,9 +83,17 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
         bottom: 0,
       },
     },
+    title: {
+      titleDisplay: true,
+      titleFontSize: 1,
+      titlePosition: 'top',
+      titleAlign: 'center',
+      titleColor: '#666666FF',
+      titleFontWeight: 700,
+    },
     barChart: {
       indexAxis: 'x',
-      barColor: ['#90D5FF'],
+      barColor: ['#90D5FFFF'],
       barBorderWidth: 0,
       barBorderColor: '#00000012',
       barBorderRadius: {
@@ -96,20 +104,16 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       },
       inflateAmount: 0,
     },
-    title: {
-      titleDisplay: true,
-      titlePosition: 'top',
-      titleAlign: 'center',
-      titleColor: '#666666',
-      titleFontWeight: 700,
-    },
+
     label: {
       labelDisplay: true,
       labelPosition: 'top',
       labelAlign: 'center',
+      labelBoxWidth: 2,
+      labelBoxHeight: 1,
       labelMaxHeight: 0,
       labelMaxWidth: 0,
-      labelColor: '#666666',
+      labelColor: '#666666FF',
     },
   }
   editor.createChartOption(props.indexOfChart, chartOption)
@@ -205,6 +209,12 @@ const chartOptions = computed(() => {
           editor.dashboard.charts[props.indexOfChart].chartOption.label.labelMaxWidth *
           props.gridWidth,
         labels: {
+          boxWidth:
+            editor.dashboard.charts[props.indexOfChart].chartOption.label.labelBoxWidth *
+            props.gridWidth,
+          boxHeight:
+            editor.dashboard.charts[props.indexOfChart].chartOption.label.labelBoxHeight *
+            props.gridWidth,
           font: {
             size:
               editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
@@ -221,7 +231,7 @@ const chartOptions = computed(() => {
         font: {
           weight: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontWeight,
           size:
-            editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+            editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontSize *
             props.gridWidth,
         },
         text: editor.dashboard.charts[props.indexOfChart].chartTitle,

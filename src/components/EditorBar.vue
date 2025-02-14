@@ -9,12 +9,12 @@
       ></v-btn>
     </v-list-item>
     <v-list-item>
-      <h3 class="mb-4">{{ $t('editDrawer.customOptions') }}</h3>
+      <h3 class="mb-6">{{ $t('editDrawer.customOptions') }}</h3>
       <v-row>
-        <v-col cols="6" class="d-flex justify-start align-center py-0">{{
+        <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
           $t('editDrawer.chartTitle')
         }}</v-col>
-        <v-col cols="6" class="py-0">
+        <v-col cols="7" class="py-0">
           <v-text-field
             density="compact"
             variant="outlined"
@@ -24,10 +24,10 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="6" class="d-flex justify-start align-center py-0">{{
+        <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
           $t('editDrawer.chartPosX')
         }}</v-col>
-        <v-col cols="6" class="py-0">
+        <v-col cols="7" class="py-0">
           <v-text-field
             v-maska="customOptionsPosXMask"
             suffix="grid"
@@ -46,10 +46,10 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="6" class="d-flex justify-start align-center py-0">{{
+        <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
           $t('editDrawer.chartPosY')
         }}</v-col>
-        <v-col cols="6" class="py-0">
+        <v-col cols="7" class="py-0">
           <v-text-field
             v-maska="customOptionsPosYMask"
             density="compact"
@@ -68,11 +68,12 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="6" class="d-flex justify-start align-center py-0">{{
+        <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
           $t('editDrawer.chartWidth')
         }}</v-col>
-        <v-col cols="6" class="py-0">
+        <v-col cols="7" class="py-0">
           <v-text-field
+            :key="editKey"
             v-maska="customOptionsWidthMask"
             density="compact"
             variant="outlined"
@@ -80,7 +81,7 @@
             suffix="grid"
             :model-value="editor.dashboard.charts[indexOfChart].chartWidth"
             @change="
-              editor.resizeChart(
+              changeSize(
                 indexOfChart,
                 $event.target.value * 1,
                 editor.dashboard.charts[indexOfChart].chartHeight,
@@ -90,11 +91,12 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="6" class="d-flex justify-start align-center py-0">{{
+        <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
           $t('editDrawer.chartHeight')
         }}</v-col>
-        <v-col cols="6" class="py-0">
+        <v-col cols="7" class="py-0">
           <v-text-field
+            :key="editKey"
             v-maska="customOptionsHeightMask"
             density="compact"
             variant="outlined"
@@ -102,7 +104,7 @@
             suffix="grid"
             :model-value="editor.dashboard.charts[indexOfChart].chartHeight"
             @change="
-              editor.resizeChart(
+              changeSize(
                 indexOfChart,
                 editor.dashboard.charts[indexOfChart].chartWidth,
                 $event.target.value * 1,
@@ -117,14 +119,14 @@
       :key="type"
       class="border"
     >
-      <h3 class="mb-2">{{ $t(`editDrawer.${type}`) }}</h3>
+      <h3 class="mb-6 mt-3">{{ $t(`editDrawer.${type}`) }}</h3>
       <v-row v-for="(optionValue, optionKey) in options" :key="optionKey">
         <!-- 不是物件或陣列 -->
         <template v-if="!(typeof optionValue === 'object')">
-          <v-col cols="6" class="d-flex justify-start align-center py-0">{{
+          <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
             $t(`editDrawer.${optionKey}`)
           }}</v-col>
-          <v-col cols="6" class="py-0">
+          <v-col cols="7" class="py-0">
             <!-- 如果是布林值 -->
             <v-switch
               v-if="typeof optionValue === 'boolean'"
@@ -136,29 +138,45 @@
             <!-- 如果是數字 -->
             <v-text-field
               v-else-if="typeof optionValue === 'number'"
+              v-maska="numberMask"
               :model-value="options[optionKey]"
               density="compact"
               variant="outlined"
               placeholder="grid"
               suffix="grid"
-              @change="
-                editor.editChartOption(indexOfChart, type, optionKey, $event.target.value * 1)
-              "
+              @change="changeNumber(indexOfChart, type, optionKey, $event.target.value * 1)"
+              @wheel.prevent="wheelNumber(indexOfChart, type, optionKey, $event)"
             ></v-text-field>
             <!-- 如果是顏色 -->
             <v-text-field
               v-else-if="optionValue[0] === '#'"
+              :key="editKey"
+              v-maska="colorMask"
+              :model-value="options[optionKey]"
               class="pa-0 ma-0"
               variant="outlined"
               density="compact"
-              placeholder="#000000"
+              placeholder="#00000000"
+              @change="changeColor(indexOfChart, type, optionKey, $event.target.value)"
             >
               <template #append-inner>
                 <v-menu :close-on-content-click="false">
                   <template #activator="{ props: prop }">
-                    <div :style="swatchStyle" v-bind="prop"></div>
+                    <div
+                      :style="{
+                        backgroundColor: options[optionKey],
+                        cursor: 'pointer',
+                        height: '1.5rem',
+                        width: '1.5rem',
+                      }"
+                      v-bind="prop"
+                    ></div>
                   </template>
-                  <v-color-picker flat :modes="['rgba', 'hsla', 'hexa']"></v-color-picker>
+                  <v-color-picker
+                    v-model="options[optionKey]"
+                    flat
+                    :modes="['rgba', 'hsla', 'hexa']"
+                  ></v-color-picker>
                 </v-menu>
               </template>
             </v-text-field>
@@ -174,6 +192,7 @@
             ></v-switch>
             <v-select
               v-else-if="positionItems.includes(optionValue)"
+              v-model="options[optionKey]"
               variant="outlined"
               density="compact"
               :items="positionItems"
@@ -181,6 +200,7 @@
             </v-select>
             <v-select
               v-else-if="alignItems.includes(optionValue)"
+              v-model="options[optionKey]"
               variant="outlined"
               density="compact"
               :items="alignItems"
@@ -190,10 +210,10 @@
         </template>
         <!-- 是物件或陣列 -->
         <template v-else>
-          <v-col cols="6" class="d-flex justify-start align-center py-0">{{
+          <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
             $t(`editDrawer.${optionKey}`)
           }}</v-col>
-          <v-col cols="6" class="py-0 d-flex">
+          <v-col cols="7" class="py-0 d-flex">
             <!-- 如果是陣列(顏色) -->
             <v-text-field
               v-if="Array.isArray(optionValue)"
@@ -205,7 +225,7 @@
               <template #append-inner>
                 <v-menu :close-on-content-click="false">
                   <template #activator="{ props: prop }">
-                    <div :style="swatchStyle" v-bind="prop"></div>
+                    <div v-bind="prop"></div>
                   </template>
                   <v-card>
                     <v-color-picker flat :modes="['rgba', 'hsla', 'hexa']"></v-color-picker>
@@ -257,7 +277,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useEditorStore } from '@/stores/editor'
 import { vMaska } from 'maska/vue'
 
@@ -355,20 +375,74 @@ const customOptionsHeightMask = computed(() => {
   }
 })
 
+const numberMask = computed(() => {
+  return {
+    mask: 'XDX',
+    eager: true,
+    tokens: {
+      X: {
+        pattern: /[0-9]/,
+        multiple: true,
+      },
+      D: {
+        pattern: /[.]/,
+      },
+    },
+  }
+})
+
+const colorMask = computed(() => {
+  return {
+    mask: '!#HHHHHHHH',
+    eager: true,
+    tokens: {
+      H: {
+        pattern: /[0-9a-fA-F]/,
+      },
+    },
+    preProcess: (val) => {
+      if (val === '') return '#'
+
+      return val
+    },
+  }
+})
+
+// 渲染參數
+const editKey = ref(0)
+
+const changeSize = (index, chartWidth, chartHeight) => {
+  editor.resizeChart(index, chartWidth > 10 ? chartWidth : 10, chartHeight > 10 ? chartHeight : 10)
+  editKey.value++
+}
+
+const changeNumber = (index, type, key, value) => {
+  if (value < 0) editor.editChartOption(index, type, key, 0)
+  else if (value > 1000) editor.editChartOption(index, type, key, 1000)
+  else editor.editChartOption(index, type, key, value)
+  editKey.value++
+}
+
+const changeColor = (index, type, key, value) => {
+  if (value.length === 7 || value.length === 9) {
+    editor.editChartOption(index, type, key, value)
+  }
+  editKey.value++
+}
+
 const positionItems = ['top', 'left', 'bottom', 'right']
 const alignItems = ['start', 'center', 'end']
 
-// 檢色器樣式
-const swatchStyle = computed(() => {
-  return {
-    backgroundColor: '#000000',
-    cursor: 'pointer',
-    height: '1.5rem',
-    width: '1.5rem',
-    // borderRadius: menu ? '50%' : '4px',
-    transition: 'border-radius 200ms ease-in-out',
+// 滾輪條數值
+const wheelNumber = (index, type, key, event) => {
+  if (event.target.__vueParentComponent.props.focused) {
+    if (event.deltaY < 0) {
+      editor.dashboard.charts[index].chartOption[type][key]++
+    } else if (event.deltaY > 0 && editor.dashboard.charts[index].chartOption[type][key] !== 0) {
+      editor.dashboard.charts[index].chartOption[type][key]--
+    }
   }
-})
+}
 </script>
 
 <style lang="scss" scoped>

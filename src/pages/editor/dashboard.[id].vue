@@ -80,9 +80,7 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-navigation-drawer v-model="editDrawer.isOpen" :permanent="true" location="right" width="320">
-    <!-- <v-color-picker></v-color-picker> -->
-    <!-- https://codepen.io/JamieCurnow/pen/KKPjraK -->
+  <v-navigation-drawer v-model="editDrawer.isOpen" :permanent="true" location="right" width="300">
     <EditorBar
       v-if="editDrawer.isOpen && editor.dashboard.charts"
       :index-of-chart="editDrawer.indexOfChart"

@@ -145,7 +145,6 @@
               placeholder="grid"
               suffix="grid"
               @change="changeNumber(indexOfChart, type, optionKey, $event.target.value * 1)"
-              @wheel.prevent="wheelNumber(indexOfChart, type, optionKey, $event)"
             ></v-text-field>
             <!-- 如果是顏色 -->
             <v-text-field
@@ -432,17 +431,6 @@ const changeColor = (index, type, key, value) => {
 
 const positionItems = ['top', 'left', 'bottom', 'right']
 const alignItems = ['start', 'center', 'end']
-
-// 滾輪條數值
-const wheelNumber = (index, type, key, event) => {
-  if (event.target.__vueParentComponent.props.focused) {
-    if (event.deltaY < 0) {
-      editor.dashboard.charts[index].chartOption[type][key]++
-    } else if (event.deltaY > 0 && editor.dashboard.charts[index].chartOption[type][key] !== 0) {
-      editor.dashboard.charts[index].chartOption[type][key]--
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>

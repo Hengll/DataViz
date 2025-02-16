@@ -52,6 +52,9 @@ export const useEditorStore = defineStore('editor', () => {
     dashboard.value.charts[index].chartOption[type][key] = value
   }
 
+  const editChartSubOption = (index, type, key, subkey, value) => {
+    dashboard.value.charts[index].chartOption[type][key][subkey] = value
+  }
   const moveChart = (index, chartPosX, chartPosY) => {
     dashboard.value.charts[index].chartPosX = chartPosX
     dashboard.value.charts[index].chartPosY = chartPosY
@@ -73,6 +76,7 @@ export const useEditorStore = defineStore('editor', () => {
     deleteChart,
     editChartTitle,
     createChartOption,
+    editChartSubOption,
     editChartOption,
     moveChart,
     resizeChart,

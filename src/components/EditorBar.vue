@@ -207,40 +207,18 @@
             </v-select>
           </v-col>
         </template>
-        <!-- 是物件或陣列 -->
+        <!-- 是物件 -->
         <template v-else>
           <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
             $t(`editDrawer.${optionKey}`)
           }}</v-col>
           <v-col cols="7" class="py-0 d-flex">
-            <!-- 如果是陣列(顏色) -->
             <v-text-field
-              v-if="Array.isArray(optionValue)"
-              class="pa-0 ma-0"
-              variant="outlined"
               density="compact"
-              placeholder="#000000"
+              variant="outlined"
+              :model-value="isAllSame(optionValue) ? Object.values(optionValue)[0] : 'mixed'"
+              @change="changeInnerAllNumber(indexOfChart, type, optionKey, $event.target.value * 1)"
             >
-              <template #append-inner>
-                <v-menu :close-on-content-click="false">
-                  <template #activator="{ props: prop }">
-                    <div v-bind="prop"></div>
-                  </template>
-                  <v-card>
-                    <v-color-picker flat :modes="['rgba', 'hsla', 'hexa']"></v-color-picker>
-                    <v-card-actions>
-                      <div class="d-flex ms-auto">
-                        <v-btn class="border" variant="text" @click="console.log('新增顏色')"
-                          >append color</v-btn
-                        >
-                      </div>
-                    </v-card-actions>
-                  </v-card>
-                </v-menu>
-              </template>
-            </v-text-field>
-            <!-- 如果是物件 -->
-            <v-text-field v-else density="compact" variant="outlined">
               <template #append-inner>
                 <v-menu :close-on-content-click="false">
                   <template #activator="{ props: prop }">
@@ -257,11 +235,22 @@
                     <v-card-text class="d-flex">
                       <v-text-field
                         v-for="(subValue, subOptionKey) in optionValue"
-                        :key="subOptionKey"
+                        :key="subValue"
+                        v-maska="numberMask"
+                        :model-value="subValue"
                         variant="outlined"
                         class="mx-1"
                         :label="$t(`editDrawer.${subOptionKey}`)"
                         density="compact"
+                        @change="
+                          changeInnerNumber(
+                            indexOfChart,
+                            type,
+                            optionKey,
+                            subOptionKey,
+                            $event.target.value * 1,
+                          )
+                        "
                       ></v-text-field>
                     </v-card-text>
                   </v-card>
@@ -429,8 +418,38 @@ const changeColor = (index, type, key, value) => {
   editKey.value++
 }
 
+const changeInnerNumber = (index, type, key, subkey, value) => {
+  if (value < 0) editor.editChartSubOption(index, type, key, subkey, 0)
+  else if (value > 1000) editor.editChartSubOption(index, type, key, subkey, 1000)
+  else editor.editChartSubOption(index, type, key, subkey, value)
+  editKey.value++
+}
+
+const changeInnerAllNumber = (index, type, key, value) => {
+  const keys = Object.keys(editor.dashboard.charts[props.indexOfChart].chartOption[type][key])
+
+  if (value < 0) {
+    for (let i = 0; i < keys.length; i++) {
+      editor.editChartSubOption(index, type, key, keys[i], 0)
+    }
+  } else if (value > 1000) {
+    for (let i = 0; i < keys.length; i++) {
+      editor.editChartSubOption(index, type, key, keys[i], 1000)
+    }
+  } else {
+    for (let i = 0; i < keys.length; i++) {
+      editor.editChartSubOption(index, type, key, keys[i], value)
+    }
+  }
+  editKey.value++
+}
+
 const positionItems = ['top', 'left', 'bottom', 'right']
 const alignItems = ['start', 'center', 'end']
+
+const isAllSame = (obj) => {
+  return new Set(Object.values(obj)).size === 1
+}
 </script>
 
 <style lang="scss" scoped>

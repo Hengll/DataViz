@@ -93,7 +93,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
     },
     barChart: {
       indexAxis: 'x',
-      barColor: ['#90D5FFFF'],
+      barColor: '#90D5FFFF',
       barBorderWidth: 0,
       barBorderColor: '#00000012',
       barBorderRadius: {
@@ -167,8 +167,20 @@ const chartOptions = computed(() => {
           props.gridWidth,
         borderColor:
           editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderColor,
-        borderRadius:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius,
+        borderRadius: {
+          topLeft:
+            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
+              .topLeft,
+          topRight:
+            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
+              .topRight,
+          bottomLeft:
+            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
+              .bottomLeft,
+          bottomRight:
+            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
+              .bottomRight,
+        },
         inflateAmount:
           editor.dashboard.charts[props.indexOfChart].chartOption.barChart.inflateAmount,
       },

@@ -38,10 +38,10 @@ const progress = ref(true)
 editor.saveLoading = true
 
 const data = computed(() => {
-  const Variables0 = editor.dashboard.dataSet?.data.map(
+  const Variables0 = editor.filterData.map(
     (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[0]],
   )
-  const Variables1 = editor.dashboard.dataSet?.data.map(
+  const Variables1 = editor.filterData.map(
     (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[1]],
   )
   const data = {}
@@ -269,9 +269,6 @@ const chartOptions = computed(() => {
 <style lang="scss" scoped>
 .cover {
   position: absolute;
-  // top: 50%;
-  // left: 50%;
-  // transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
   backdrop-filter: blur(2px);

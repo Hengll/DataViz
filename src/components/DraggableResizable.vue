@@ -46,6 +46,7 @@ import { ref, watch, onMounted, markRaw } from 'vue'
 import interact from 'interactjs'
 import { useEditorStore } from '@/stores/editor'
 import BarChart from './BarChart.vue'
+import CategoryFilter from './CategoryFilter.vue'
 
 const editor = useEditorStore()
 
@@ -77,6 +78,8 @@ defineEmits(['edit', 'delete'])
 const chartCategory = ref(null)
 if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
   chartCategory.value = markRaw(BarChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'categoryFilter') {
+  chartCategory.value = markRaw(CategoryFilter)
 } else {
   console.log('err')
 }

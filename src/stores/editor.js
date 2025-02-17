@@ -19,6 +19,26 @@ export const useEditorStore = defineStore('editor', () => {
     }
   })
 
+  const filterRule = ref({
+    categoryFilter: {},
+    rangeFilter: {},
+  })
+
+  const filterData = computed(() => {
+    if (dashboard.value.dataSet) {
+      return dashboard.value.dataSet.data.filter((item) => {
+        for (const key in filterRule.value.categoryFilter) {
+          if (!filterRule.value.categoryFilter[key].includes(item[key])) {
+            return false
+          }
+        }
+        return true
+      })
+    } else {
+      return {}
+    }
+  })
+
   const getDashboardWithAPI = async (id) => {
     try {
       const { data } = await apiAuth.get(`/dashboard/${id}`)
@@ -70,6 +90,8 @@ export const useEditorStore = defineStore('editor', () => {
     saveLoading,
     dashboard,
     dataVariables,
+    filterRule,
+    filterData,
     getDashboardWithAPI,
     clearDashboard,
     newChart,

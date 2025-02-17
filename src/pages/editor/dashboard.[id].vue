@@ -27,6 +27,7 @@
               class="user-select-none"
               :title="$t('editDashboard.' + menu.text)"
               v-bind="props"
+              @click="resetFormNewChart"
             ></v-list-item>
           </template>
 
@@ -36,7 +37,10 @@
           >
             <v-card min-width="300">
               <v-list>
-                <v-list-item :title="$t('editDashboard.' + menu.text)"></v-list-item>
+                <v-list-item
+                  :title="$t('editDashboard.' + menu.text)"
+                  :prepend-icon="menu.icon"
+                ></v-list-item>
               </v-list>
               <v-divider></v-divider>
               <v-list>
@@ -47,19 +51,11 @@
                     :error-messages="chartTitle.errorMessage.value"
                   ></v-text-field>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item v-for="i in menu.useVarsNum" :key="i">
                   <v-select
-                    v-model="useVariables.value.value[0]"
+                    v-model="useVariables.value.value[i - 1]"
                     :items="editor.dataVariables"
-                    :label="$t('editDashboard.variables1')"
-                    :error-messages="useVariables.errorMessage.value"
-                  ></v-select>
-                </v-list-item>
-                <v-list-item>
-                  <v-select
-                    v-model="useVariables.value.value[1]"
-                    :items="editor.dataVariables"
-                    :label="$t('editDashboard.variables2')"
+                    :label="$t(`editDashboard.variables${i}`)"
                     :error-messages="useVariables.errorMessage.value"
                   ></v-select>
                 </v-list-item>
@@ -195,21 +191,150 @@ const navs = ref([
         isOpen: false,
         text: 'barChart',
         icon: 'mdi-chart-bar',
+        useVarsNum: 2,
+      },
+      {
+        isOpen: false,
+        text: 'histogram',
+        icon: 'mdi-chart-histogram',
+        useVarsNum: 2,
       },
       {
         isOpen: false,
         text: 'lineChart',
         icon: 'mdi-chart-line',
+        useVarsNum: 2,
+      },
+      {
+        isOpen: false,
+        text: 'areaChart',
+        icon: 'mdi-chart-areaspline-variant',
+        useVarsNum: 2,
+      },
+      {
+        isOpen: false,
+        text: 'scatterChart',
+        icon: 'mdi-chart-scatter-plot',
+        useVarsNum: 2,
+      },
+      {
+        isOpen: false,
+        text: 'bubbleChart',
+        icon: 'mdi-chart-bubble',
+        useVarsNum: 3,
+      },
+      {
+        isOpen: false,
+        text: 'pieChart',
+        icon: 'mdi-chart-pie',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'donutChart',
+        icon: 'mdi-chart-donut',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'polarAreaChart',
+        icon: 'mdi-chart-donut-variant',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'radarChart',
+        icon: 'mdi-radar',
+        useVarsNum: 2,
       },
     ],
   },
   {
     text: 'statistics',
-    menus: [],
+    menus: [
+      {
+        isOpen: false,
+        text: 'mean',
+        icon: '',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'median',
+        icon: '',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'mode',
+        icon: '',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'range',
+        icon: '',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'IQR',
+        icon: '',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'variance',
+        icon: '',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'standardDeviation',
+        icon: '',
+        useVarsNum: 1,
+      },
+    ],
   },
   {
     text: 'dataFilter',
-    menus: [],
+    menus: [
+      {
+        isOpen: false,
+        text: 'categoryFilter',
+        icon: 'mdi-filter-settings',
+        useVarsNum: 1,
+      },
+      {
+        isOpen: false,
+        text: 'rangeFilter',
+        icon: 'mdi-filter',
+        useVarsNum: 1,
+      },
+    ],
+  },
+  {
+    text: 'textBox',
+    menus: [
+      {
+        isOpen: false,
+        text: 'rectangle',
+        icon: 'mdi-rectangle',
+        useVarsNum: 0,
+      },
+      {
+        isOpen: false,
+        text: 'circle',
+        icon: 'mdi-circle',
+        useVarsNum: 0,
+      },
+      {
+        isOpen: false,
+        text: 'triangle',
+        icon: 'mdi-triangle',
+        useVarsNum: 0,
+      },
+    ],
   },
 ])
 
@@ -273,7 +398,33 @@ const schemaNewChart = yup.object({
   category: yup
     .string()
     .required(t('api.chartCategoryRequired'))
-    .oneOf(['barChart', 'lineChart'], t('api.chartCategoryInvalid')),
+    .oneOf(
+      [
+        'barChart',
+        'histogram',
+        'lineChart',
+        'areaChart',
+        'scatterChart',
+        'bubbleChart',
+        'pieChart',
+        'donutChart',
+        'polarAreaChart',
+        'radarChart',
+        'mean',
+        'median',
+        'mode',
+        'range',
+        'IQR',
+        'variance',
+        'standardDeviation',
+        'categoryFilter',
+        'rangeFilter',
+        'rectangle',
+        'circle',
+        'triangle',
+      ],
+      t('api.chartCategoryInvalid'),
+    ),
   chartTitle: yup.string(),
   useVariables: yup.array().of(yup.string().notOneOf([''], t('api.useVariablesRequired'))),
 })
@@ -285,7 +436,7 @@ const {
 } = useForm({
   validationSchema: schemaNewChart,
   initialValues: {
-    useVariables: ['', ''],
+    useVariables: ['', '', ''],
   },
 })
 
@@ -295,6 +446,15 @@ const useVariables = useField('useVariables')
 
 const newChart = async (categoryValue, navIndex, menuIndex) => {
   category.value.value = categoryValue
+
+  for (
+    let i = navs.value[navIndex].menus[menuIndex].useVarsNum;
+    i < useVariables.value.value.length;
+    i++
+  ) {
+    useVariables.value.value[i] = 'notUse'
+  }
+
   if (!chartTitle.value.value) {
     chartTitle.value.value = categoryValue
   }

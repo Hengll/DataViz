@@ -374,7 +374,10 @@ const submit = handleSubmit(async (values) => {
     fd.append('public', values.public)
 
     await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
-    await editor.getDashboardWithAPI(editor.dashboard._id)
+    editor.dashboard.dashboardName = values.dashboardName
+    editor.dashboard.dashboardInfo = values.dashboardInfo
+    editor.dashboard.public = values.public
+
     createSnackbar({
       text: t('editDashboard.saveSuccess'),
       snackbarProps: {

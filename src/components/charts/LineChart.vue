@@ -2,24 +2,25 @@
   <div v-if="progress" class="cover">
     <v-progress-circular class="progress-circular" indeterminate></v-progress-circular>
   </div>
-  <Bar id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Bar>
+  <Line id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Line>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Bar } from 'vue-chartjs'
+import { Line } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  LineElement,
+  PointElement,
   CategoryScale,
   LinearScale,
 } from 'chart.js'
 import { useEditorStore } from '@/stores/editor'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale)
 
 const editor = useEditorStore()
 
@@ -91,22 +92,17 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       titleColor: '#666666FF',
       titleFontWeight: 700,
     },
-    barChart: {
+    lineChart: {
       indexAxis: 'x',
-      barColor: '#90D5FFFF',
-      barBorderWidth: 0,
-      barBorderColor: '#00000012',
-      barBorderRadius: {
-        topLeft: 0,
-        topRight: 0,
-        bottomLeft: 0,
-        bottomRight: 0,
-      },
-      inflateAmount: 0,
+      lineWidth: 0.2,
+      lineColor: '#00000012',
+      pointRadius: 0.3,
+      pointColor: '#90D5FFFF',
     },
 
     label: {
       labelDisplay: true,
+      scalesXDisplay: true,
       labelPosition: 'top',
       labelAlign: 'center',
       labelBoxWidth: 2,
@@ -141,7 +137,7 @@ const chartOptions = computed(() => {
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis,
+    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis,
     layout: {
       padding: {
         left:
@@ -160,34 +156,29 @@ const chartOptions = computed(() => {
     },
 
     elements: {
-      bar: {
-        backgroundColor: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barColor,
+      line: {
+        backgroundColor:
+          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
         borderWidth:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderWidth *
+          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineWidth *
           props.gridWidth,
-        borderColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderColor,
-        borderRadius: {
-          topLeft:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .topLeft,
-          topRight:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .topRight,
-          bottomLeft:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .bottomLeft,
-          bottomRight:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .bottomRight,
-        },
-        inflateAmount:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.inflateAmount,
+        borderColor: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineColor,
+      },
+      point: {
+        backgroundColor:
+          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
+        radius:
+          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointRadius *
+          props.gridWidth,
       },
     },
 
     scales: {
       x: {
+        title: {
+          display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesXDisplay,
+          text: editor.dashboard.charts[props.indexOfChart].useVariables[0],
+        },
         ticks: {
           font: {
             size:

@@ -45,8 +45,11 @@
 import { ref, watch, onMounted, markRaw } from 'vue'
 import interact from 'interactjs'
 import { useEditorStore } from '@/stores/editor'
-import BarChart from './BarChart.vue'
-import CategoryFilter from './CategoryFilter.vue'
+import BarChart from './charts/BarChart.vue'
+import Histogram from './charts/Histogram.vue'
+import LineChart from './charts/LineChart.vue'
+import CategoryFilter from './charts/CategoryFilter.vue'
+import RangeFilter from './charts/RangeFilter.vue'
 
 const editor = useEditorStore()
 
@@ -78,8 +81,14 @@ defineEmits(['edit', 'delete'])
 const chartCategory = ref(null)
 if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
   chartCategory.value = markRaw(BarChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'histogram') {
+  chartCategory.value = markRaw(Histogram)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'lineChart') {
+  chartCategory.value = markRaw(LineChart)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'categoryFilter') {
   chartCategory.value = markRaw(CategoryFilter)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'rangeFilter') {
+  chartCategory.value = markRaw(RangeFilter)
 } else {
   console.log('err')
 }

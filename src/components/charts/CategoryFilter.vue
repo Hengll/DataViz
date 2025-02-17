@@ -1,32 +1,27 @@
 <template>
   <div class="content" :style="style">
-    <div :style="titleStyle" class="title d-flex justify-center align-center">
+    <div :style="titleStyle" class="title justify-center align-center">
       {{ editor.dashboard.charts[indexOfChart].chartTitle }}
     </div>
     <div class="body">
       <v-row>
-        <v-col cols="12">
-          <v-checkbox v-model="selectAll" density="compact" :style="bodyStyle">
-            <template #label>
-              <span :style="bodyStyle">{{ $t('editDashboard.all') }}</span>
-            </template>
-          </v-checkbox>
-          <v-checkbox
-            v-for="item in items"
-            :key="item"
+        <v-col cols="12" class="my-0 pb-0">
+          <input id="checkboxAll" v-model="selectAll" type="checkbox" :style="bodyStyle" />
+          <label for="checkboxAll" :style="bodyStyle">{{ $t('editDashboard.all') }}</label>
+        </v-col>
+        <v-col v-for="(item, index) in items" :key="index" class="my-0 py-0" cols="12">
+          <input
+            :id="`${item}-${index}`"
             v-model="
               editor.filterRule.categoryFilter[
                 editor.dashboard.charts[props.indexOfChart].useVariables[0]
               ]
             "
-            density="compact"
+            type="checkbox"
             :value="item"
             :style="bodyStyle"
-          >
-            <template #label>
-              <span :style="bodyStyle">{{ item }}</span>
-            </template>
-          </v-checkbox>
+          />
+          <label :for="`${item}-${index}`" :style="bodyStyle">{{ item }}</label>
         </v-col>
       </v-row>
     </div>
@@ -121,7 +116,7 @@ const titleStyle = computed(() => {
         props.gridWidth +
       +'px',
     display: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleDisplay
-      ? 'block'
+      ? 'flex'
       : 'none',
     fontSize:
       editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontSize *
@@ -146,9 +141,12 @@ const titleStyle = computed(() => {
 
 const bodyStyle = computed(() => {
   return {
+    width:
+      editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+        props.gridWidth +
+      'px',
     height:
       editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-        1.5 *
         props.gridWidth +
       'px',
     fontSize:

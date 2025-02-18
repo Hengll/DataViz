@@ -4,20 +4,52 @@
       <v-col cols="12" class="d-flex justify-center align-center">
         <v-col cols="6">
           <v-text-field
-            :model-value="search"
+            v-model="search"
             variant="outlined"
             density="compact"
             append-inner-icon="mdi-magnify"
             :placeholder="$t('explore.titleOrAuthor')"
-            @click:append-inner="onSearch($event.target.value)"
+            @click:append-inner="
+              $router.push({ path: '/explore', query: { search: search || undefined } })
+            "
+            @keydown.enter="
+              $router.push({ path: '/explore', query: { search: search || undefined } })
+            "
           ></v-text-field>
         </v-col>
       </v-col>
       <v-col cols="12" class="d-flex justify-end mb-0 pb-0">
-        <v-btn-toggle v-model="toggle" divided>
-          <v-btn class="h-75" @click="sortBy = 'view'">{{ $t('explore.popular') }}</v-btn>
-          <v-btn class="h-75" @click="sortBy = 'createAt'">{{ $t('explore.new') }}</v-btn>
-          <v-btn class="h-75" @click="sortBy = 'like'">{{ $t('explore.good') }}</v-btn>
+        <v-btn-toggle :model-value="toggle" divided>
+          <v-btn
+            class="h-75"
+            @click="
+              $router.push({
+                path: '/explore',
+                query: { sort: 'view', search: $route.query.search || undefined },
+              })
+            "
+            >{{ $t('explore.popular') }}</v-btn
+          >
+          <v-btn
+            class="h-75"
+            @click="
+              $router.push({
+                path: '/explore',
+                query: { sort: 'createAt', search: $route.query.search || undefined },
+              })
+            "
+            >{{ $t('explore.new') }}</v-btn
+          >
+          <v-btn
+            class="h-75"
+            @click="
+              $router.push({
+                path: '/explore',
+                query: { sort: 'like', search: $route.query.search || undefined },
+              })
+            "
+            >{{ $t('explore.good') }}</v-btn
+          >
         </v-btn-toggle>
       </v-col>
       <v-col cols="12">
@@ -33,33 +65,56 @@
         </v-row>
       </v-col>
       <v-col cols="12">
-        <v-pagination v-model="currentPage" :length="totalPage"></v-pagination>
+        <v-pagination
+          v-model="currentPage"
+          :length="totalPage"
+          @click="
+            $router.push({
+              path: '/explore',
+              query: {
+                page: currentPage,
+                sort: $route.query.sort || undefined,
+                search: $route.query.search || undefined,
+              },
+            })
+          "
+        ></v-pagination>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAxios } from '@/composables/axios'
+import { useRoute } from 'vue-router'
 import DashboardCard from '@/components/DashboardCard.vue'
 
 const { api } = useAxios()
+const route = useRoute()
 
-const toggle = ref(0)
 const isLoading = ref(true)
+
+const search = ref('')
+const toggle = computed(() => {
+  if (route.query.sort === 'createAt') {
+    return 1
+  } else if (route.query.sort === 'like') {
+    return 2
+  } else {
+    return 0
+  }
+})
 
 const dashboards = ref([])
 const totalPage = ref(1)
+const currentPage = ref(route.query.page * 1 || 1)
 const perPage = 12
-const currentPage = ref(1)
-const sortBy = ref('view')
-const search = ref('')
 
 const getDashboards = async () => {
   try {
     const { data } = await api.get(
-      `/dashboard/public?page=${currentPage.value}&limit=${perPage}&sort=${sortBy.value}&search=${search.value}`,
+      `/dashboard/public?page=${route.query.page || 1}&limit=${perPage}&sort=${route.query.sort || 'view'}&search=${route.query.search || ''}`,
     )
     dashboards.value = data.result
     totalPage.value = Math.ceil(data.numsOfData / perPage)
@@ -68,19 +123,6 @@ const getDashboards = async () => {
   }
 }
 getDashboards()
-
-const onSearch = async (value) => {
-  try {
-    search.value = value
-    await getDashboards()
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-watch([currentPage, sortBy], () => {
-  getDashboards()
-})
 
 onMounted(() => {
   isLoading.value = false

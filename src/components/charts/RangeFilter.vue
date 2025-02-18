@@ -35,8 +35,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useEditorStore } from '@/stores/editor'
-
-const editor = useEditorStore()
+import { usePublicStore } from '@/stores/public'
 
 const props = defineProps({
   indexOfChart: {
@@ -47,7 +46,18 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  readOnly: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+let editor
+if (props.readOnly) {
+  editor = usePublicStore()
+} else {
+  editor = useEditorStore()
+}
 
 const items = computed(() => {
   const variable = editor.dashboard.charts[props.indexOfChart].useVariables[0]

@@ -21,16 +21,19 @@
         :is="chartCategory"
         :index-of-chart="indexOfChart"
         :grid-width="gridWidth"
+        :read-only="readOnly"
       ></component>
 
       <div v-if="isHovering" class="position-absolute top-0 right-0">
         <v-btn
+          v-if="!readOnly"
           class="border radius-10 me-1 mt-1 btn-size pb-1"
           variant="text"
           icon="mdi-pencil"
           @click="$emit('edit')"
         ></v-btn>
         <v-btn
+          v-if="!readOnly"
           class="border radius-10 me-1 mt-1 btn-size"
           variant="text"
           icon="mdi-close"
@@ -45,13 +48,12 @@
 import { ref, watch, onMounted, markRaw } from 'vue'
 import interact from 'interactjs'
 import { useEditorStore } from '@/stores/editor'
+import { usePublicStore } from '@/stores/public'
 import BarChart from './charts/BarChart.vue'
 import Histogram from './charts/Histogram.vue'
 import LineChart from './charts/LineChart.vue'
 import CategoryFilter from './charts/CategoryFilter.vue'
 import RangeFilter from './charts/RangeFilter.vue'
-
-const editor = useEditorStore()
 
 const props = defineProps({
   containerWidth: {
@@ -74,9 +76,20 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  readOnly: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 defineEmits(['edit', 'delete'])
+
+let editor
+if (props.readOnly) {
+  editor = usePublicStore()
+} else {
+  editor = useEditorStore()
+}
 
 const chartCategory = ref(null)
 if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
@@ -188,10 +201,16 @@ const setupInteract = () => {
     })
 }
 
-onMounted(setupInteract)
+onMounted(() => {
+  if (!props.readOnly) {
+    setupInteract()
+  }
+})
 
 watch([() => props.containerWidth, () => props.containerHeight], () => {
-  setupInteract()
+  if (!props.readOnly) {
+    setupInteract()
+  }
 })
 </script>
 

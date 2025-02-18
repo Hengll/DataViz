@@ -111,6 +111,7 @@
             :index-of-chart="index"
             :grid-width="areaWidth / gridSizeDivisor.x"
             :grid-height="areaHeight / gridSizeDivisor.y"
+            :read-only="false"
             @edit="openEditDrawer(index)"
             @delete="deleteChart(index)"
           ></DraggableResizable>

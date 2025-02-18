@@ -37,6 +37,14 @@ export default {
     password: '密碼',
     passwordConfirm: '確認密碼',
   },
+  explore: {
+    popular: '最熱門',
+    new: '最新',
+    good: '最多讚',
+    author: '作者',
+    details: '詳細資訊',
+    updatedAt: '最後更新',
+  },
   auth: {
     myDashboards: '我的儀錶板',
     myDataSets: '我的資料集',

@@ -7,6 +7,7 @@ export const useUserStore = defineStore(
   'user',
   () => {
     const token = ref('')
+    const id = ref('')
     const account = ref('')
     const userName = ref('')
     const userInfo = ref('')
@@ -25,6 +26,7 @@ export const useUserStore = defineStore(
       if (data.token) {
         token.value = data.token
       }
+      id.value = data.id
       account.value = data.account
       userName.value = data.userName
       userInfo.value = data.userInfo
@@ -34,6 +36,7 @@ export const useUserStore = defineStore(
 
     const logout = () => {
       token.value = ''
+      id.value = ''
       account.value = ''
       userName.value = ''
       userInfo.value = ''
@@ -41,7 +44,19 @@ export const useUserStore = defineStore(
       role.value = UserRole.USER
     }
 
-    return { token, account, userName, userInfo, avatar, role, isLoggedIn, isAdmin, login, logout }
+    return {
+      token,
+      id,
+      account,
+      userName,
+      userInfo,
+      avatar,
+      role,
+      isLoggedIn,
+      isAdmin,
+      login,
+      logout,
+    }
   },
   {
     persist: {

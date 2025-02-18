@@ -24,8 +24,12 @@
       </v-col>
       <v-col cols="4">
         <v-card-actions class="d-flex flex-column">
-          <v-btn class="border" @click="$emit('edit')">{{ $t('dashboard.edit') }}</v-btn>
-          <v-btn class="border" @click="$emit('delete')">{{ $t('dashboard.delete') }}</v-btn>
+          <v-btn v-if="!readOnly" class="border" @click="$emit('edit')">{{
+            $t('dashboard.edit')
+          }}</v-btn>
+          <v-btn v-if="!readOnly" class="border" @click="$emit('delete')">{{
+            $t('dashboard.delete')
+          }}</v-btn>
         </v-card-actions>
       </v-col>
     </v-row>
@@ -59,6 +63,10 @@ defineProps({
   image: {
     type: String,
     default: '',
+  },
+  readOnly: {
+    type: Boolean,
+    default: false,
   },
 })
 

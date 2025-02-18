@@ -14,8 +14,11 @@
             :key="dashboard._id"
             class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
           >
+            <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
             <dashboard-card
+              v-else
               v-bind="dashboard"
+              :read-only="false"
               @edit="$router.push(`/editor/dashboard/${dashboard._id}`)"
               @delete="openConfirmDialog(dashboard._id)"
             ></dashboard-card>
@@ -43,7 +46,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAxios } from '@/composables/axios'
 import DashboardCard from '@/components/DashboardCard.vue'
 import { useI18n } from 'vue-i18n'
@@ -55,6 +58,7 @@ const { t } = useI18n()
 const createSnackbar = useSnackbar()
 const router = useRouter()
 
+const isLoading = ref(true)
 const dashboards = ref([])
 const confirmDialog = ref({
   isOpen: false,
@@ -116,6 +120,10 @@ const createDashboard = async () => {
     })
   }
 }
+
+onMounted(() => {
+  isLoading.value = false
+})
 </script>
 
 <style lang="scss" scoped>

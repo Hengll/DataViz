@@ -5,7 +5,6 @@ export default {
   nav: {
     home: '首頁',
     explore: '探索與推薦',
-    tutorial: '教學',
     about: '關於我們',
     settings: '設定',
     login: '登入',
@@ -41,6 +40,7 @@ export default {
     popular: '最熱門',
     new: '最新',
     good: '最多讚',
+    titleOrAuthor: '標題或作者',
     author: '作者',
     details: '詳細資訊',
     updatedAt: '最後更新',

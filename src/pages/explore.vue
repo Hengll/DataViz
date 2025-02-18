@@ -4,17 +4,20 @@
       <v-col cols="12" class="d-flex justify-center align-center">
         <v-col cols="6">
           <v-text-field
+            :model-value="search"
             variant="outlined"
             density="compact"
             append-inner-icon="mdi-magnify"
+            :placeholder="$t('explore.titleOrAuthor')"
+            @click:append-inner="onSearch($event.target.value)"
           ></v-text-field>
         </v-col>
       </v-col>
       <v-col cols="12" class="d-flex justify-end mb-0 pb-0">
         <v-btn-toggle v-model="toggle" divided>
-          <v-btn class="h-75">{{ $t('explore.popular') }}</v-btn>
-          <v-btn class="h-75">{{ $t('explore.new') }}</v-btn>
-          <v-btn class="h-75">{{ $t('explore.good') }}</v-btn>
+          <v-btn class="h-75" @click="sortBy = 'view'">{{ $t('explore.popular') }}</v-btn>
+          <v-btn class="h-75" @click="sortBy = 'createAt'">{{ $t('explore.new') }}</v-btn>
+          <v-btn class="h-75" @click="sortBy = 'like'">{{ $t('explore.good') }}</v-btn>
         </v-btn-toggle>
       </v-col>
       <v-col cols="12">
@@ -30,14 +33,14 @@
         </v-row>
       </v-col>
       <v-col cols="12">
-        <v-pagination :length="4"></v-pagination>
+        <v-pagination v-model="currentPage" :length="totalPage"></v-pagination>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useAxios } from '@/composables/axios'
 import DashboardCard from '@/components/DashboardCard.vue'
 
@@ -47,16 +50,37 @@ const toggle = ref(0)
 const isLoading = ref(true)
 
 const dashboards = ref([])
+const totalPage = ref(1)
+const perPage = 12
+const currentPage = ref(1)
+const sortBy = ref('view')
+const search = ref('')
 
 const getDashboards = async () => {
   try {
-    const { data } = await api.get('/dashboard/public')
+    const { data } = await api.get(
+      `/dashboard/public?page=${currentPage.value}&limit=${perPage}&sort=${sortBy.value}&search=${search.value}`,
+    )
     dashboards.value = data.result
+    totalPage.value = Math.ceil(data.numsOfData / perPage)
   } catch (err) {
     console.log(err)
   }
 }
 getDashboards()
+
+const onSearch = async (value) => {
+  try {
+    search.value = value
+    await getDashboards()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+watch([currentPage, sortBy], () => {
+  getDashboards()
+})
 
 onMounted(() => {
   isLoading.value = false

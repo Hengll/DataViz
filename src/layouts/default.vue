@@ -5,7 +5,6 @@
       <div>
         <v-btn to="/">{{ $t('nav.home') }}</v-btn>
         <v-btn to="/explore">{{ $t('nav.explore') }}</v-btn>
-        <v-btn to="/tutorial">{{ $t('nav.tutorial') }}</v-btn>
         <v-btn to="/about">{{ $t('nav.about') }}</v-btn>
         <v-btn>{{ $t('nav.settings') }}</v-btn>
       </div>

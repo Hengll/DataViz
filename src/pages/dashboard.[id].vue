@@ -61,7 +61,7 @@ import { useUserStore } from '@/stores/user'
 import { usePublicStore } from '@/stores/public'
 import DraggableResizable from '@/components/DraggableResizable.vue'
 
-const { apiAuth } = useAxios()
+const { api, apiAuth } = useAxios()
 const route = useRoute()
 const router = useRouter()
 const theme = useTheme()
@@ -71,6 +71,7 @@ const dashboard = usePublicStore()
 const getDashboard = async () => {
   try {
     await dashboard.getDashboardWithAPI(route.params.id)
+    await api.patch(`/dashboard/view/${route.params.id}`)
     document.title = dashboard.dashboard.dashboardName + ' | DataViz'
   } catch (err) {
     console.log(err)

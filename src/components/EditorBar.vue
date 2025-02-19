@@ -207,6 +207,59 @@
             </v-select>
           </v-col>
         </template>
+        <!-- 是陣列 -->
+        <template v-else-if="Array.isArray(optionValue)">
+          <p>陣列喔</p>
+          <!-- <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
+            $t(`editDrawer.${optionKey}`)
+          }}</v-col>
+          <v-col cols="7" class="py-0 d-flex">
+            <v-text-field
+              density="compact"
+              variant="outlined"
+              :model-value="isAllSame(optionValue) ? Object.values(optionValue)[0] : 'mixed'"
+
+            >
+              <template #append-inner>
+                <v-menu :close-on-content-click="false">
+                  <template #activator="{ props: prop }">
+                    <v-btn
+                      icon="mdi-arrow-expand-all"
+                      variant="text"
+                      v-bind="prop"
+                      class="expend-btn border"
+                    >
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>{{ $t(`editDrawer.${optionKey}`) }}</v-card-title>
+                    <v-card-text class="d-flex">
+                      <v-text-field
+                        v-for="(subValue, subOptionKey) in optionValue"
+                        :key="subValue"
+                        v-maska="numberMask"
+                        :model-value="subValue"
+                        variant="outlined"
+                        class="mx-1"
+                        :label="$t(`editDrawer.${subOptionKey}`)"
+                        density="compact"
+                        @change="
+                          changeInnerNumber(
+                            indexOfChart,
+                            type,
+                            optionKey,
+                            subOptionKey,
+                            $event.target.value * 1,
+                          )
+                        "
+                      ></v-text-field>
+                    </v-card-text>
+                  </v-card>
+                </v-menu>
+              </template>
+            </v-text-field>
+          </v-col> -->
+        </template>
         <!-- 是物件 -->
         <template v-else>
           <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{

@@ -2,12 +2,12 @@
   <div v-if="progress" class="cover">
     <v-progress-circular class="progress-circular" indeterminate></v-progress-circular>
   </div>
-  <Line id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Line>
+  <Bubble id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Bubble>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Line } from 'vue-chartjs'
+import { Bubble } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   Title,
@@ -55,26 +55,28 @@ const data = computed(() => {
   const Variables1 = editor.filterData.map(
     (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[1]],
   )
-  const data = {}
+  const Variables2 = editor.filterData.map(
+    (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[2]],
+  )
 
-  for (let i = 0; i < Variables0.length; i++) {
-    if (!data[Variables0[i]]) {
-      data[Variables0[i]] = Variables1[i] * 1
-    } else {
-      data[Variables0[i]] += Variables1[i] * 1
-    }
+  if (editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.indexAxis === 'x') {
+    return [Variables0, Variables1, Variables2]
+  } else {
+    return [Variables1, Variables0, Variables2]
   }
-
-  return data
 })
 
 const chartData = computed(() => {
   return {
-    labels: Object.keys(data.value),
+    labels: data.value[0],
     datasets: [
       {
         label: editor.dashboard.charts[props.indexOfChart].useVariables[1],
-        data: Object.values(data.value),
+        data: data.value[0].map((label, index) => ({
+          x: label,
+          y: data.value[1][index],
+          r: data.value[2][index],
+        })),
       },
     ],
   }
@@ -102,18 +104,15 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       titleColor: '#666666FF',
       titleFontWeight: 700,
     },
-    lineChart: {
+    bubbleChart: {
       indexAxis: 'x',
-      lineWidth: 0.2,
-      lineColor: '#00000012',
-      pointRadius: 0.3,
       pointColor: '#90D5FFFF',
     },
 
     label: {
-      labelDisplay: true,
+      labelDisplay: false,
       scalesXDisplay: true,
-      scalesYDisplay: false,
+      scalesYDisplay: true,
       labelPosition: 'top',
       labelAlign: 'center',
       labelBoxWidth: 2,
@@ -148,7 +147,7 @@ const chartOptions = computed(() => {
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis,
+    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.indexAxis,
     layout: {
       padding: {
         left:
@@ -169,18 +168,11 @@ const chartOptions = computed(() => {
     elements: {
       line: {
         backgroundColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
-        borderWidth:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineWidth *
-          props.gridWidth,
-        borderColor: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineColor,
+          editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.pointColor,
       },
       point: {
         backgroundColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
-        radius:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointRadius *
-          props.gridWidth,
+          editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.pointColor,
       },
     },
 
@@ -189,7 +181,7 @@ const chartOptions = computed(() => {
         title: {
           display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesXDisplay,
           text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis === 'x'
+            editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
               : editor.dashboard.charts[props.indexOfChart].useVariables[1],
         },
@@ -206,7 +198,7 @@ const chartOptions = computed(() => {
         title: {
           display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesYDisplay,
           text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis === 'x'
+            editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
               : editor.dashboard.charts[props.indexOfChart].useVariables[0],
         },
@@ -271,6 +263,22 @@ const chartOptions = computed(() => {
           size:
             editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
             props.gridWidth,
+        },
+        callbacks: {
+          title: () => {
+            return ''
+          },
+          label: (tooltipItem) => {
+            return `${
+              editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.indexAxis === 'x'
+                ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
+                : editor.dashboard.charts[props.indexOfChart].useVariables[1]
+            } : ${tooltipItem.raw.x} ${
+              editor.dashboard.charts[props.indexOfChart].chartOption.bubbleChart.indexAxis === 'x'
+                ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
+                : editor.dashboard.charts[props.indexOfChart].useVariables[0]
+            } : ${tooltipItem.raw.y} ${editor.dashboard.charts[props.indexOfChart].useVariables[2]} : ${tooltipItem.raw.r}`
+          },
         },
       },
     },

@@ -118,6 +118,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
     label: {
       labelDisplay: true,
       scalesXDisplay: true,
+      scalesYDisplay: false,
       labelPosition: 'top',
       labelAlign: 'center',
       labelBoxWidth: 2,
@@ -201,7 +202,10 @@ const chartOptions = computed(() => {
       x: {
         title: {
           display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesXDisplay,
-          text: editor.dashboard.charts[props.indexOfChart].useVariables[0],
+          text:
+            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis === 'x'
+              ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
+              : editor.dashboard.charts[props.indexOfChart].useVariables[1],
         },
         ticks: {
           font: {
@@ -213,6 +217,13 @@ const chartOptions = computed(() => {
         },
       },
       y: {
+        title: {
+          display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesYDisplay,
+          text:
+            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis === 'x'
+              ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
+              : editor.dashboard.charts[props.indexOfChart].useVariables[0],
+        },
         ticks: {
           font: {
             size:

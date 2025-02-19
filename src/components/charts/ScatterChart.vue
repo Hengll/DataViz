@@ -2,12 +2,12 @@
   <div v-if="progress" class="cover">
     <v-progress-circular class="progress-circular" indeterminate></v-progress-circular>
   </div>
-  <Line id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Line>
+  <Scatter id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Scatter>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Line } from 'vue-chartjs'
+import { Scatter } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   Title,
@@ -55,26 +55,17 @@ const data = computed(() => {
   const Variables1 = editor.filterData.map(
     (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[1]],
   )
-  const data = {}
 
-  for (let i = 0; i < Variables0.length; i++) {
-    if (!data[Variables0[i]]) {
-      data[Variables0[i]] = Variables1[i] * 1
-    } else {
-      data[Variables0[i]] += Variables1[i] * 1
-    }
-  }
-
-  return data
+  return [Variables0, Variables1]
 })
 
 const chartData = computed(() => {
   return {
-    labels: Object.keys(data.value),
+    labels: data.value[0],
     datasets: [
       {
         label: editor.dashboard.charts[props.indexOfChart].useVariables[1],
-        data: Object.values(data.value),
+        data: data.value[1],
       },
     ],
   }
@@ -102,18 +93,16 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       titleColor: '#666666FF',
       titleFontWeight: 700,
     },
-    lineChart: {
+    scatterChart: {
       indexAxis: 'x',
-      lineWidth: 0.2,
-      lineColor: '#00000012',
       pointRadius: 0.3,
       pointColor: '#90D5FFFF',
     },
 
     label: {
-      labelDisplay: true,
+      labelDisplay: false,
       scalesXDisplay: true,
-      scalesYDisplay: false,
+      scalesYDisplay: true,
       labelPosition: 'top',
       labelAlign: 'center',
       labelBoxWidth: 2,
@@ -148,7 +137,7 @@ const chartOptions = computed(() => {
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis,
+    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.indexAxis,
     layout: {
       padding: {
         left:
@@ -169,17 +158,13 @@ const chartOptions = computed(() => {
     elements: {
       line: {
         backgroundColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
-        borderWidth:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineWidth *
-          props.gridWidth,
-        borderColor: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineColor,
+          editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.pointColor,
       },
       point: {
         backgroundColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
+          editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.pointColor,
         radius:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointRadius *
+          editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.pointRadius *
           props.gridWidth,
       },
     },
@@ -189,7 +174,7 @@ const chartOptions = computed(() => {
         title: {
           display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesXDisplay,
           text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis === 'x'
+            editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
               : editor.dashboard.charts[props.indexOfChart].useVariables[1],
         },
@@ -206,7 +191,7 @@ const chartOptions = computed(() => {
         title: {
           display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesYDisplay,
           text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis === 'x'
+            editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
               : editor.dashboard.charts[props.indexOfChart].useVariables[0],
         },
@@ -271,6 +256,22 @@ const chartOptions = computed(() => {
           size:
             editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
             props.gridWidth,
+        },
+        callbacks: {
+          title: () => {
+            return ''
+          },
+          label: (tooltipItem) => {
+            return `${
+              editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.indexAxis === 'x'
+                ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
+                : editor.dashboard.charts[props.indexOfChart].useVariables[1]
+            } : ${tooltipItem.parsed.x} ${
+              editor.dashboard.charts[props.indexOfChart].chartOption.scatterChart.indexAxis === 'x'
+                ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
+                : editor.dashboard.charts[props.indexOfChart].useVariables[0]
+            } : ${tooltipItem.parsed.y}`
+          },
         },
       },
     },

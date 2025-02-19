@@ -228,7 +228,7 @@ const navs = ref([
         isOpen: false,
         text: 'pieChart',
         icon: 'mdi-chart-pie',
-        useVarsNum: 1,
+        useVarsNum: 2,
       },
       {
         isOpen: false,

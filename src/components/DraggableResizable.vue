@@ -54,6 +54,10 @@ import Histogram from './charts/Histogram.vue'
 import LineChart from './charts/LineChart.vue'
 import CategoryFilter from './charts/CategoryFilter.vue'
 import RangeFilter from './charts/RangeFilter.vue'
+import AreaChart from './charts/AreaChart.vue'
+import ScatterChart from './charts/ScatterChart.vue'
+import BubbleChart from './charts/BubbleChart.vue'
+import PieChart from './charts/PieChart.vue'
 
 const props = defineProps({
   containerWidth: {
@@ -98,6 +102,14 @@ if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
   chartCategory.value = markRaw(Histogram)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'lineChart') {
   chartCategory.value = markRaw(LineChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'areaChart') {
+  chartCategory.value = markRaw(AreaChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'scatterChart') {
+  chartCategory.value = markRaw(ScatterChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'bubbleChart') {
+  chartCategory.value = markRaw(BubbleChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'pieChart') {
+  chartCategory.value = markRaw(PieChart)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'categoryFilter') {
   chartCategory.value = markRaw(CategoryFilter)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'rangeFilter') {

@@ -17,11 +17,21 @@ import {
   PointElement,
   CategoryScale,
   LinearScale,
+  Filler,
 } from 'chart.js'
 import { useEditorStore } from '@/stores/editor'
 import { usePublicStore } from '@/stores/public'
 
-ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale)
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Filler,
+)
 
 const props = defineProps({
   indexOfChart: {
@@ -102,12 +112,12 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       titleColor: '#666666FF',
       titleFontWeight: 700,
     },
-    lineChart: {
+    areaChart: {
       indexAxis: 'x',
       lineWidth: 0.2,
       lineColor: '#00000012',
       pointRadius: 0.3,
-      pointColor: '#90D5FFFF',
+      areaColor: '#90D5FFFF',
     },
 
     label: {
@@ -148,7 +158,7 @@ const chartOptions = computed(() => {
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis,
+    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.indexAxis,
     layout: {
       padding: {
         left:
@@ -169,17 +179,18 @@ const chartOptions = computed(() => {
     elements: {
       line: {
         backgroundColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
+          editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.areaColor,
         borderWidth:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineWidth *
+          editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.lineWidth *
           props.gridWidth,
-        borderColor: editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.lineColor,
+        borderColor: editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.lineColor,
+        fill: true,
       },
       point: {
         backgroundColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointColor,
+          editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.areaColor,
         radius:
-          editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.pointRadius *
+          editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.pointRadius *
           props.gridWidth,
       },
     },
@@ -189,7 +200,7 @@ const chartOptions = computed(() => {
         title: {
           display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesXDisplay,
           text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis === 'x'
+            editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
               : editor.dashboard.charts[props.indexOfChart].useVariables[1],
         },
@@ -206,7 +217,7 @@ const chartOptions = computed(() => {
         title: {
           display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesYDisplay,
           text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.lineChart.indexAxis === 'x'
+            editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
               : editor.dashboard.charts[props.indexOfChart].useVariables[0],
         },

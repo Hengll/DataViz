@@ -209,16 +209,15 @@
         </template>
         <!-- 是陣列 -->
         <template v-else-if="Array.isArray(optionValue)">
-          <p>陣列喔</p>
-          <!-- <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
+          <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
             $t(`editDrawer.${optionKey}`)
           }}</v-col>
           <v-col cols="7" class="py-0 d-flex">
             <v-text-field
+              v-maska="mixColorMask"
               density="compact"
               variant="outlined"
               :model-value="isAllSame(optionValue) ? Object.values(optionValue)[0] : 'mixed'"
-
             >
               <template #append-inner>
                 <v-menu :close-on-content-click="false">
@@ -233,32 +232,44 @@
                   </template>
                   <v-card>
                     <v-card-title>{{ $t(`editDrawer.${optionKey}`) }}</v-card-title>
-                    <v-card-text class="d-flex">
+                    <v-card-text>
                       <v-text-field
                         v-for="(subValue, subOptionKey) in optionValue"
-                        :key="subValue"
-                        v-maska="numberMask"
+                        :key="editKey + subOptionKey"
+                        v-maska="colorMask"
                         :model-value="subValue"
+                        class="pa-0 ma-0"
                         variant="outlined"
-                        class="mx-1"
-                        :label="$t(`editDrawer.${subOptionKey}`)"
                         density="compact"
-                        @change="
-                          changeInnerNumber(
-                            indexOfChart,
-                            type,
-                            optionKey,
-                            subOptionKey,
-                            $event.target.value * 1,
-                          )
-                        "
-                      ></v-text-field>
+                        placeholder="#00000000"
+                      >
+                        <template #append-inner>
+                          <v-menu :close-on-content-click="false">
+                            <template #activator="{ props: prop }">
+                              <div
+                                :style="{
+                                  backgroundColor: subValue,
+                                  cursor: 'pointer',
+                                  height: '1.5rem',
+                                  width: '1.5rem',
+                                }"
+                                v-bind="prop"
+                              ></div>
+                            </template>
+                            <v-color-picker
+                              v-model="optionValue[subOptionKey]"
+                              flat
+                              :modes="['rgba', 'hsla', 'hexa']"
+                            ></v-color-picker>
+                          </v-menu>
+                        </template>
+                      </v-text-field>
                     </v-card-text>
                   </v-card>
                 </v-menu>
               </template>
             </v-text-field>
-          </v-col> -->
+          </v-col>
         </template>
         <!-- 是物件 -->
         <template v-else>
@@ -267,6 +278,7 @@
           }}</v-col>
           <v-col cols="7" class="py-0 d-flex">
             <v-text-field
+              v-maska="mixNumberMask"
               density="compact"
               variant="outlined"
               :model-value="isAllSame(optionValue) ? Object.values(optionValue)[0] : 'mixed'"
@@ -419,6 +431,7 @@ const customOptionsHeightMask = computed(() => {
 const numberMask = computed(() => {
   return {
     mask: 'XDX',
+
     eager: true,
     tokens: {
       X: {
@@ -427,6 +440,27 @@ const numberMask = computed(() => {
       },
       D: {
         pattern: /[.]/,
+      },
+    },
+  }
+})
+
+const mixNumberMask = computed(() => {
+  return {
+    mask: (value) => {
+      return value === 'mixed' ? 'MMMMM' : 'XDX'
+    },
+    eager: true,
+    tokens: {
+      X: {
+        pattern: /[0-9]/,
+        multiple: true,
+      },
+      D: {
+        pattern: /[.]/,
+      },
+      M: {
+        pattern: /[a-zA-Z]/,
       },
     },
   }
@@ -443,7 +477,27 @@ const colorMask = computed(() => {
     },
     preProcess: (val) => {
       if (val === '') return '#'
+      return val
+    },
+  }
+})
 
+const mixColorMask = computed(() => {
+  return {
+    mask: (value) => {
+      return value === 'mixed' ? 'MMMMM' : '!#HHHHHHHH'
+    },
+    eager: true,
+    tokens: {
+      H: {
+        pattern: /[0-9a-fA-F]/,
+      },
+      M: {
+        pattern: /[a-zA-Z]/,
+      },
+    },
+    preProcess: (val) => {
+      if (val === '') return '#'
       return val
     },
   }

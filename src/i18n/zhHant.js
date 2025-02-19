@@ -174,6 +174,7 @@ export default {
     lineColor: '線顏色',
     lineWidth: '線寬',
     areaColor: '面積顏色',
+    pieColor: '圓餅顏色',
     topLeft: '左上',
     topRight: '右上',
     bottomLeft: '左下',

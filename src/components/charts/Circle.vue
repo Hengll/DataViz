@@ -3,7 +3,11 @@
     <div :style="titleStyle" class="title">
       {{ editor.dashboard.charts[indexOfChart].chartTitle }}
     </div>
-    <div class="body" :style="bodyStyle"></div>
+    <div class="body" :style="bodyStyle">
+      <p class="text">
+        {{ editor.dashboard.charts[indexOfChart].chartOption.typography.innerText }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -123,7 +127,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       },
     },
     title: {
-      titleDisplay: false,
+      titleDisplay: true,
       titleFontSize: 1,
       titlePosition: 'top',
       titleAlign: 'center',
@@ -152,7 +156,15 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
 .body {
   user-select: none;
   flex-grow: 1;
-  border: 1px solid black;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+}
+
+.text {
+  width: 100%;
+  border-radius: 100%;
+  overflow-wrap: break-word;
 }
 
 ::v-deep(.body) {

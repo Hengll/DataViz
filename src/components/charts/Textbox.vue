@@ -1,9 +1,10 @@
 <template>
   <div class="content" :style="style">
-    <div :style="titleStyle" class="title">
-      {{ editor.dashboard.charts[indexOfChart].chartTitle }}
+    <div class="body" :style="bodyStyle">
+      <p class="text">
+        {{ editor.dashboard.charts[indexOfChart].chartOption.typography.innerText }}
+      </p>
     </div>
-    <div class="body" :style="bodyStyle"></div>
   </div>
 </template>
 
@@ -56,40 +57,6 @@ const style = computed(() => {
       editor.dashboard.charts[props.indexOfChart].chartOption.typography.padding.bottom *
         props.gridWidth +
       'px',
-    flexDirection: ['left', 'right'].includes(
-      editor.dashboard.charts[props.indexOfChart].chartOption.title.titlePosition,
-    )
-      ? 'row'
-      : 'column',
-  }
-})
-
-const titleStyle = computed(() => {
-  return {
-    height:
-      editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontSize *
-        props.gridWidth +
-      +'px',
-    display: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleDisplay
-      ? 'flex'
-      : 'none',
-    fontSize:
-      editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontSize *
-        props.gridWidth +
-      'px',
-    justifyContent: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleAlign,
-    color: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleColor,
-    fontWeight: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontWeight,
-    order: ['top', 'left'].includes(
-      editor.dashboard.charts[props.indexOfChart].chartOption.title.titlePosition,
-    )
-      ? 0
-      : 1,
-    writingMode: ['left', 'right'].includes(
-      editor.dashboard.charts[props.indexOfChart].chartOption.title.titlePosition,
-    )
-      ? `sideways-${editor.dashboard.charts[props.indexOfChart].chartOption.title.titlePosition === 'left' ? 'lr' : 'rl'}`
-      : 'horizontal-tb',
   }
 })
 
@@ -109,7 +76,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
   const chartOption = {
     typography: {
       fontSize: 2,
-      innerText: '',
+      innerText: 'text',
       textAlign: 'start',
       textPosition: 'start',
       color: '#666666FF',
@@ -121,14 +88,6 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
         top: 0,
         bottom: 0,
       },
-    },
-    title: {
-      titleDisplay: false,
-      titleFontSize: 1,
-      titlePosition: 'top',
-      titleAlign: 'center',
-      titleColor: '#666666FF',
-      titleFontWeight: 700,
     },
   }
   editor.createChartOption(props.indexOfChart, chartOption)
@@ -143,16 +102,17 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
   overflow: hidden;
 }
 
-.title {
-  user-select: none;
-  flex-grow: 0;
-  margin: 0.2rem;
-}
-
 .body {
   user-select: none;
   flex-grow: 1;
-  border: 1px solid black;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+}
+
+.text {
+  width: 100%;
+  overflow-wrap: break-word;
 }
 
 ::v-deep(.body) {

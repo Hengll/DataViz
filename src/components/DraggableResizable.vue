@@ -61,7 +61,9 @@ import PieChart from './charts/PieChart.vue'
 import DonutChart from './charts/DonutChart.vue'
 import PolarAreaChart from './charts/PolarAreaChart.vue'
 import RadarChart from './charts/RadarChart.vue'
+import Textbox from './charts/Textbox.vue'
 import Rectangle from './charts/Rectangle.vue'
+import Circle from './charts/Circle.vue'
 
 const props = defineProps({
   containerWidth: {
@@ -124,8 +126,12 @@ if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
   chartCategory.value = markRaw(CategoryFilter)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'rangeFilter') {
   chartCategory.value = markRaw(RangeFilter)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'textbox') {
+  chartCategory.value = markRaw(Textbox)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'rectangle') {
   chartCategory.value = markRaw(Rectangle)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'circle') {
+  chartCategory.value = markRaw(Circle)
 } else {
   console.log('err')
 }

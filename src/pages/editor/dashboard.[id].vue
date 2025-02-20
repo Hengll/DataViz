@@ -13,63 +13,81 @@
           <v-divider></v-divider>
         </template>
 
-        <v-menu
-          v-for="(menu, menuIndex) in nav.menus"
-          :key="menu"
-          v-model="menu.isOpen"
-          :close-on-content-click="false"
-          location="end"
-        >
-          <template #activator="{ props }">
-            <v-list-item
-              append-icon="mdi-plus"
-              :prepend-icon="menu.icon"
-              class="user-select-none"
-              :title="$t('editDashboard.' + menu.text)"
-              v-bind="props"
-              @click="resetFormNewChart"
-            ></v-list-item>
-          </template>
-
-          <v-form
-            :disabled="isSubmittingNewChart"
-            @submit.prevent="newChart(menu.text, navIndex, menuIndex)"
+        <template v-if="nav.text !== 'textAndShape'">
+          <v-menu
+            v-for="(menu, menuIndex) in nav.menus"
+            :key="menu"
+            v-model="menu.isOpen"
+            :close-on-content-click="false"
+            location="end"
           >
-            <v-card min-width="300">
-              <v-list>
-                <v-list-item
-                  :title="$t('editDashboard.' + menu.text)"
-                  :prepend-icon="menu.icon"
-                ></v-list-item>
-              </v-list>
-              <v-divider></v-divider>
-              <v-list>
-                <v-list-item>
-                  <v-text-field
-                    v-model="chartTitle.value.value"
-                    :label="$t('editDashboard.chartTitle')"
-                    :error-messages="chartTitle.errorMessage.value"
-                  ></v-text-field>
-                </v-list-item>
-                <v-list-item v-for="i in menu.useVarsNum" :key="i">
-                  <v-select
-                    v-model="useVariables.value.value[i - 1]"
-                    :items="editor.dataVariables"
-                    :label="$t(`editDashboard.variables${i}`)"
-                    :error-messages="useVariables.errorMessage.value"
-                  ></v-select>
-                </v-list-item>
-              </v-list>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn variant="text" @click="menu.isOpen = false">取消</v-btn>
-                <v-btn type="submit" color="primary" variant="text" :loading="isSubmittingNewChart"
-                  >新增</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-form>
-        </v-menu>
+            <template #activator="{ props }">
+              <v-list-item
+                append-icon="mdi-plus"
+                :prepend-icon="menu.icon"
+                class="user-select-none"
+                :title="$t('editDashboard.' + menu.text)"
+                v-bind="props"
+                @click="resetFormNewChart"
+              ></v-list-item>
+            </template>
+
+            <v-form
+              :disabled="isSubmittingNewChart"
+              @submit.prevent="newChart(menu.text, navIndex, menuIndex)"
+            >
+              <v-card min-width="300">
+                <v-list>
+                  <v-list-item
+                    :title="$t('editDashboard.' + menu.text)"
+                    :prepend-icon="menu.icon"
+                  ></v-list-item>
+                </v-list>
+                <v-divider></v-divider>
+                <v-list>
+                  <v-list-item>
+                    <v-text-field
+                      v-model="chartTitle.value.value"
+                      :label="$t('editDashboard.chartTitle')"
+                      :error-messages="chartTitle.errorMessage.value"
+                    ></v-text-field>
+                  </v-list-item>
+                  <v-list-item v-for="i in menu.useVarsNum" :key="i">
+                    <v-select
+                      v-model="useVariables.value.value[i - 1]"
+                      :items="editor.dataVariables"
+                      :label="$t(`editDashboard.variables${i}`)"
+                      :error-messages="useVariables.errorMessage.value"
+                    ></v-select>
+                  </v-list-item>
+                </v-list>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn variant="text" @click="menu.isOpen = false">取消</v-btn>
+                  <v-btn
+                    type="submit"
+                    color="primary"
+                    variant="text"
+                    :loading="isSubmittingNewChart"
+                    >新增</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-form>
+          </v-menu>
+        </template>
+        <template v-else>
+          <v-list-item
+            v-for="(menu, menuIndex) in nav.menus"
+            :key="menuIndex"
+            append-icon="mdi-plus"
+            :prepend-icon="menu.icon"
+            class="user-select-none"
+            :title="$t('editDashboard.' + menu.text)"
+            :disabled="isSubmittingNewChart"
+            @click="newChart(menu.text, navIndex, menuIndex)"
+          ></v-list-item>
+        </template>
 
         <v-divider></v-divider>
       </v-list-group>
@@ -315,8 +333,14 @@ const navs = ref([
     ],
   },
   {
-    text: 'textBox',
+    text: 'textAndShape',
     menus: [
+      {
+        isOpen: false,
+        text: 'textbox',
+        icon: 'mdi-text',
+        useVarsNum: 0,
+      },
       {
         isOpen: false,
         text: 'rectangle',
@@ -423,6 +447,7 @@ const schemaNewChart = yup.object({
         'standardDeviation',
         'categoryFilter',
         'rangeFilter',
+        'textbox',
         'rectangle',
         'circle',
         'triangle',

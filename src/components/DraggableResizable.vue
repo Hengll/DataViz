@@ -64,6 +64,7 @@ import RadarChart from './charts/RadarChart.vue'
 import Textbox from './charts/Textbox.vue'
 import Rectangle from './charts/Rectangle.vue'
 import Circle from './charts/Circle.vue'
+import Triangle from './charts/Triangle.vue'
 
 const props = defineProps({
   containerWidth: {
@@ -132,6 +133,8 @@ if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
   chartCategory.value = markRaw(Rectangle)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'circle') {
   chartCategory.value = markRaw(Circle)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'triangle') {
+  chartCategory.value = markRaw(Triangle)
 } else {
   console.log('err')
 }

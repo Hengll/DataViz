@@ -94,7 +94,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       titleFontWeight: 700,
     },
     pieChart: {
-      pieColor: ['#90D5FFFF', '#FF0000FF'],
+      pieColor: ['#FF000088', '#0000FF88'],
     },
 
     label: {
@@ -121,6 +121,10 @@ const style = computed(() => {
 })
 
 const chartOptions = computed(() => {
+  // 確保 computed 會重新計算
+  const pieColor = [].concat(
+    editor.dashboard.charts[props.indexOfChart].chartOption.pieChart.pieColor,
+  )
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -152,7 +156,7 @@ const chartOptions = computed(() => {
 
     elements: {
       arc: {
-        backgroundColor: editor.dashboard.charts[props.indexOfChart].chartOption.pieChart.pieColor,
+        backgroundColor: pieColor,
       },
     },
 

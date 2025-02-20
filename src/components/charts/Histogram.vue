@@ -107,7 +107,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
     },
     histogram: {
       indexAxis: 'x',
-      histogramColor: '#90D5FFFF',
+      histogramColor: ['#90D5FFFF'],
       histogramBorderWidth: 0,
       histogramBorderColor: '#00000012',
       histogramBorderRadius: {
@@ -146,6 +146,10 @@ const style = computed(() => {
 })
 
 const chartOptions = computed(() => {
+  const histogramColor = [].concat(
+    editor.dashboard.charts[props.indexOfChart].chartOption.histogram.histogramColor,
+  )
+
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -178,8 +182,7 @@ const chartOptions = computed(() => {
 
     elements: {
       bar: {
-        backgroundColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.histogram.histogramColor,
+        backgroundColor: histogramColor,
         borderWidth:
           editor.dashboard.charts[props.indexOfChart].chartOption.histogram.histogramBorderWidth *
           props.gridWidth,
@@ -212,6 +215,7 @@ const chartOptions = computed(() => {
             editor.dashboard.charts[props.indexOfChart].chartOption.histogram.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
               : editor.dashboard.charts[props.indexOfChart].useVariables[1],
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
         },
         ticks: {
           font: {
@@ -229,6 +233,7 @@ const chartOptions = computed(() => {
             editor.dashboard.charts[props.indexOfChart].chartOption.histogram.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
               : editor.dashboard.charts[props.indexOfChart].useVariables[0],
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
         },
         ticks: {
           font: {

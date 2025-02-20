@@ -2,25 +2,26 @@
   <div v-if="progress" class="cover">
     <v-progress-circular class="progress-circular" indeterminate></v-progress-circular>
   </div>
-  <Bar id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Bar>
+  <Radar id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Radar>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Bar } from 'vue-chartjs'
+import { Radar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
 } from 'chart.js'
 import { useEditorStore } from '@/stores/editor'
 import { usePublicStore } from '@/stores/public'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, Filler, RadialLinearScale)
 
 const props = defineProps({
   indexOfChart: {
@@ -101,24 +102,15 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       titleColor: '#666666FF',
       titleFontWeight: 700,
     },
-    barChart: {
-      indexAxis: 'x',
-      barColor: ['#90D5FFFF'],
-      barBorderWidth: 0,
-      barBorderColor: '#00000012',
-      barBorderRadius: {
-        topLeft: 0,
-        topRight: 0,
-        bottomLeft: 0,
-        bottomRight: 0,
-      },
-      inflateAmount: 0,
+    radarChart: {
+      lineWidth: 0.2,
+      lineColor: '#00000012',
+      pointRadius: 0.3,
+      areaColor: '#90D5FFFF',
     },
 
     label: {
-      labelDisplay: true,
-      scalesXDisplay: true,
-      scalesYDisplay: false,
+      labelDisplay: false,
       labelPosition: 'top',
       labelAlign: 'center',
       labelBoxWidth: 2,
@@ -141,10 +133,6 @@ const style = computed(() => {
 })
 
 const chartOptions = computed(() => {
-  const barColor = [].concat(
-    editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barColor,
-  )
-
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -157,7 +145,6 @@ const chartOptions = computed(() => {
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis,
     layout: {
       padding: {
         left:
@@ -176,68 +163,21 @@ const chartOptions = computed(() => {
     },
 
     elements: {
-      bar: {
-        backgroundColor: barColor,
+      line: {
+        backgroundColor:
+          editor.dashboard.charts[props.indexOfChart].chartOption.radarChart.areaColor,
         borderWidth:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderWidth *
+          editor.dashboard.charts[props.indexOfChart].chartOption.radarChart.lineWidth *
           props.gridWidth,
-        borderColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderColor,
-        borderRadius: {
-          topLeft:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .topLeft,
-          topRight:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .topRight,
-          bottomLeft:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .bottomLeft,
-          bottomRight:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .bottomRight,
-        },
-        inflateAmount:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.inflateAmount,
+        borderColor: editor.dashboard.charts[props.indexOfChart].chartOption.radarChart.lineColor,
+        fill: true,
       },
-    },
-
-    scales: {
-      x: {
-        title: {
-          display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesXDisplay,
-          text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis === 'x'
-              ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
-              : editor.dashboard.charts[props.indexOfChart].useVariables[1],
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
-        ticks: {
-          font: {
-            size:
-              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-              props.gridWidth,
-          },
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
-      },
-      y: {
-        title: {
-          display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesYDisplay,
-          text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis === 'x'
-              ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
-              : editor.dashboard.charts[props.indexOfChart].useVariables[0],
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
-        ticks: {
-          font: {
-            size:
-              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-              props.gridWidth,
-          },
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
+      point: {
+        backgroundColor:
+          editor.dashboard.charts[props.indexOfChart].chartOption.radarChart.areaColor,
+        radius:
+          editor.dashboard.charts[props.indexOfChart].chartOption.radarChart.pointRadius *
+          props.gridWidth,
       },
     },
 
@@ -291,6 +231,14 @@ const chartOptions = computed(() => {
           size:
             editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
             props.gridWidth,
+        },
+        callbacks: {
+          title: () => {
+            return
+          },
+          label: () => {
+            return
+          },
         },
       },
     },

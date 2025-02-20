@@ -32,6 +32,14 @@ export const useEditorStore = defineStore('editor', () => {
             return false
           }
         }
+        for (const key in filterRule.value.rangeFilter) {
+          if (
+            item[key] < Math.min(...filterRule.value.rangeFilter[key]) ||
+            item[key] > Math.max(...filterRule.value.rangeFilter[key])
+          ) {
+            return false
+          }
+        }
         return true
       })
     } else {
@@ -75,6 +83,17 @@ export const useEditorStore = defineStore('editor', () => {
   const editChartSubOption = (index, type, key, subkey, value) => {
     dashboard.value.charts[index].chartOption[type][key][subkey] = value
   }
+
+  const insertChartSubOption = (index, type, key) => {
+    dashboard.value.charts[index].chartOption[type][key].push('#000000FF')
+  }
+
+  const removeChartSubOption = (index, type, key, subkey) => {
+    if (dashboard.value.charts[index].chartOption[type][key].length > 1) {
+      dashboard.value.charts[index].chartOption[type][key].splice(subkey, 1)
+    }
+  }
+
   const moveChart = (index, chartPosX, chartPosY) => {
     dashboard.value.charts[index].chartPosX = chartPosX
     dashboard.value.charts[index].chartPosY = chartPosY
@@ -100,6 +119,8 @@ export const useEditorStore = defineStore('editor', () => {
     createChartOption,
     editChartSubOption,
     editChartOption,
+    insertChartSubOption,
+    removeChartSubOption,
     moveChart,
     resizeChart,
   }

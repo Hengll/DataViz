@@ -2,25 +2,17 @@
   <div v-if="progress" class="cover">
     <v-progress-circular class="progress-circular" indeterminate></v-progress-circular>
   </div>
-  <Bar id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></Bar>
+  <PolarArea id="my-chart-id" :style="style" :options="chartOptions" :data="chartData"></PolarArea>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Bar } from 'vue-chartjs'
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-} from 'chart.js'
+import { PolarArea } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, RadialLinearScale } from 'chart.js'
 import { useEditorStore } from '@/stores/editor'
 import { usePublicStore } from '@/stores/public'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, ArcElement, RadialLinearScale)
 
 const props = defineProps({
   indexOfChart: {
@@ -101,24 +93,12 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
       titleColor: '#666666FF',
       titleFontWeight: 700,
     },
-    barChart: {
-      indexAxis: 'x',
-      barColor: ['#90D5FFFF'],
-      barBorderWidth: 0,
-      barBorderColor: '#00000012',
-      barBorderRadius: {
-        topLeft: 0,
-        topRight: 0,
-        bottomLeft: 0,
-        bottomRight: 0,
-      },
-      inflateAmount: 0,
+    polarAreaChart: {
+      polarAreaColor: ['#FF000088', '#0000FF88'],
     },
 
     label: {
-      labelDisplay: true,
-      scalesXDisplay: true,
-      scalesYDisplay: false,
+      labelDisplay: false,
       labelPosition: 'top',
       labelAlign: 'center',
       labelBoxWidth: 2,
@@ -141,10 +121,10 @@ const style = computed(() => {
 })
 
 const chartOptions = computed(() => {
-  const barColor = [].concat(
-    editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barColor,
+  // 確保 computed 會重新計算
+  const polarAreaColor = [].concat(
+    editor.dashboard.charts[props.indexOfChart].chartOption.polarAreaChart.polarAreaColor,
   )
-
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -157,7 +137,6 @@ const chartOptions = computed(() => {
     },
     devicePixelRatio: 2,
 
-    indexAxis: editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis,
     layout: {
       padding: {
         left:
@@ -176,68 +155,8 @@ const chartOptions = computed(() => {
     },
 
     elements: {
-      bar: {
-        backgroundColor: barColor,
-        borderWidth:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderWidth *
-          props.gridWidth,
-        borderColor:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderColor,
-        borderRadius: {
-          topLeft:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .topLeft,
-          topRight:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .topRight,
-          bottomLeft:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .bottomLeft,
-          bottomRight:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.barBorderRadius
-              .bottomRight,
-        },
-        inflateAmount:
-          editor.dashboard.charts[props.indexOfChart].chartOption.barChart.inflateAmount,
-      },
-    },
-
-    scales: {
-      x: {
-        title: {
-          display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesXDisplay,
-          text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis === 'x'
-              ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
-              : editor.dashboard.charts[props.indexOfChart].useVariables[1],
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
-        ticks: {
-          font: {
-            size:
-              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-              props.gridWidth,
-          },
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
-      },
-      y: {
-        title: {
-          display: editor.dashboard.charts[props.indexOfChart].chartOption.label.scalesYDisplay,
-          text:
-            editor.dashboard.charts[props.indexOfChart].chartOption.barChart.indexAxis === 'x'
-              ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
-              : editor.dashboard.charts[props.indexOfChart].useVariables[0],
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
-        ticks: {
-          font: {
-            size:
-              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-              props.gridWidth,
-          },
-          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-        },
+      arc: {
+        backgroundColor: polarAreaColor,
       },
     },
 
@@ -291,6 +210,14 @@ const chartOptions = computed(() => {
           size:
             editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
             props.gridWidth,
+        },
+        callbacks: {
+          title: () => {
+            return
+          },
+          label: () => {
+            return
+          },
         },
       },
     },

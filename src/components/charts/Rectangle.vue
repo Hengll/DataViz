@@ -3,34 +3,8 @@
     <div :style="titleStyle" class="title">
       {{ editor.dashboard.charts[indexOfChart].chartTitle }}
     </div>
-    <div class="body">
-      <v-row>
-        <v-col cols="12" class="my-0 pb-0">
-          <input
-            :id="'checkboxAll-' + seed"
-            v-model="selectAll"
-            type="checkbox"
-            :style="bodyStyle"
-          />
-          <label :for="'checkboxAll-' + seed" :style="bodyStyle">{{
-            $t('editDashboard.all')
-          }}</label>
-        </v-col>
-        <v-col v-for="(item, index) in items" :key="index" class="my-0 py-0" cols="12">
-          <input
-            :id="`${item}-${index}`"
-            v-model="
-              editor.filterRule.categoryFilter[
-                editor.dashboard.charts[props.indexOfChart].useVariables[0]
-              ]
-            "
-            type="checkbox"
-            :value="item"
-            :style="bodyStyle"
-          />
-          <label :for="`${item}-${index}`" :style="bodyStyle">{{ item }}</label>
-        </v-col>
-      </v-row>
+    <div class="body" :style="bodyStyle">
+      {{ editor.dashboard.charts[indexOfChart].chartOption.typography.innerText }}
     </div>
   </div>
 </template>
@@ -55,46 +29,12 @@ const props = defineProps({
   },
 })
 
-const seed = Math.random()
-
 let editor
 if (props.readOnly) {
   editor = usePublicStore()
 } else {
   editor = useEditorStore()
 }
-
-const items = computed(() => {
-  const variable = editor.dashboard.charts[props.indexOfChart].useVariables[0]
-  const arr = []
-  if (editor.dashboard.dataSet) {
-    for (const item of editor.dashboard.dataSet.data) {
-      if (!arr.includes(item[variable])) {
-        arr.push(item[variable])
-      }
-    }
-  }
-  return arr
-})
-
-const selectAll = computed({
-  get: () =>
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]]
-      .length === items.value.length,
-  set: (value) => toggleAll(value),
-})
-
-function toggleAll(value) {
-  if (value) {
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] =
-      items.value
-  } else {
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] =
-      []
-  }
-}
-
-toggleAll(true)
 
 const style = computed(() => {
   return {
@@ -159,14 +99,6 @@ const titleStyle = computed(() => {
 
 const bodyStyle = computed(() => {
   return {
-    width:
-      editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-        props.gridWidth +
-      'px',
-    height:
-      editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-        props.gridWidth +
-      'px',
     fontSize:
       editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
         props.gridWidth +
@@ -178,7 +110,7 @@ const bodyStyle = computed(() => {
 if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
   const chartOption = {
     typography: {
-      fontSize: 1,
+      fontSize: 2,
       color: '#666666FF',
       backgroundColor: '#FFFFFFFF',
       borderColor: '#00000012',
@@ -188,6 +120,7 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
         top: 0,
         bottom: 0,
       },
+      innerText: '',
     },
     title: {
       titleDisplay: true,
@@ -239,9 +172,5 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
     background: var(--sb-thumb-color);
     border-radius: 5px;
   }
-}
-
-:deep(.v-input__details) {
-  display: none;
 }
 </style>

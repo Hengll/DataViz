@@ -205,22 +205,33 @@
               :items="alignItems"
             >
             </v-select>
+            <v-textarea
+              v-else-if="optionKey === 'innerText'"
+              v-model="options[optionKey]"
+              class="text-body border mb-7"
+              spellcheck="false"
+              variant="plain"
+              auto-grow
+              hide-details
+            ></v-textarea>
           </v-col>
         </template>
-        <!-- 是陣列 -->
+        <!-- 是陣列(顏色) -->
         <template v-else-if="Array.isArray(optionValue)">
           <v-col cols="5" class="d-flex justify-start align-center py-0 pe-0">{{
             $t(`editDrawer.${optionKey}`)
           }}</v-col>
           <v-col cols="7" class="py-0 d-flex">
             <v-text-field
+              :key="editKey"
               v-maska="mixColorMask"
               density="compact"
               variant="outlined"
               :model-value="isAllSame(optionValue) ? Object.values(optionValue)[0] : 'mixed'"
+              @change="changeInnerAllColor(indexOfChart, type, optionKey, $event.target.value)"
             >
               <template #append-inner>
-                <v-menu :close-on-content-click="false">
+                <v-menu :close-on-content-click="false" width="200">
                   <template #activator="{ props: prop }">
                     <v-btn
                       icon="mdi-arrow-expand-all"
@@ -231,7 +242,15 @@
                     </v-btn>
                   </template>
                   <v-card>
-                    <v-card-title>{{ $t(`editDrawer.${optionKey}`) }}</v-card-title>
+                    <v-card-title class="d-flex align-center justify-space-between">
+                      {{ $t(`editDrawer.${optionKey}`) }}
+                      <v-btn
+                        class="expend-btn border"
+                        variant="text"
+                        icon="mdi-plus"
+                        @click="editor.insertChartSubOption(indexOfChart, type, optionKey)"
+                      ></v-btn>
+                    </v-card-title>
                     <v-card-text>
                       <v-text-field
                         v-for="(subValue, subOptionKey) in optionValue"
@@ -242,7 +261,31 @@
                         variant="outlined"
                         density="compact"
                         placeholder="#00000000"
+                        @change="
+                          changeInnerColor(
+                            indexOfChart,
+                            type,
+                            optionKey,
+                            subOptionKey,
+                            $event.target.value,
+                          )
+                        "
                       >
+                        <template #prepend-inner>
+                          <v-btn
+                            class="expend-btn border"
+                            variant="text"
+                            icon="mdi-minus"
+                            @click="
+                              editor.removeChartSubOption(
+                                indexOfChart,
+                                type,
+                                optionKey,
+                                subOptionKey,
+                              )
+                            "
+                          ></v-btn>
+                        </template>
                         <template #append-inner>
                           <v-menu :close-on-content-click="false">
                             <template #activator="{ props: prop }">
@@ -551,6 +594,24 @@ const changeInnerAllNumber = (index, type, key, value) => {
   editKey.value++
 }
 
+const changeInnerColor = (index, type, key, subkey, value) => {
+  if (value.length === 7 || value.length === 9) {
+    editor.editChartSubOption(index, type, key, subkey, value)
+  }
+  editKey.value++
+}
+
+const changeInnerAllColor = (index, type, key, value) => {
+  const keys = Object.keys(editor.dashboard.charts[props.indexOfChart].chartOption[type][key])
+
+  if (value.length === 7 || value.length === 9) {
+    for (let i = 0; i < keys.length; i++) {
+      editor.editChartSubOption(index, type, key, keys[i], value)
+    }
+  }
+  editKey.value++
+}
+
 const positionItems = ['top', 'left', 'bottom', 'right']
 const alignItems = ['start', 'center', 'end']
 
@@ -570,5 +631,29 @@ const isAllSame = (obj) => {
   border-radius: 5px;
   width: 25px;
   height: 25px;
+}
+
+.text-body {
+  height: 200px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+::v-deep(.text-body) {
+  --sb-thumb-color: #d2d2d2;
+  --sb-size: 5px;
+
+  &::-webkit-scrollbar {
+    width: var(--sb-size);
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 5px;
+  }
 }
 </style>

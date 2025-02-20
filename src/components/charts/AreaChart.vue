@@ -203,6 +203,7 @@ const chartOptions = computed(() => {
             editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[0]
               : editor.dashboard.charts[props.indexOfChart].useVariables[1],
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
         },
         ticks: {
           font: {
@@ -220,6 +221,7 @@ const chartOptions = computed(() => {
             editor.dashboard.charts[props.indexOfChart].chartOption.areaChart.indexAxis === 'x'
               ? editor.dashboard.charts[props.indexOfChart].useVariables[1]
               : editor.dashboard.charts[props.indexOfChart].useVariables[0],
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
         },
         ticks: {
           font: {

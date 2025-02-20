@@ -58,6 +58,10 @@ import AreaChart from './charts/AreaChart.vue'
 import ScatterChart from './charts/ScatterChart.vue'
 import BubbleChart from './charts/BubbleChart.vue'
 import PieChart from './charts/PieChart.vue'
+import DonutChart from './charts/DonutChart.vue'
+import PolarAreaChart from './charts/PolarAreaChart.vue'
+import RadarChart from './charts/RadarChart.vue'
+import Rectangle from './charts/Rectangle.vue'
 
 const props = defineProps({
   containerWidth: {
@@ -110,10 +114,18 @@ if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
   chartCategory.value = markRaw(BubbleChart)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'pieChart') {
   chartCategory.value = markRaw(PieChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'donutChart') {
+  chartCategory.value = markRaw(DonutChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'polarAreaChart') {
+  chartCategory.value = markRaw(PolarAreaChart)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'radarChart') {
+  chartCategory.value = markRaw(RadarChart)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'categoryFilter') {
   chartCategory.value = markRaw(CategoryFilter)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'rangeFilter') {
   chartCategory.value = markRaw(RangeFilter)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'rectangle') {
+  chartCategory.value = markRaw(Rectangle)
 } else {
   console.log('err')
 }

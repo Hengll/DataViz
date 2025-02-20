@@ -1,31 +1,44 @@
 <template>
   <div class="content" :style="style">
-    <div :style="titleStyle" class="title d-flex justify-center align-center">
+    <div :style="titleStyle" class="title">
       {{ editor.dashboard.charts[indexOfChart].chartTitle }}
     </div>
     <div class="body">
       <v-row>
-        <v-col cols="12">
-          <v-range-slider :max="10" :min="-10" class="align-center" hide-details>
-            <template #prepend>
-              <v-text-field
-                density="compact"
-                type="number"
-                variant="outlined"
-                hide-details
-                single-line
-              ></v-text-field>
-            </template>
-            <template #append>
-              <v-text-field
-                density="compact"
-                type="number"
-                variant="outlined"
-                hide-details
-                single-line
-              ></v-text-field>
-            </template>
-          </v-range-slider>
+        <v-col cols="12" class="d-flex">
+          <v-col cols="3" @pointermove.stop>
+            <v-text-field
+              v-model="range[0]"
+              :disabled="isNaN(min)"
+              label="min"
+              density="compact"
+              type="number"
+              variant="outlined"
+              hide-details
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6" @pointermove.stop>
+            <v-range-slider
+              v-model="range"
+              class="flex-grow-1"
+              :max="max"
+              :min="min"
+              hide-details
+              :disabled="isNaN(min)"
+            >
+            </v-range-slider>
+          </v-col>
+          <v-col cols="3" @pointermove.stop>
+            <v-text-field
+              v-model="range[1]"
+              :disabled="isNaN(min)"
+              label="max"
+              density="compact"
+              type="number"
+              variant="outlined"
+              hide-details
+            ></v-text-field>
+          </v-col>
         </v-col>
       </v-row>
     </div>
@@ -59,7 +72,7 @@ if (props.readOnly) {
   editor = useEditorStore()
 }
 
-const items = computed(() => {
+const data = computed(() => {
   const variable = editor.dashboard.charts[props.indexOfChart].useVariables[0]
   const arr = []
   if (editor.dashboard.dataSet) {
@@ -72,24 +85,28 @@ const items = computed(() => {
   return arr
 })
 
-const selectAll = computed({
-  get: () =>
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]]
-      .length === items.value.length,
-  set: (value) => toggleAll(value),
-})
-
-function toggleAll(value) {
-  if (value) {
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] =
-      items.value
-  } else {
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] =
-      []
-  }
+const min = Math.min(...data.value)
+const max = Math.max(...data.value)
+if (
+  !editor.filterRule.rangeFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] &&
+  !isNaN(min)
+) {
+  editor.filterRule.rangeFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] = [
+    min,
+    max,
+  ]
 }
 
-toggleAll(true)
+const range = computed({
+  get: () =>
+    editor.filterRule.rangeFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]]
+      ? editor.filterRule.rangeFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]]
+      : [],
+  set: (value) => {
+    editor.filterRule.rangeFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] =
+      value
+  },
+})
 
 const style = computed(() => {
   return {
@@ -130,14 +147,13 @@ const titleStyle = computed(() => {
         props.gridWidth +
       +'px',
     display: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleDisplay
-      ? 'block'
+      ? 'flex'
       : 'none',
     fontSize:
       editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontSize *
         props.gridWidth +
       'px',
-    titlePosition: 'top',
-    textAlign: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleAlign,
+    justifyContent: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleAlign,
     color: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleColor,
     fontWeight: editor.dashboard.charts[props.indexOfChart].chartOption.title.titleFontWeight,
     order: ['top', 'left'].includes(
@@ -153,29 +169,9 @@ const titleStyle = computed(() => {
   }
 })
 
-const bodyStyle = computed(() => {
-  return {
-    width:
-      editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-        props.gridWidth +
-      'px',
-    height:
-      editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-        props.gridWidth +
-      'px',
-    fontSize:
-      editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
-        props.gridWidth +
-      'px',
-    color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
-  }
-})
-
 if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
   const chartOption = {
     typography: {
-      fontSize: 1,
-      color: '#666666FF',
       backgroundColor: '#FFFFFFFF',
       borderColor: '#00000012',
       padding: {
@@ -214,25 +210,5 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
 
 .body {
   flex-grow: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-::v-deep(.body) {
-  --sb-thumb-color: #d2d2d2;
-  --sb-size: 5px;
-
-  &::-webkit-scrollbar {
-    width: var(--sb-size);
-  }
-
-  &::-webkit-scrollbar-track {
-    border-radius: 5px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--sb-thumb-color);
-    border-radius: 5px;
-  }
 }
 </style>

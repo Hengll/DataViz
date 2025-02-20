@@ -234,13 +234,13 @@ const navs = ref([
         isOpen: false,
         text: 'donutChart',
         icon: 'mdi-chart-donut',
-        useVarsNum: 1,
+        useVarsNum: 2,
       },
       {
         isOpen: false,
         text: 'polarAreaChart',
         icon: 'mdi-chart-donut-variant',
-        useVarsNum: 1,
+        useVarsNum: 2,
       },
       {
         isOpen: false,

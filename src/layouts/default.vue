@@ -6,7 +6,14 @@
         <v-btn to="/">{{ $t('nav.home') }}</v-btn>
         <v-btn to="/explore">{{ $t('nav.explore') }}</v-btn>
         <v-btn to="/about">{{ $t('nav.about') }}</v-btn>
-        <v-btn>{{ $t('nav.settings') }}</v-btn>
+        <v-menu>
+          <template #activator="{ props }">
+            <v-btn v-bind="props" append-icon="mdi-chevron-down">{{ $t('nav.settings') }}</v-btn>
+          </template>
+          <v-list>
+            <v-list-item>123</v-list-item>
+          </v-list>
+        </v-menu>
       </div>
       <div>
         <v-btn v-if="user.isLoggedIn" @click="logout">{{ $t('nav.logout') }}</v-btn>

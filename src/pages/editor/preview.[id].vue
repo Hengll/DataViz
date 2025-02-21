@@ -97,16 +97,6 @@ const gridSizeDivisor = {
 <route lang="json">
 {
   "meta": {
-    "login": false,
-    "admin": false,
-    "title": "nav.explore"
-  }
-}
-</route>
-
-<route lang="json">
-{
-  "meta": {
     "layout": "editor",
     "login": true,
     "admin": false,

@@ -21,7 +21,6 @@
         :is="chartCategory"
         :index-of-chart="indexOfChart"
         :grid-width="gridWidth"
-        :read-only="readOnly"
       ></component>
 
       <div v-if="isHovering" class="position-absolute top-0 right-0">
@@ -48,7 +47,6 @@
 import { ref, watch, onMounted, markRaw } from 'vue'
 import interact from 'interactjs'
 import { useEditorStore } from '@/stores/editor'
-import { usePublicStore } from '@/stores/public'
 import BarChart from './charts/BarChart.vue'
 import Histogram from './charts/Histogram.vue'
 import LineChart from './charts/LineChart.vue'
@@ -65,6 +63,13 @@ import Textbox from './charts/Textbox.vue'
 import Rectangle from './charts/Rectangle.vue'
 import Circle from './charts/Circle.vue'
 import Triangle from './charts/Triangle.vue'
+import Mean from './charts/Mean.vue'
+import Median from './charts/Median.vue'
+import Mode from './charts/Mode.vue'
+import Range from './charts/Range.vue'
+import IQR from './charts/IQR.vue'
+import Variance from './charts/Variance.vue'
+import StandardDeviation from './charts/StandardDeviation.vue'
 
 const props = defineProps({
   containerWidth: {
@@ -95,12 +100,7 @@ const props = defineProps({
 
 defineEmits(['edit', 'delete'])
 
-let editor
-if (props.readOnly) {
-  editor = usePublicStore()
-} else {
-  editor = useEditorStore()
-}
+const editor = useEditorStore()
 
 const chartCategory = ref(null)
 if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
@@ -135,6 +135,20 @@ if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {
   chartCategory.value = markRaw(Circle)
 } else if (editor.dashboard.charts[props.indexOfChart].category === 'triangle') {
   chartCategory.value = markRaw(Triangle)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'mean') {
+  chartCategory.value = markRaw(Mean)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'median') {
+  chartCategory.value = markRaw(Median)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'mode') {
+  chartCategory.value = markRaw(Mode)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'range') {
+  chartCategory.value = markRaw(Range)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'IQR') {
+  chartCategory.value = markRaw(IQR)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'variance') {
+  chartCategory.value = markRaw(Variance)
+} else if (editor.dashboard.charts[props.indexOfChart].category === 'standardDeviation') {
+  chartCategory.value = markRaw(StandardDeviation)
 } else {
   console.log('err')
 }

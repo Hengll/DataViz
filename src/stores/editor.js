@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 import { useAxios } from '@/composables/axios'
 
 export const useEditorStore = defineStore('editor', () => {
-  const { apiAuth } = useAxios()
+  const { api, apiAuth } = useAxios()
 
   const drawer = ref(true)
   const saveLoading = ref(false)
@@ -21,21 +21,42 @@ export const useEditorStore = defineStore('editor', () => {
 
   const filterRule = ref({
     categoryFilter: {},
+    // categoryFilter: {
+    //   useAtr: {
+    //     nums: 1,
+    //     filter: [],
+    //   },
+    // },
     rangeFilter: {},
   })
+
+  const changeFilterRule = (filter, atr, operate, min, max) => {
+    if (atr in filterRule.value[filter]) {
+      filterRule.value[filter][atr].nums += operate
+
+      if (filterRule.value[filter][atr].nums === 0) {
+        delete filterRule.value[filter][atr]
+      }
+    } else {
+      filterRule.value[filter][atr] = {
+        nums: 1,
+        filter: filter === 'categoryFilter' ? [] : [min, max],
+      }
+    }
+  }
 
   const filterData = computed(() => {
     if (dashboard.value.dataSet) {
       return dashboard.value.dataSet.data.filter((item) => {
         for (const key in filterRule.value.categoryFilter) {
-          if (!filterRule.value.categoryFilter[key].includes(item[key])) {
+          if (!filterRule.value.categoryFilter[key].filter.includes(item[key])) {
             return false
           }
         }
         for (const key in filterRule.value.rangeFilter) {
           if (
-            item[key] < Math.min(...filterRule.value.rangeFilter[key]) ||
-            item[key] > Math.max(...filterRule.value.rangeFilter[key])
+            item[key] < Math.min(...filterRule.value.rangeFilter[key].filter) ||
+            item[key] > Math.max(...filterRule.value.rangeFilter[key].filter)
           ) {
             return false
           }
@@ -43,9 +64,18 @@ export const useEditorStore = defineStore('editor', () => {
         return true
       })
     } else {
-      return {}
+      return []
     }
   })
+
+  const getDashboardWithPublicAPI = async (id) => {
+    try {
+      const { data } = await api.get(`/dashboard/public/${id}`)
+      dashboard.value = data.result
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
 
   const getDashboardWithAPI = async (id) => {
     try {
@@ -111,6 +141,8 @@ export const useEditorStore = defineStore('editor', () => {
     dataVariables,
     filterRule,
     filterData,
+    changeFilterRule,
+    getDashboardWithPublicAPI,
     getDashboardWithAPI,
     clearDashboard,
     newChart,

@@ -4,9 +4,11 @@
     <v-row>
       <v-col cols="8">
         <v-card-title>
-          <router-link :to="'/dashboard/' + _id" class="text-decoration-none">{{
-            dashboardName
-          }}</router-link>
+          <router-link
+            :to="readOnly ? '/dashboard/' + _id : '/editor/dashboard/' + _id"
+            class="text-decoration-none"
+            >{{ dashboardName }}</router-link
+          >
         </v-card-title>
         <v-card-subtitle>{{ user.userName }}</v-card-subtitle>
         <v-card-text>

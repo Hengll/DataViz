@@ -7,7 +7,6 @@
 <script setup>
 import { computed } from 'vue'
 import { useEditorStore } from '@/stores/editor'
-import { usePublicStore } from '@/stores/public'
 
 const props = defineProps({
   indexOfChart: {
@@ -18,18 +17,9 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  readOnly: {
-    type: Boolean,
-    default: false,
-  },
 })
 
-let editor
-if (props.readOnly) {
-  editor = usePublicStore()
-} else {
-  editor = useEditorStore()
-}
+const editor = useEditorStore()
 
 const bodyStyle = computed(() => {
   return {

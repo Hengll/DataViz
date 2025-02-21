@@ -19,11 +19,7 @@
         <v-col v-for="(item, index) in items" :key="index" class="my-0 py-0" cols="12">
           <input
             :id="`${item}-${index}`"
-            v-model="
-              editor.filterRule.categoryFilter[
-                editor.dashboard.charts[props.indexOfChart].useVariables[0]
-              ]
-            "
+            v-model="editor.filterRule.categoryFilter[variable].filter"
             type="checkbox"
             :value="item"
             :style="bodyStyle"
@@ -36,9 +32,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import { useEditorStore } from '@/stores/editor'
-import { usePublicStore } from '@/stores/public'
 
 const props = defineProps({
   indexOfChart: {
@@ -49,23 +44,15 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  readOnly: {
-    type: Boolean,
-    default: false,
-  },
 })
+
+const editor = useEditorStore()
 
 const seed = Math.random()
 
-let editor
-if (props.readOnly) {
-  editor = usePublicStore()
-} else {
-  editor = useEditorStore()
-}
+const variable = editor.dashboard.charts[props.indexOfChart].useVariables[0]
 
 const items = computed(() => {
-  const variable = editor.dashboard.charts[props.indexOfChart].useVariables[0]
   const arr = []
   if (editor.dashboard.dataSet) {
     for (const item of editor.dashboard.dataSet.data) {
@@ -77,24 +64,26 @@ const items = computed(() => {
   return arr
 })
 
+editor.changeFilterRule('categoryFilter', variable, 1)
+
 const selectAll = computed({
-  get: () =>
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]]
-      .length === items.value.length,
+  get: () => editor.filterRule.categoryFilter[variable].filter.length === items.value.length,
   set: (value) => toggleAll(value),
 })
 
 function toggleAll(value) {
   if (value) {
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] =
-      items.value
+    editor.filterRule.categoryFilter[variable].filter = items.value
   } else {
-    editor.filterRule.categoryFilter[editor.dashboard.charts[props.indexOfChart].useVariables[0]] =
-      []
+    editor.filterRule.categoryFilter[variable].filter = []
   }
 }
 
 toggleAll(true)
+
+onUnmounted(() => {
+  editor.changeFilterRule('categoryFilter', variable, -1)
+})
 
 const style = computed(() => {
   return {

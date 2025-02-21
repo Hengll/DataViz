@@ -41,7 +41,9 @@ router.beforeEach(async (to, from, next) => {
     ['/editor/data/', '/editor/dashboard/', '/editor/preview/'].some((path) =>
       to.path.includes(path),
     ) &&
-    editor.dashboard._id != to.params.id
+    !['/editor/data/', '/editor/dashboard/', '/editor/preview/'].some((path) =>
+      from.path.includes(path),
+    )
   ) {
     try {
       await editor.getDashboardWithAPI(to.params.id)

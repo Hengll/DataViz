@@ -3,50 +3,14 @@
     <div :style="titleStyle" class="title">
       {{ editor.dashboard.charts[indexOfChart].chartTitle }}
     </div>
-    <div class="body">
-      <v-row>
-        <v-col cols="12" class="d-flex">
-          <v-col cols="3" @pointermove.stop>
-            <v-text-field
-              v-model="range[0]"
-              :disabled="isNaN(min) || min === Infinity"
-              label="min"
-              density="compact"
-              type="number"
-              variant="outlined"
-              hide-details
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6" @pointermove.stop>
-            <v-range-slider
-              v-model="range"
-              class="flex-grow-1"
-              :max="max"
-              :min="min"
-              hide-details
-              :disabled="isNaN(min) || min === Infinity"
-            >
-            </v-range-slider>
-          </v-col>
-          <v-col cols="3" @pointermove.stop>
-            <v-text-field
-              v-model="range[1]"
-              :disabled="isNaN(min) || min === Infinity"
-              label="max"
-              density="compact"
-              type="number"
-              variant="outlined"
-              hide-details
-            ></v-text-field>
-          </v-col>
-        </v-col>
-      </v-row>
+    <div class="body" :style="bodyStyle">
+      <p>{{ iqr }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { useEditorStore } from '@/stores/editor'
 
 const props = defineProps({
@@ -62,38 +26,29 @@ const props = defineProps({
 
 const editor = useEditorStore()
 
-const variable = editor.dashboard.charts[props.indexOfChart].useVariables[0]
+const iqr = computed(() => {
+  const Variables0 = editor.filterData.map(
+    (row) => row[editor.dashboard.charts[props.indexOfChart].useVariables[0]],
+  )
 
-const data = computed(() => {
-  const arr = []
-  if (editor.dashboard.dataSet) {
-    for (const item of editor.dashboard.dataSet.data) {
-      if (!arr.includes(item[variable])) {
-        arr.push(item[variable])
-      }
-    }
-  }
-  return arr
+  if (Variables0.length === 0 || isNaN(Variables0[0] * 1)) return NaN
+
+  const sorted = [...Variables0].sort((a, b) => a - b)
+  const q1 = getPercentile(sorted, 0.25)
+  const q3 = getPercentile(sorted, 0.75)
+  const round = editor.dashboard.charts[props.indexOfChart].chartOption.typography.round
+
+  return Math.round((q3 - q1) * 10 ** round) / 10 ** round
 })
 
-const min = Math.min(...data.value)
-const max = Math.max(...data.value)
+function getPercentile(arr, percentile) {
+  const index = (arr.length - 1) * percentile
+  const lower = Math.floor(index)
+  const upper = Math.ceil(index)
+  const weight = index - lower
 
-if (!isNaN(min) && min !== Infinity) {
-  editor.changeFilterRule('rangeFilter', variable, 1, min, max)
+  return arr[lower] * (1 - weight) + arr[upper] * weight
 }
-
-const range = computed({
-  get: () =>
-    editor.filterRule.rangeFilter[variable] ? editor.filterRule.rangeFilter[variable].filter : [],
-  set: (value) => {
-    editor.filterRule.rangeFilter[variable].filter = value
-  },
-})
-
-onUnmounted(() => {
-  editor.changeFilterRule('rangeFilter', variable, -1)
-})
 
 const style = computed(() => {
   return {
@@ -156,9 +111,26 @@ const titleStyle = computed(() => {
   }
 })
 
+const bodyStyle = computed(() => {
+  return {
+    fontSize:
+      editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+        props.gridWidth +
+      'px',
+    color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+    textAlign: editor.dashboard.charts[props.indexOfChart].chartOption.typography.textAlign,
+    justifyContent: editor.dashboard.charts[props.indexOfChart].chartOption.typography.textPosition,
+  }
+})
+
 if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
   const chartOption = {
     typography: {
+      round: 2,
+      fontSize: 1,
+      textAlign: 'center',
+      textPosition: 'center',
+      color: '#666666FF',
       backgroundColor: '#FFFFFFFF',
       borderColor: '#00000012',
       padding: {
@@ -196,6 +168,9 @@ if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
 }
 
 .body {
+  user-select: none;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 </style>

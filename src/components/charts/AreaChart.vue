@@ -20,7 +20,6 @@ import {
   Filler,
 } from 'chart.js'
 import { useEditorStore } from '@/stores/editor'
-import { usePublicStore } from '@/stores/public'
 
 ChartJS.register(
   Title,
@@ -42,18 +41,9 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  readOnly: {
-    type: Boolean,
-    default: false,
-  },
 })
 
-let editor
-if (props.readOnly) {
-  editor = usePublicStore()
-} else {
-  editor = useEditorStore()
-}
+const editor = useEditorStore()
 
 const progress = ref(true)
 editor.saveLoading = true

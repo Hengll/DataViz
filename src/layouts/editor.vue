@@ -2,6 +2,7 @@
   <v-app-bar :location="mobile ? 'top' : 'bottom'" height="40">
     <v-container fluid class="d-flex align-center">
       <v-btn
+        :style="{ visibility: $route.name === '/editor/preview.[id]' ? 'hidden' : 'visible' }"
         class="border-radius-none pa-1 h-25 me-1"
         icon="mdi-menu"
         variant="text"

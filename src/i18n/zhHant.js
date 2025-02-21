@@ -205,6 +205,7 @@ export default {
     labelMaxHeight: '標籤最大高度',
     labelMaxWidth: '標籤最大寬度',
     labelColor: '標籤顏色',
+    round: '取小數位',
   },
   api: {
     userNotFound: '用戶不存在',

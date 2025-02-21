@@ -12,6 +12,7 @@ import i18n from '@/i18n'
 import VuetifyUseDialog from 'vuetify-use-dialog'
 import VueFileAgentNext from '@boindil/vue-file-agent-next'
 import '@boindil/vue-file-agent-next/dist/vue-file-agent-next.css'
+import VueKonva from 'vue-konva'
 
 export function registerPlugins(app) {
   app
@@ -28,4 +29,5 @@ export function registerPlugins(app) {
     .use(router)
     .use(pinia)
     .use(VueFileAgentNext)
+    .use(VueKonva)
 }

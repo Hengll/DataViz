@@ -14,7 +14,7 @@ import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import { useI18n } from 'vue-i18n'
 import i18n from '@/i18n'
 
-const myCustomLightTheme = {
+const lightTheme = {
   dark: false,
   colors: {
     background: '#F5F5F5',
@@ -52,15 +52,53 @@ const myCustomLightTheme = {
   },
 }
 
+const darkTheme = {
+  dark: true,
+  colors: {
+    background: '#121212',
+    surface: '#212121',
+    'surface-bright': '#ccbfd6',
+    'surface-light': '#424242',
+    'surface-variant': '#424242',
+    'on-surface-variant': '#a3a3a3',
+    primary: '#2196F3',
+    'primary-darken-1': '#277CC1',
+    secondary: '#54B6B2',
+    'secondary-darken-1': '#48A9A6',
+    error: '#CF6679',
+    info: '#2196F3',
+    success: '#4CAF50',
+    warning: '#FB8C00',
+  },
+  variables: {
+    'border-color': '#FFFFFF',
+    'border-opacity': 0.12,
+    'high-emphasis-opacity': 1,
+    'medium-emphasis-opacity': 0.7,
+    'disabled-opacity': 0.38,
+    'idle-opacity': 0.1,
+    'hover-opacity': 0.04,
+    'focus-opacity': 0.12,
+    'selected-opacity': 0.08,
+    'activated-opacity': 0.12,
+    'pressed-opacity': 0.16,
+    'dragged-opacity': 0.08,
+    'theme-kbd': '#212529',
+    'theme-on-kbd': '#FFFFFF',
+    'theme-code': '#343434',
+    'theme-on-code': '#CCCCCC',
+  },
+}
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   locale: {
     adapter: createVueI18nAdapter({ i18n, useI18n }),
   },
   theme: {
-    defaultTheme: 'myCustomLightTheme',
+    defaultTheme: 'lightTheme',
     themes: {
-      myCustomLightTheme,
+      lightTheme,
+      darkTheme,
     },
   },
 })

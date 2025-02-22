@@ -10,3 +10,13 @@
     </v-container>
   </v-main>
 </template>
+
+<script setup>
+import { useUserStore } from '@/stores/user'
+import { useTheme } from 'vuetify'
+
+const user = useUserStore()
+const theme = useTheme()
+
+theme.global.name.value = user.theme
+</script>

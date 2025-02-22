@@ -13,6 +13,8 @@ export const useUserStore = defineStore(
     const userInfo = ref('')
     const avatar = ref('')
     const role = ref(UserRole.USER)
+    const theme = ref('darkTheme')
+    const language = ref('zhHant')
 
     const isLoggedIn = computed(() => {
       return token.value.length > 0
@@ -44,6 +46,8 @@ export const useUserStore = defineStore(
       role.value = UserRole.USER
     }
 
+    const changeTheme = () => {}
+
     return {
       token,
       id,
@@ -52,16 +56,19 @@ export const useUserStore = defineStore(
       userInfo,
       avatar,
       role,
+      theme,
+      language,
       isLoggedIn,
       isAdmin,
       login,
       logout,
+      changeTheme,
     }
   },
   {
     persist: {
       key: 'user',
-      pick: ['token'],
+      pick: ['token', 'theme', 'language'],
     },
   },
 )

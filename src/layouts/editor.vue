@@ -41,6 +41,8 @@ import { useAxios } from '@/composables/axios'
 import { useSnackbar } from 'vuetify-use-dialog'
 import { useI18n } from 'vue-i18n'
 import html2canvas from 'html2canvas'
+import { useUserStore } from '@/stores/user'
+import { useTheme } from 'vuetify'
 
 const editor = useEditorStore()
 const { mobile } = useDisplay()
@@ -48,6 +50,10 @@ const router = useRouter()
 const { apiAuth } = useAxios()
 const createSnackbar = useSnackbar()
 const { t } = useI18n()
+const user = useUserStore()
+const theme = useTheme()
+
+theme.global.name.value = user.theme
 
 const childComponent = ref(null)
 const area = ref(null)

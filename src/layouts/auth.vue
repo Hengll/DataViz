@@ -26,12 +26,16 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { useTheme } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 
 const user = useUserStore()
+const theme = useTheme()
 const { t } = useI18n()
 const { mobile } = useDisplay()
+
+theme.global.name.value = user.theme
 
 const drawer = ref(!mobile.value)
 const navs = computed(() => {

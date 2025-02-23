@@ -54,7 +54,8 @@
         <v-btn>{{ $t('linkData.save') }}</v-btn>
       </v-col>
       <v-col cols="12">
-        <v-data-table :items="editor.dashboard.dataSet?.data"></v-data-table>
+        <ag-grid-vue :row-data="rowData" :column-defs="colDefs" style="height: 600px">
+        </ag-grid-vue>
       </v-col>
     </v-row>
   </v-container>
@@ -97,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useEditorStore } from '@/stores/editor'
 import { useAxios } from '@/composables/axios'
 import { useI18n } from 'vue-i18n'
@@ -105,6 +106,8 @@ import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 import { useSnackbar } from 'vuetify-use-dialog'
 import Papa from 'papaparse'
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'
+import { AgGridVue } from 'ag-grid-vue3'
 
 const editor = useEditorStore()
 const { apiAuth } = useAxios()
@@ -264,6 +267,18 @@ const linkData = async (dataId) => {
     })
   }
 }
+
+ModuleRegistry.registerModules([AllCommunityModule])
+
+const rowData = computed(() => {
+  return editor.dashboard.dataSet?.data
+})
+
+const colDefs = computed(() => {
+  return Object.keys(editor.dashboard.dataSet?.data[0]).map((value) => {
+    return { field: value, editable: true }
+  })
+})
 </script>
 
 <route lang="json">

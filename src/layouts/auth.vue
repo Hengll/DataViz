@@ -42,6 +42,7 @@ const navs = computed(() => {
   return [
     { to: '/auth', text: t('nav.myDashboards') },
     { to: '/auth/datas', text: t('nav.myDataSets') },
+    { to: `/author/${user.id}`, text: t('nav.myPage') },
     { to: '/', text: t('nav.home') },
   ]
 })

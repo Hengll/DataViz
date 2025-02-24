@@ -19,6 +19,7 @@ export default {
     myWorkSpace: '我的空間',
     myDashboards: '我的儀錶板',
     myDataSets: '我的資料集',
+    myPage: '我的個人頁',
     linkData: '連結資料',
     editDashboard: '儀錶板編輯',
     previewDashboard: '儀錶板預覽',

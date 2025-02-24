@@ -5,7 +5,7 @@
         <template #prepend>
           <v-btn icon="mdi-menu" variant="text" @click.stop="drawer = !drawer"></v-btn>
         </template>
-        <v-avatar :image="user.avatar || userIcon"></v-avatar>
+        <v-avatar class="bg-orange-darken-1" :image="user.avatar || userIcon"></v-avatar>
         <span>
           {{ user.userName }}
         </span>

@@ -11,6 +11,8 @@ export const useEditorStore = defineStore('editor', () => {
 
   const dashboard = ref({})
 
+  const dataChanged = ref(false)
+
   const dataVariables = computed(() => {
     if (dashboard.value.dataSet) {
       return Object.keys(dashboard.value.dataSet.data[0])
@@ -134,10 +136,41 @@ export const useEditorStore = defineStore('editor', () => {
     dashboard.value.charts[index].chartHeight = chartHeight
   }
 
+  const editData = (index, col, value) => {
+    dashboard.value.dataSet.data[index][col] = value
+    dataChanged.value = true
+  }
+
+  const deleteRowData = (index) => {
+    dashboard.value.dataSet.data.splice(index, 1)
+    dataChanged.value = true
+  }
+
+  const insertRowData = () => {
+    if (dashboard.value.dataSet?.data) {
+      dashboard.value.dataSet.data.push({ ...dashboard.value.dataSet.data[0] })
+      dataChanged.value = true
+    }
+  }
+
+  const saveDataWithApi = async () => {
+    if (dataChanged.value === false) return
+
+    try {
+      await apiAuth.patch(`/dataSet/${dashboard.value.dataSet._id}`, {
+        data: dashboard.value.dataSet.data,
+      })
+      dataChanged.value = false
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
+
   return {
     drawer,
     saveLoading,
     dashboard,
+    dataChanged,
     dataVariables,
     filterRule,
     filterData,
@@ -155,5 +188,9 @@ export const useEditorStore = defineStore('editor', () => {
     removeChartSubOption,
     moveChart,
     resizeChart,
+    editData,
+    deleteRowData,
+    insertRowData,
+    saveDataWithApi,
   }
 })

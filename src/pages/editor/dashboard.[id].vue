@@ -533,6 +533,7 @@ const saveDashboard = async () => {
           color: 'green',
         },
       })
+      editor.chartsChanged = false
       editor.saveLoading = false
     })
   } catch (err) {

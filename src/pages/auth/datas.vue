@@ -23,7 +23,12 @@
           </template>
           <template #[`item.edit`]="{ item }">
             <div class="d-flex justify-end">
-              <v-btn class="border" variant="text">{{ $t('dataSet.edit') }}</v-btn>
+              <v-btn
+                class="border"
+                variant="text"
+                @click="$router.push(`/auth/data/${item._id}`)"
+                >{{ $t('dataSet.edit') }}</v-btn
+              >
               <v-btn class="border ms-1" variant="text" @click="openConfirmDialog(item._id)">{{
                 $t('dataSet.delete')
               }}</v-btn>

@@ -2,7 +2,7 @@
   <v-app-bar :location="mobile ? 'top' : 'bottom'" height="40">
     <v-container fluid class="d-flex align-center">
       <v-btn
-        :style="{ visibility: $route.name === '/editor/preview.[id]' ? 'hidden' : 'visible' }"
+        :style="{ visibility: $route.name === '/editor/dashboard.[id]' ? 'visible' : 'hidden' }"
         class="border-radius-none pa-1 h-25 me-1"
         icon="mdi-menu"
         variant="text"
@@ -82,6 +82,7 @@ const saveAndBack = async () => {
         fd.append('charts', JSON.stringify(editor.dashboard.charts))
 
         await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
+        await editor.saveDataWithApi()
         editor.saveLoading = false
         editor.clearDashboard()
         router.push('/auth')
@@ -92,6 +93,7 @@ const saveAndBack = async () => {
       fd.append('charts', JSON.stringify(editor.dashboard.charts))
 
       await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
+      await editor.saveDataWithApi()
       editor.saveLoading = false
       editor.clearDashboard()
       router.push('/auth')

@@ -92,12 +92,14 @@ export default {
   linkData: {
     newRow: '新增單筆資料',
     newCol: '新增欄位',
-    editName: '編輯資料集名稱',
-    editInfo: '編輯資料集描述',
+    editDataInfo: '編輯資料集資訊',
     new: '資料集上傳',
     linkDataSelect: '選擇連結資料集',
     linkDataSuccess: '連結資料集成功',
     save: '保存修改',
+    saveDataSuccess: '保存資料成功',
+    editSuccess: '修改資訊成功',
+    edit: '修改',
   },
   editDashboard: {
     edit: '編輯儀錶板資訊',

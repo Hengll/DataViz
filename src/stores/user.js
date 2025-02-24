@@ -13,7 +13,7 @@ export const useUserStore = defineStore(
     const userInfo = ref('')
     const avatar = ref('')
     const role = ref(UserRole.USER)
-    const theme = ref('darkTheme')
+    const theme = ref('lightTheme')
     const language = ref('zhHant')
 
     const isLoggedIn = computed(() => {

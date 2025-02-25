@@ -3,7 +3,14 @@
     <v-row>
       <v-col cols="12" class="d-flex">
         <p class="me-8">{{ dashboard.dashboard.dashboardName }}</p>
-        <p>{{ $t('explore.author') }} : {{ dashboard.dashboard.user?.userName }}</p>
+        <p>
+          {{ $t('explore.author') }} :
+          <span
+            ><router-link :to="'/author/' + dashboard.dashboard.user?._id">{{
+              dashboard.dashboard.user?.userName
+            }}</router-link></span
+          >
+        </p>
       </v-col>
       <v-col cols="12">
         <div id="area" ref="area">
@@ -106,6 +113,7 @@ const good = async () => {
     }
   } catch (err) {
     console.log(err)
+    router.push('/login')
   }
 }
 

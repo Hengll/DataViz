@@ -1,7 +1,23 @@
 <template>
   <v-container>
-    index
-    <div id="d1"></div>
+    <div class="hero-section">
+      <v-row>
+        <v-col cols="12" class="d-flex justify-center align-end">
+          <div class="w-75">
+            <h1 class="mainHeadline">{{ $t('home.mainHeadline') }}</h1>
+            <h3 class="Subheadline">{{ $t('home.Subheadline') }}</h3>
+          </div>
+        </v-col>
+        <v-col cols="12">
+          <div>
+            <v-btn>{{ $t('home.getStarted') }}</v-btn>
+            <v-btn>{{ $t('home.explore') }}</v-btn>
+          </div>
+        </v-col>
+      </v-row>
+    </div>
+    <div class="introduction"></div>
+    <div class="highlights"></div>
   </v-container>
 </template>
 
@@ -10,8 +26,29 @@
 </script>
 
 <style lang="scss" scoped>
-#d1 {
-  height: 2000px;
+.hero-section {
+  height: 100vh;
+  margin-bottom: 3rem;
+  background: rgb(var(--v-theme-surface));
+
+  & .mainHeadline {
+    font-size: 4rem;
+  }
+
+  & .Subheadline {
+    font-size: 1.5rem;
+  }
+}
+
+.introduction {
+  height: 100vh;
+  margin-bottom: 3rem;
+  background: rgb(var(--v-theme-surface));
+}
+
+.highlights {
+  height: 100vh;
+  background: rgb(var(--v-theme-surface));
 }
 </style>
 

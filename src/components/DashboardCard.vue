@@ -10,7 +10,12 @@
             >{{ dashboardName }}</router-link
           >
         </v-card-title>
-        <v-card-subtitle>{{ user.userName }}</v-card-subtitle>
+        <v-card-subtitle>
+          <router-link v-if="readOnly" :to="'/author/' + user._id" class="text-decoration-none">
+            {{ user.userName }}
+          </router-link>
+          <p v-else>{{ user.userName }}</p>
+        </v-card-subtitle>
         <v-card-text>
           <v-row>
             <v-col cols="6" class="d-flex align-end">

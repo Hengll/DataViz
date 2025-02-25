@@ -273,13 +273,13 @@ toggleTheme()
 
 <style lang="scss" scoped>
 .app-bar {
-  background-color: rgb(var(--v-theme-surface), 0.5);
-  backdrop-filter: blur(2px);
+  background-color: rgb(var(--v-theme-surface), 0.75);
+  backdrop-filter: blur(3px);
 }
 
 .app-menu {
-  background-color: rgb(var(--v-theme-surface), 0.3) !important;
-  backdrop-filter: blur(2px);
+  background-color: rgb(var(--v-theme-surface), 0.75) !important;
+  backdrop-filter: blur(3px);
 }
 
 .setting-menu {

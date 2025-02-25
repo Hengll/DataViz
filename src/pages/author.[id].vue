@@ -155,7 +155,7 @@ const getAuthor = async () => {
       author.value = data.result
     }
 
-    document.title = author.value.userName + ' | DataViz'
+    document.title = author.value.userName + ' - DataViz'
     const { data } = await api.get(`/dashboard/public/user/${route.params.id}`)
     dashboards.value = data.result
   } catch (err) {

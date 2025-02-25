@@ -79,7 +79,7 @@ const getDashboard = async () => {
   try {
     await dashboard.getDashboardWithPublicAPI(route.params.id)
     await api.patch(`/dashboard/view/${route.params.id}`)
-    document.title = dashboard.dashboard.dashboardName + ' | DataViz'
+    document.title = dashboard.dashboard.dashboardName + ' - DataViz'
   } catch (err) {
     console.log(err)
     router.push('/')

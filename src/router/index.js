@@ -62,7 +62,7 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.afterEach((to) => {
-  document.title = i18n.global.t(to.meta.title) + ' | DataViz'
+  document.title = i18n.global.t(to.meta.title) + ' - DataViz'
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

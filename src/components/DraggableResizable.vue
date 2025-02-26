@@ -26,14 +26,14 @@
       <div v-if="isHovering" class="position-absolute top-0 right-0">
         <v-btn
           v-if="!readOnly"
-          class="border radius-10 me-1 mt-1 btn-size pb-1"
+          class="radius-10 me-1 mt-1 btn-size pb-1"
           variant="text"
           icon="mdi-pencil"
           @click="$emit('edit')"
         ></v-btn>
         <v-btn
           v-if="!readOnly"
-          class="border radius-10 me-1 mt-1 btn-size"
+          class="radius-10 me-1 mt-1 btn-size"
           variant="text"
           icon="mdi-close"
           @click="$emit('delete')"
@@ -280,5 +280,7 @@ watch([() => props.containerWidth, () => props.containerHeight], () => {
   height: 30px;
   font-size: 18px;
   background: white;
+  color: black;
+  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 </style>

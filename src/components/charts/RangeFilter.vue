@@ -9,6 +9,9 @@
           <v-col cols="3" @pointermove.stop>
             <v-text-field
               v-model="range[0]"
+              :style="{
+                color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+              }"
               :disabled="isNaN(min) || min === Infinity"
               label="min"
               density="compact"
@@ -31,6 +34,9 @@
           <v-col cols="3" @pointermove.stop>
             <v-text-field
               v-model="range[1]"
+              :style="{
+                color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+              }"
               :disabled="isNaN(min) || min === Infinity"
               label="max"
               density="compact"
@@ -159,6 +165,7 @@ const titleStyle = computed(() => {
 if (!editor.dashboard.charts[props.indexOfChart].chartOption) {
   const chartOption = {
     typography: {
+      color: '#666666FF',
       backgroundColor: '#FFFFFFFF',
       borderColor: '#00000012',
       padding: {

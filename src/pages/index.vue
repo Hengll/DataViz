@@ -4,11 +4,11 @@
       <v-row class="flex-column flex-nowrap h-100">
         <v-col cols="12" class="d-flex justify-center align-end flex-0-0-0">
           <div class="w-75">
-            <h1 class="mainHeadline">{{ $t('home.mainHeadline') }}</h1>
-            <h3 class="Subheadline">{{ $t('home.Subheadline') }}</h3>
+            <h1 class="mainHeadline text-h3 font-weight-bold">{{ $t('home.mainHeadline') }}</h1>
+            <h3 class="Subheadline text-h5 font-weight-bold">{{ $t('home.Subheadline') }}</h3>
           </div>
         </v-col>
-        <v-col cols="12" class="flex-0-0-0">
+        <v-col cols="12" class="flex-0-0-0 mt-10">
           <div class="d-flex justify-center align-center flex-column flex-md-row">
             <v-btn class="btn-getStarted mb-3 mb-md-0 me-md-10" variant="outlined" rounded="0">{{
               $t('home.getStarted')
@@ -19,7 +19,9 @@
           </div>
         </v-col>
         <v-col cols="12" class="flex-1-0-0 d-flex justify-center">
-          <div class="video"></div>
+          <div class="video">
+            <video class="w-100" muted :src="demo" autoplay loop></video>
+          </div>
         </v-col>
       </v-row>
     </div>
@@ -64,6 +66,8 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
+const demo = new URL('@/assets/demo.webm', import.meta.url).href
+
 const tab = ref(0)
 const introductions = computed(() => {
   return [
@@ -99,16 +103,15 @@ const introductions = computed(() => {
 .hero-section {
   height: 100vh;
   margin-bottom: 3rem;
-  padding-top: 1rem;
+  padding-top: 5rem;
   background: rgb(var(--v-theme-surface));
 
   & .mainHeadline {
-    font-size: 3.5rem;
     text-align: center;
+    margin-bottom: 1rem;
   }
 
   & .Subheadline {
-    font-size: 1.5rem;
     text-align: center;
   }
 
@@ -125,9 +128,8 @@ const introductions = computed(() => {
   }
 
   & .video {
-    height: 100%;
-    aspect-ratio: 16 / 9;
-    border: 1px solid black;
+    width: 75%;
+    display: flex;
   }
 }
 

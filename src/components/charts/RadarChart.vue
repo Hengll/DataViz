@@ -152,6 +152,35 @@ const chartOptions = computed(() => {
       },
     },
 
+    scales: {
+      r: {
+        ticks: {
+          backdropColor:
+            editor.dashboard.charts[props.indexOfChart].chartOption.typography.backgroundColor,
+          font: {
+            size:
+              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+              props.gridWidth,
+          },
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+        },
+        pointLabels: {
+          font: {
+            size:
+              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+              props.gridWidth,
+          },
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+        },
+        angleLines: {
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+        },
+        grid: {
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+        },
+      },
+    },
+
     elements: {
       line: {
         backgroundColor:

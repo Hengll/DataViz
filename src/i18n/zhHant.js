@@ -42,6 +42,19 @@ export default {
       '用最直覺的方式，將數據轉化為生動的視覺化作品，讓你的想法一目了然，與全球創作者一同探索數據的無限可能！',
     getStarted: '立即開始',
     explore: '探索作品',
+    introductionTitle: '讓複雜數據變得簡單易懂',
+    introductionData: '管理資料',
+    introductionDataText:
+      '管理您的資料，無論是上傳、編輯或刪除。我們提供簡單直觀的介面，讓您輕鬆掌控每一份資料。',
+    introductionLinkData: '連結資料',
+    introductionLinkDataText: '連結您上傳的資料',
+    introductionDashboard: '視覺化儀錶板',
+    introductionDashboardText:
+      '利用我們的視覺化儀錶板，將資料轉換成直觀的圖表與報表。您可以根據需求自訂儀錶板，輕鬆呈現數據趨勢',
+    introductionPublic: '公開',
+    introductionPublicText:
+      '當您的資料視覺化作品完成後，您可以選擇將其公開，讓全球的使用者可以查看與互動。',
+    highlightsTitle: '熱門視覺化作品',
   },
   login: {
     login: '登入',
@@ -140,6 +153,7 @@ export default {
     public: '公開',
     cancel: '取消',
     save: '保存修改',
+    backgroundColor: '背景色',
     saveSuccess: '保存成功',
     dataChart: '資料圖表',
     barChart: '長條圖',

@@ -13,7 +13,7 @@
         </p>
       </v-col>
       <v-col cols="12">
-        <div id="area" ref="area">
+        <div id="area" ref="area" :style="{ backgroundColor: dashboard.dashboard.backgroundColor }">
           <DraggableResizable
             v-for="(chart, index) in dashboard.dashboard.charts"
             :key="chart"
@@ -146,7 +146,6 @@ const gridSizeDivisor = {
   width: 100%;
   aspect-ratio: 16 / 9;
   outline: 1px solid rgba(0, 0, 0, 0.12);
-  background: white;
 }
 </style>
 

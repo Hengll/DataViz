@@ -6,7 +6,7 @@
         <p>{{ $t('explore.author') }} : {{ user.userName }}</p>
       </v-col>
       <v-col cols="12">
-        <div id="area" ref="area">
+        <div id="area" ref="area" :style="{ backgroundColor: editer.dashboard.backgroundColor }">
           <DraggableResizable
             v-for="(chart, index) in editer.dashboard.charts"
             :key="chart"

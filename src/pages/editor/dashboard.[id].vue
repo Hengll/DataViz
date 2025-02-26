@@ -114,13 +114,40 @@
       <v-col cols="4">
         <v-btn @click="openDialog">{{ $t('editDashboard.edit') }}</v-btn>
       </v-col>
-      <v-col cols="2" class="ms-auto d-flex justify-end">
+      <v-col cols="3" class="ms-auto d-flex justify-end align-center">
+        <v-menu :close-on-content-click="false">
+          <template #activator="{ props: prop }">
+            <div
+              v-bind="prop"
+              class="d-flex align-center justify-center"
+              :style="{
+                backgroundColor: editor.dashboard.backgroundColor,
+                cursor: 'pointer',
+                width: '120px',
+                height: '36px',
+                outline: '1px solid rgba(0, 0, 0, 0.12)',
+                marginRight: '1rem',
+                borderRadius: '2px',
+                fontSize: '14px',
+                color: editor.dashboard.backgroundColor === '#000000' ? '#FFFFFF' : '#000000',
+              }"
+            >
+              {{ $t('editDashboard.backgroundColor') }}
+            </div>
+          </template>
+          <v-color-picker
+            v-model="editor.dashboard.backgroundColor"
+            flat
+            :modes="['rgb', 'hsl', 'hex']"
+          ></v-color-picker>
+        </v-menu>
+
         <v-btn :loading="editor.saveLoading" @click="saveDashboard">{{
           $t('editDashboard.save')
         }}</v-btn>
       </v-col>
       <v-col cols="12">
-        <div id="area" ref="area">
+        <div id="area" ref="area" :style="{ backgroundColor: editor.dashboard.backgroundColor }">
           <DraggableResizable
             v-for="(chart, index) in editor.dashboard.charts"
             :key="chart"
@@ -524,6 +551,7 @@ const saveDashboard = async () => {
       const fd = new FormData()
 
       fd.append('image', file)
+      fd.append('backgroundColor', editor.dashboard.backgroundColor)
       fd.append('charts', JSON.stringify(editor.dashboard.charts))
 
       await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)
@@ -587,7 +615,6 @@ defineExpose({
   width: 100%;
   aspect-ratio: 16 / 9;
   outline: 1px solid rgba(0, 0, 0, 0.12);
-  background: white;
 }
 
 .user-select-none {

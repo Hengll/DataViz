@@ -150,6 +150,27 @@ const chartOptions = computed(() => {
       },
     },
 
+    scales: {
+      r: {
+        ticks: {
+          font: {
+            size:
+              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+              props.gridWidth,
+          },
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+        },
+        pointLabels: {
+          font: {
+            size:
+              editor.dashboard.charts[props.indexOfChart].chartOption.typography.fontSize *
+              props.gridWidth,
+          },
+          color: editor.dashboard.charts[props.indexOfChart].chartOption.typography.color,
+        },
+      },
+    },
+
     plugins: {
       legend: {
         display: editor.dashboard.charts[props.indexOfChart].chartOption.label.labelDisplay,

@@ -79,6 +79,7 @@ const saveAndBack = async () => {
         const fd = new FormData()
 
         fd.append('image', file)
+        fd.append('backgroundColor', editor.dashboard.backgroundColor)
         fd.append('charts', JSON.stringify(editor.dashboard.charts))
 
         await apiAuth.patch(`/dashboard/${editor.dashboard._id}`, fd)

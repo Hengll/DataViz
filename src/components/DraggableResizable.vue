@@ -268,7 +268,7 @@ watch([() => props.containerWidth, () => props.containerHeight], () => {
 
 .hover-style {
   outline: 1px solid rgba(0, 0, 0, 1);
-  z-index: 100;
+  // z-index: 100;
 }
 
 .radius-10 {
@@ -279,5 +279,6 @@ watch([() => props.containerWidth, () => props.containerHeight], () => {
   width: 30px;
   height: 30px;
   font-size: 18px;
+  background: white;
 }
 </style>

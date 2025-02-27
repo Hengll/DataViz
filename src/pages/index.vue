@@ -1,43 +1,44 @@
 <template>
-  <v-container>
-    <div class="hero-section">
+  <div class="hero-section">
+    <v-container class="h-screen">
       <v-row class="flex-column flex-nowrap h-100">
-        <v-col cols="12" class="d-flex justify-center align-end flex-0-0-0">
-          <div class="w-75">
+        <v-col class="flex-0-1 d-flex flex-column flex-sm-row">
+          <div class="w-100 w-sm-50">
             <h1 class="mainHeadline text-h3 font-weight-bold">{{ $t('home.mainHeadline') }}</h1>
-            <h3 class="Subheadline text-h5 font-weight-bold">{{ $t('home.Subheadline') }}</h3>
+            <h3 class="Subheadline text-h6 font-weight-bold">{{ $t('home.Subheadline') }}</h3>
           </div>
-        </v-col>
-        <v-col cols="12" class="flex-0-0-0 mt-10">
-          <div class="d-flex justify-center align-center flex-column flex-md-row">
-            <v-btn class="btn-getStarted mb-3 mb-md-0 me-md-10" variant="outlined" rounded="0">{{
+          <div class="w-100 w-sm-50 d-flex flex-column justify-center align-center align-sm-end">
+            <v-btn class="btn-getStarted" color="primary" variant="flat">{{
               $t('home.getStarted')
             }}</v-btn>
-            <v-btn class="btn-explore" variant="outlined" rounded="0">{{
-              $t('home.explore')
-            }}</v-btn>
+            <v-btn class="btn-explore" variant="outlined">{{ $t('home.explore') }}</v-btn>
           </div>
         </v-col>
-        <v-col cols="12" class="flex-1-0-0 d-flex justify-center">
-          <div class="video">
-            <video class="w-100" muted :src="demo" autoplay loop></video>
+        <v-col class="position-relative pt-16">
+          <div class="vedio1">
+            <video class="w-100 rounded-xl" muted :src="demo" autoplay loop></video>
+          </div>
+          <div class="vedio2">
+            <video class="w-100 rounded-xl" muted :src="demo" autoplay loop></video>
           </div>
         </v-col>
       </v-row>
-    </div>
-    <div class="introduction">
+    </v-container>
+  </div>
+  <div class="introduction">
+    <v-container class="h-screen">
       <v-row class="flex-column flex-nowrap h-100">
-        <v-col cols="12" class="flex-0-0-0">
+        <v-col cols="12" class="flex-0-1">
           <h3 class="introductionTitle">{{ $t('home.introductionTitle') }}</h3>
         </v-col>
-        <v-col cols="12" class="d-flex justify-center align-center flex-1-0-0">
-          <v-card class="w-75 h-75 d-flex flex-column pa-2">
-            <v-card-title class="flex-0-0-auto">{{ introductions[tab].title }}</v-card-title>
-            <v-card-text class="flex-1-0-auto d-flex flex-column justify-space-between">
+        <v-col cols="12" class="flex-1-1 d-flex justify-center align-center">
+          <v-card class="w-100 w-xl-75">
+            <v-card-title>{{ introductions[tab].title }}</v-card-title>
+            <v-card-text>
               <div>{{ introductions[tab].text }}</div>
               <div class="media"></div>
             </v-card-text>
-            <v-card-actions class="overflow-x-auto">
+            <v-card-actions>
               <v-btn
                 v-for="(introduction, index) in introductions"
                 :key="introduction"
@@ -49,24 +50,67 @@
           </v-card>
         </v-col>
       </v-row>
-    </div>
-    <div class="highlights">
-      <v-row>
-        <v-col cols="12">
+    </v-container>
+  </div>
+  <div class="highlights">
+    <v-container fluid class="h-screen">
+      <v-row class="flex-column flex-nowrap h-100">
+        <v-col cols="12" class="flex-0-0">
           <h3 class="highlightsTitle">{{ $t('home.highlightsTitle') }}</h3>
         </v-col>
+        <v-col cols="12" class="flex-1-0 d-flex justify-center align-center">
+          <swiper
+            v-if="dashboards.length > 0"
+            :slides-per-view="name === 'xs' ? 1 : 2"
+            :loop="true"
+            :space-between="30"
+            :centered-slides="true"
+            :autoplay="{
+              delay: 5000,
+              disableOnInteraction: false,
+            }"
+            :pagination="{
+              clickable: true,
+            }"
+            :navigation="true"
+            :modules="[Autoplay, Pagination, Navigation]"
+          >
+            <swiper-slide v-for="dashboard in dashboards" :key="dashboard">
+              <v-col cols="12">
+                <h4 class="cursor-pointer" @click="$router.push(`/dashboard/${dashboard._id}`)">
+                  {{ dashboard.dashboardName }}
+                </h4>
+                <v-img
+                  class="border ma-1 cursor-pointer rounded-xl"
+                  :src="dashboard.image || whiteImg"
+                  @click="$router.push(`/dashboard/${dashboard._id}`)"
+                ></v-img>
+              </v-col>
+            </swiper-slide>
+          </swiper>
+        </v-col>
       </v-row>
-    </div>
-  </v-container>
+    </v-container>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+import { Autoplay, Pagination, Navigation } from 'swiper/modules'
+import { useAxios } from '@/composables/axios'
+import { useDisplay } from 'vuetify'
 
 const { t } = useI18n()
+const { api } = useAxios()
+const { name } = useDisplay()
 
 const demo = new URL('@/assets/demo.webm', import.meta.url).href
+const whiteImg = new URL('@/assets/white.png', import.meta.url).href
 
 const tab = ref(0)
 const introductions = computed(() => {
@@ -97,28 +141,35 @@ const introductions = computed(() => {
     },
   ]
 })
+
+const dashboards = ref([])
+
+const getDashboards = async () => {
+  try {
+    const { data } = await api.get('/dashboard/public?page=1&limit=5&sort=view')
+    dashboards.value = data.result
+  } catch (err) {
+    console.log(err)
+  }
+}
+getDashboards()
 </script>
 
 <style lang="scss" scoped>
 .hero-section {
   height: 100vh;
-  margin-bottom: 3rem;
-  padding-top: 5rem;
-  background: rgb(var(--v-theme-surface));
+  padding-top: 6rem;
 
   & .mainHeadline {
-    text-align: center;
     margin-bottom: 1rem;
-  }
-
-  & .Subheadline {
-    text-align: center;
   }
 
   & .btn-getStarted {
     width: 200px;
     height: 80px;
     font-size: 2rem;
+    margin-bottom: 1rem;
+    // background: rgba(var(--v-theme-primary), 0.8);
   }
 
   & .btn-explore {
@@ -127,15 +178,21 @@ const introductions = computed(() => {
     font-size: 2rem;
   }
 
-  & .video {
-    width: 75%;
-    display: flex;
+  & .vedio1 {
+    width: 60%;
+  }
+
+  & .vedio2 {
+    width: 50%;
+    position: absolute;
+    top: 30%;
+    right: 0;
   }
 }
 
 .introduction {
-  height: 100vh;
-  margin-bottom: 3rem;
+  height: 120vh;
+  padding-top: 6rem;
   background: rgb(var(--v-theme-surface));
 
   & .introductionTitle {
@@ -144,29 +201,38 @@ const introductions = computed(() => {
   }
 
   & .media {
-    height: 400px;
+    aspect-ratio: 16 / 9;
     border: 1px solid black;
   }
 }
 
-:deep(.introduction .v-btn__overlay) {
-  background: transparent;
-  opacity: 1;
-}
-
-:deep(.introduction .active > .v-btn__overlay) {
-  border-bottom: 1px solid rgba(var(--v-theme-on-surface));
+:deep(.active > .v-btn__overlay) {
+  border-bottom: 1px solid rgba(var(--v-theme-secondary));
   border-radius: 0;
 }
 
 .highlights {
-  height: 100vh;
-  background: rgb(var(--v-theme-surface));
+  height: 120vh;
+  padding-top: 6rem;
 
   & .highlightsTitle {
     font-size: 1.5rem;
     text-align: center;
   }
+}
+
+.swiper {
+  width: 100%;
+  height: 80%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-img class="border ma-1" :src="image || whiteImg"></v-img>
+    <v-img class="border ma-1 rounded-t" :src="image || whiteImg"></v-img>
     <v-row>
       <v-col cols="8">
         <v-card-title>
@@ -29,7 +29,7 @@
           </v-row>
         </v-card-text>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="4" class="pe-5">
         <v-card-actions class="d-flex flex-column">
           <v-btn v-if="!readOnly" class="border" @click="$emit('edit')">{{
             $t('dashboard.edit')

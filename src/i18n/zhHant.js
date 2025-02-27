@@ -37,7 +37,7 @@ export default {
     privacyPolicy: '隱私政策',
   },
   home: {
-    mainHeadline: '發現數據美，分享你的視覺化作品',
+    mainHeadline: '發現數據之美，分享你的視覺化作品',
     Subheadline:
       '用最直覺的方式，將數據轉化為生動的視覺化作品，讓你的想法一目了然，與全球創作者一同探索數據的無限可能！',
     getStarted: '立即開始',
@@ -59,10 +59,14 @@ export default {
   login: {
     login: '登入',
     success: '登入成功',
+    firstUse: '第一次使用 DataViz？',
+    register: '註冊',
   },
   register: {
     register: '註冊',
     success: '註冊成功',
+    notFirstUse: '已經有帳號了？',
+    login: '登入',
   },
   logout: {
     success: '登出成功',

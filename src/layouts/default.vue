@@ -303,17 +303,20 @@ toggleTheme()
   }
 }
 
-:deep(.v-btn--active > .v-btn__overlay) {
-  opacity: 1;
+:deep(.v-btn__overlay) {
   background: transparent;
-  border-bottom: 1px solid rgba(var(--v-theme-on-surface));
+  opacity: 1;
+}
+
+:deep(.v-btn--active > .v-btn__overlay) {
+  border-bottom: 1px solid rgba(var(--v-theme-secondary));
   border-radius: 0;
 }
 
 :deep(.v-btn:hover) {
   opacity: 1;
   background: transparent;
-  border-bottom: 1px solid rgba(var(--v-theme-on-surface));
+  border-bottom: 1px solid rgba(var(--v-theme-secondary));
   border-radius: 0;
 }
 

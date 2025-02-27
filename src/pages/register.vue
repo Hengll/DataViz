@@ -2,14 +2,18 @@
   <v-container class="d-flex justify-center">
     <div class="user-container">
       <v-row>
+        <v-col cols="12" class="pa-0">
+          <v-img :src="user.theme === 'lightTheme' ? logo : logoDark"></v-img>
+        </v-col>
+        <v-col cols="12"></v-col>
         <v-col cols="12">
           <h1 class="text-center">{{ $t('nav.register') }}</h1>
         </v-col>
-        <v-spacer></v-spacer>
         <v-col cols="12">
           <v-form :disabled="isSubmitting" @submit.prevent="submit">
             <v-text-field
               v-model="account.value.value"
+              variant="outlined"
               :error-messages="account.errorMessage.value"
               :label="$t('user.account')"
               counter
@@ -18,16 +22,19 @@
             ></v-text-field>
             <v-text-field
               v-model="userName.value.value"
+              variant="outlined"
               :error-messages="userName.errorMessage.value"
               :label="$t('user.userName')"
             ></v-text-field>
             <v-text-field
               v-model="email.value.value"
+              variant="outlined"
               :error-messages="email.errorMessage.value"
               :label="$t('user.email')"
             ></v-text-field>
             <v-text-field
               v-model="password.value.value"
+              variant="outlined"
               type="password"
               autocomplete
               :error-messages="password.errorMessage.value"
@@ -38,6 +45,7 @@
             ></v-text-field>
             <v-text-field
               v-model="passwordConfirm.value.value"
+              variant="outlined"
               type="password"
               autocomplete
               :error-messages="passwordConfirm.errorMessage.value"
@@ -47,11 +55,18 @@
               maxlength="20"
             ></v-text-field>
             <div class="d-flex justify-center mt-10">
-              <v-btn :loading="isSubmitting" type="submit" color="primary">{{
+              <v-btn :loading="isSubmitting" variant="outlined" type="submit" color="primary">{{
                 $t('register.register')
               }}</v-btn>
             </div>
           </v-form>
+        </v-col>
+        <v-col cols="12"></v-col>
+        <v-col cols="12">
+          <p class="text-center">
+            <span>{{ $t('register.notFirstUse') }}</span>
+            <router-link to="/login" class="link-login">{{ $t('register.login') }}</router-link>
+          </p>
         </v-col>
       </v-row>
     </div>
@@ -66,11 +81,16 @@ import { useI18n } from 'vue-i18n'
 import { useAxios } from '@/composables/axios'
 import { useSnackbar } from 'vuetify-use-dialog'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
+const logo = new URL('@/assets/logo.png', import.meta.url).href
+const logoDark = new URL('@/assets/logo_dark.png', import.meta.url).href
 
 const { t } = useI18n()
 const { api } = useAxios()
 const createSnackbar = useSnackbar()
 const router = useRouter()
+const user = useUserStore()
 
 const schema = yup.object({
   account: yup
@@ -134,7 +154,10 @@ const submit = handleSubmit(async (value) => {
 <style lang="scss" scoped>
 .user-container {
   width: 410px;
-  margin-top: 2rem;
+}
+
+.link-login {
+  color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
 }
 </style>
 

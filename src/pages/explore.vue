@@ -19,9 +19,11 @@
         </v-col>
       </v-col>
       <v-col cols="12" class="d-flex justify-end mb-0 pb-0">
-        <v-btn-toggle :model-value="toggle" divided>
+        <v-btn-toggle :model-value="toggle">
           <v-btn
+            variant="text"
             class="h-75"
+            :class="{ active: toggle === 0 ? true : false }"
             @click="
               $router.push({
                 path: '/explore',
@@ -31,17 +33,21 @@
             >{{ $t('explore.popular') }}</v-btn
           >
           <v-btn
+            variant="text"
             class="h-75"
+            :class="{ active: toggle === 1 ? true : false }"
             @click="
               $router.push({
                 path: '/explore',
-                query: { sort: 'createAt', search: $route.query.search || undefined },
+                query: { sort: 'createdAt', search: $route.query.search || undefined },
               })
             "
             >{{ $t('explore.new') }}</v-btn
           >
           <v-btn
+            variant="text"
             class="h-75"
+            :class="{ active: toggle === 3 ? true : false }"
             @click="
               $router.push({
                 path: '/explore',
@@ -60,7 +66,12 @@
             class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
           >
             <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
-            <dashboard-card v-else v-bind="dashboard" :read-only="true"></dashboard-card>
+            <dashboard-card
+              v-else
+              class="dashboard-card"
+              v-bind="dashboard"
+              :read-only="true"
+            ></dashboard-card>
           </v-col>
         </v-row>
       </v-col>
@@ -85,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useAxios } from '@/composables/axios'
 import { useRoute } from 'vue-router'
 import DashboardCard from '@/components/DashboardCard.vue'
@@ -93,11 +104,13 @@ import DashboardCard from '@/components/DashboardCard.vue'
 const { api } = useAxios()
 const route = useRoute()
 
-const isLoading = ref(true)
+const isLoading = computed(() => {
+  return dashboards.value.length === 0
+})
 
 const search = ref('')
 const toggle = computed(() => {
-  if (route.query.sort === 'createAt') {
+  if (route.query.sort === 'createdAt') {
     return 1
   } else if (route.query.sort === 'like') {
     return 2
@@ -123,13 +136,24 @@ const getDashboards = async () => {
   }
 }
 getDashboards()
-
-onMounted(() => {
-  isLoading.value = false
-})
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled) > .v-btn__overlay) {
+  background: transparent;
+  opacity: 1;
+}
+
+:deep(.active > .v-btn__overlay) {
+  border-bottom: 1px solid rgba(var(--v-theme-secondary));
+  border-radius: 0;
+}
+
+.dashboard-card:hover {
+  transition: 0.5s;
+  transform: scale(1.1);
+}
+</style>
 
 <route lang="json">
 {

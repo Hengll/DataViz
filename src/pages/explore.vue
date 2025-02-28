@@ -21,8 +21,8 @@
       <v-col cols="12" class="d-flex justify-end mb-0 pb-0">
         <v-btn-toggle :model-value="toggle">
           <v-btn
+            class="h-75 underline-btn"
             variant="text"
-            class="h-75"
             :class="{ active: toggle === 0 ? true : false }"
             @click="
               $router.push({
@@ -33,8 +33,8 @@
             >{{ $t('explore.popular') }}</v-btn
           >
           <v-btn
+            class="h-75 underline-btn"
             variant="text"
-            class="h-75"
             :class="{ active: toggle === 1 ? true : false }"
             @click="
               $router.push({
@@ -45,8 +45,8 @@
             >{{ $t('explore.new') }}</v-btn
           >
           <v-btn
+            class="h-75 underline-btn"
             variant="text"
-            class="h-75"
             :class="{ active: toggle === 3 ? true : false }"
             @click="
               $router.push({
@@ -142,11 +142,6 @@ getDashboards()
 :deep(.v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled) > .v-btn__overlay) {
   background: transparent;
   opacity: 1;
-}
-
-:deep(.active > .v-btn__overlay) {
-  border-bottom: 1px solid rgba(var(--v-theme-secondary));
-  border-radius: 0;
 }
 
 .dashboard-card:hover {

@@ -1,62 +1,84 @@
 <template>
   <div class="hero-section">
-    <v-container class="h-screen">
+    <v-container class="h-100">
       <v-row class="flex-column flex-nowrap h-100">
         <v-col class="flex-0-1 d-flex flex-column flex-sm-row">
-          <div class="w-100 w-sm-50">
-            <h1 class="mainHeadline text-h3 font-weight-bold">{{ $t('home.mainHeadline') }}</h1>
+          <div class="w-100 w-sm-75">
+            <h1 class="mainHeadline text-h3 text-md-h2 text-lg-h1 font-weight-bold">
+              {{ $t('home.mainHeadline') }}
+            </h1>
+            <h1 class="mainHeadline text-h3 text-md-h2 text-lg-h1 font-weight-bold mb-3">
+              {{ $t('home.mainHeadline2') }}
+            </h1>
             <h3 class="Subheadline text-h6 font-weight-bold">{{ $t('home.Subheadline') }}</h3>
           </div>
           <div class="w-100 w-sm-50 d-flex flex-column justify-center align-center align-sm-end">
-            <v-btn class="btn-getStarted" color="primary" variant="flat">{{
+            <v-btn class="btn-getStarted mt-10 mt-sm-0" color="primary" variant="flat">{{
               $t('home.getStarted')
             }}</v-btn>
-            <v-btn class="btn-explore" variant="outlined">{{ $t('home.explore') }}</v-btn>
           </div>
         </v-col>
         <v-col class="position-relative pt-16">
           <div class="vedio1">
-            <video class="w-100 rounded-xl" muted :src="demo" autoplay loop></video>
+            <video class="w-100 rounded" muted :src="demo" autoplay loop></video>
           </div>
           <div class="vedio2">
-            <video class="w-100 rounded-xl" muted :src="demo" autoplay loop></video>
+            <video class="w-100 rounded" muted :src="demo" autoplay loop></video>
           </div>
         </v-col>
       </v-row>
     </v-container>
   </div>
-  <div class="introduction">
-    <v-container class="h-screen">
+  <div
+    class="introduction"
+    :style="{
+      paddingTop: name === 'xs' || name === 'sm' ? '5rem' : '25rem',
+      height: name === 'xs' || name === 'sm' ? 'auto' : '400vh',
+    }"
+  >
+    <v-container class="h-100">
       <v-row class="flex-column flex-nowrap h-100">
         <v-col cols="12" class="flex-0-1">
-          <h3 class="introductionTitle">{{ $t('home.introductionTitle') }}</h3>
+          <h3 class="text-h5 text-sm-h3 font-weight-bold">{{ $t('home.introductionTitle') }}</h3>
         </v-col>
-        <v-col cols="12" class="flex-1-1 d-flex justify-center align-center">
-          <v-card class="w-100 w-xl-75">
-            <v-card-title>{{ introductions[tab].title }}</v-card-title>
-            <v-card-text>
-              <div>{{ introductions[tab].text }}</div>
-              <div class="media"></div>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn
-                v-for="(introduction, index) in introductions"
-                :key="introduction"
-                :class="{ active: tab === index ? true : false }"
-                @click="tab = index"
-                >{{ introduction.title }}</v-btn
-              >
-            </v-card-actions>
-          </v-card>
+        <v-col cols="12" class="flex-1-1 d-flex flex-column position-relative">
+          <v-divider
+            vertical
+            class="vertical-line border-opacity-100"
+            :style="{ left: name === 'xs' || name === 'sm' ? 'calc(28px + 2%)' : '50%' }"
+          ></v-divider>
+          <v-col
+            v-for="(introduction, index) in introductions"
+            :key="introduction"
+            cols="12"
+            class="flex-1-0-0 d-flex flex-column flex-md-row align-center mb-16 mb-md-auto"
+          >
+            <v-col
+              class="flex-1-1 h-md-50 w-md-50"
+              :class="{
+                'order-1': index % 2 === 1 || name === 'sm' || name === 'xs' ? true : false,
+              }"
+              :style="{ width: name === 'xs' || name === 'sm' ? '95%' : 'auto' }"
+            >
+              <h1 class="mb-2">{{ introduction.title }}</h1>
+              <p>{{ introduction.text }}</p>
+            </v-col>
+            <v-col
+              class="border bg-light-blue flex-0-1 h-md-50 w-md-50 d-flex justify-center align-center order-md-0 position-relative media"
+            >
+            </v-col>
+          </v-col>
         </v-col>
       </v-row>
     </v-container>
   </div>
   <div class="highlights">
-    <v-container fluid class="h-screen">
+    <v-container fluid class="h-100">
       <v-row class="flex-column flex-nowrap h-100">
         <v-col cols="12" class="flex-0-0">
-          <h3 class="highlightsTitle">{{ $t('home.highlightsTitle') }}</h3>
+          <h3 class="text-h5 text-sm-h4 font-weight-bold text-center">
+            {{ $t('home.highlightsTitle') }}
+          </h3>
         </v-col>
         <v-col cols="12" class="flex-1-0 d-flex justify-center align-center">
           <swiper
@@ -81,7 +103,7 @@
                   {{ dashboard.dashboardName }}
                 </h4>
                 <v-img
-                  class="border ma-1 cursor-pointer rounded-xl"
+                  class="border ma-1 cursor-pointer rounded"
                   :src="dashboard.image || whiteImg"
                   @click="$router.push(`/dashboard/${dashboard._id}`)"
                 ></v-img>
@@ -112,7 +134,6 @@ const { name } = useDisplay()
 const demo = new URL('@/assets/demo.webm', import.meta.url).href
 const whiteImg = new URL('@/assets/white.png', import.meta.url).href
 
-const tab = ref(0)
 const introductions = computed(() => {
   return [
     {
@@ -157,73 +178,50 @@ getDashboards()
 
 <style lang="scss" scoped>
 .hero-section {
-  height: 100vh;
+  height: calc(100vh - 60px);
   padding-top: 6rem;
 
-  & .mainHeadline {
-    margin-bottom: 1rem;
-  }
-
   & .btn-getStarted {
-    width: 200px;
-    height: 80px;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    // background: rgba(var(--v-theme-primary), 0.8);
-  }
-
-  & .btn-explore {
     width: 200px;
     height: 80px;
     font-size: 2rem;
   }
 
   & .vedio1 {
-    width: 60%;
+    width: 70%;
   }
 
   & .vedio2 {
-    width: 50%;
+    width: 60%;
     position: absolute;
-    top: 30%;
+    top: 40%;
     right: 0;
   }
 }
 
 .introduction {
-  height: 120vh;
-  padding-top: 6rem;
   background: rgb(var(--v-theme-surface));
 
-  & .introductionTitle {
-    font-size: 1.5rem;
-    text-align: center;
+  & .vertical-line {
+    position: absolute;
+    top: 12px;
+    height: calc(100% - 24px);
   }
 
   & .media {
+    width: 100%;
     aspect-ratio: 16 / 9;
-    border: 1px solid black;
   }
-}
-
-:deep(.active > .v-btn__overlay) {
-  border-bottom: 1px solid rgba(var(--v-theme-secondary));
-  border-radius: 0;
 }
 
 .highlights {
-  height: 120vh;
+  height: 100vh;
   padding-top: 6rem;
-
-  & .highlightsTitle {
-    font-size: 1.5rem;
-    text-align: center;
-  }
 }
 
 .swiper {
   width: 100%;
-  height: 80%;
+  height: 100%;
 }
 
 .swiper-slide {

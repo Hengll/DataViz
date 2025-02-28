@@ -10,12 +10,13 @@
       <!-- 電腦版面 -->
       <template v-if="!mobile">
         <div>
-          <v-btn class="mx-1" to="/">{{ $t('nav.home') }}</v-btn>
-          <v-btn class="mx-1" to="/explore">{{ $t('nav.explore') }}</v-btn>
-          <v-btn class="mx-1" to="/about">{{ $t('nav.about') }}</v-btn>
+          <v-btn class="underline-btn mx-1" to="/">{{ $t('nav.home') }}</v-btn>
+          <v-btn class="underline-btn mx-1" to="/explore">{{ $t('nav.explore') }}</v-btn>
+          <v-btn class="underline-btn mx-1" to="/about">{{ $t('nav.about') }}</v-btn>
           <v-menu open-on-hover close-delay="300" open-delay="0" :close-on-content-click="false">
             <template #activator="{ props }">
               <v-btn
+                class="underline-btn"
                 rounded="0"
                 v-bind="props"
                 :append-icon="
@@ -60,9 +61,11 @@
           </v-menu>
         </div>
         <div>
-          <v-btn v-if="user.isLoggedIn" @click="logout">{{ $t('nav.logout') }}</v-btn>
+          <v-btn v-if="user.isLoggedIn" class="underline-btn" @click="logout">{{
+            $t('nav.logout')
+          }}</v-btn>
           <template v-for="nav in navs" :key="nav.to">
-            <v-btn v-if="nav.show" :to="nav.to">{{ nav.text }}</v-btn>
+            <v-btn v-if="nav.show" class="underline-btn" :to="nav.to">{{ nav.text }}</v-btn>
           </template>
         </div>
       </template>
@@ -303,17 +306,17 @@ toggleTheme()
   }
 }
 
-:deep(.v-btn__overlay) {
+:deep(.underline-btn .v-btn__overlay) {
   background: transparent;
   opacity: 1;
 }
 
-:deep(.v-btn--active > .v-btn__overlay) {
+:deep(.underline-btn.v-btn--active > .v-btn__overlay) {
   border-bottom: 1px solid rgba(var(--v-theme-secondary));
   border-radius: 0;
 }
 
-:deep(.v-btn:hover) {
+:deep(.underline-btn.v-btn:hover) {
   opacity: 1;
   background: transparent;
   border-bottom: 1px solid rgba(var(--v-theme-secondary));

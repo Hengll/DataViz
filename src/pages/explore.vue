@@ -8,6 +8,7 @@
             variant="outlined"
             density="compact"
             append-inner-icon="mdi-magnify"
+            color="secondary"
             :placeholder="$t('explore.titleOrAuthor')"
             @click:append-inner="
               $router.push({ path: '/explore', query: { search: search || undefined } })
@@ -15,7 +16,8 @@
             @keydown.enter="
               $router.push({ path: '/explore', query: { search: search || undefined } })
             "
-          ></v-text-field>
+          >
+          </v-text-field>
         </v-col>
       </v-col>
       <v-col cols="12" class="d-flex justify-end mb-0 pb-0">
@@ -23,7 +25,7 @@
           <v-btn
             class="h-75 underline-btn"
             variant="text"
-            :class="{ active: toggle === 0 ? true : false }"
+            :class="{ 'text-primary': toggle === 0 ? true : false }"
             @click="
               $router.push({
                 path: '/explore',
@@ -35,7 +37,7 @@
           <v-btn
             class="h-75 underline-btn"
             variant="text"
-            :class="{ active: toggle === 1 ? true : false }"
+            :class="{ 'text-primary': toggle === 1 ? true : false }"
             @click="
               $router.push({
                 path: '/explore',
@@ -47,7 +49,7 @@
           <v-btn
             class="h-75 underline-btn"
             variant="text"
-            :class="{ active: toggle === 3 ? true : false }"
+            :class="{ 'text-primary': toggle === 2 ? true : false }"
             @click="
               $router.push({
                 path: '/explore',
@@ -65,13 +67,20 @@
             :key="dashboard._id"
             class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
           >
-            <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
-            <dashboard-card
-              v-else
-              class="dashboard-card"
-              v-bind="dashboard"
-              :read-only="true"
-            ></dashboard-card>
+            <v-hover>
+              <template #default="{ isHovering, props }">
+                <div v-bind="props" class="bg-secondary rounded">
+                  <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
+                  <dashboard-card
+                    v-else
+                    v-bind="dashboard"
+                    :read-only="true"
+                    :class="{ 'dashboard-hover': isHovering ? true : false }"
+                    :style="{ transition: '0.2s' }"
+                  ></dashboard-card>
+                </div>
+              </template>
+            </v-hover>
           </v-col>
         </v-row>
       </v-col>
@@ -144,9 +153,8 @@ getDashboards()
   opacity: 1;
 }
 
-.dashboard-card:hover {
-  transition: 0.5s;
-  transform: scale(1.1);
+.dashboard-hover {
+  transform: translate(5px, -5px);
 }
 </style>
 

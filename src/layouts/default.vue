@@ -312,14 +312,14 @@ toggleTheme()
 }
 
 :deep(.underline-btn.v-btn--active > .v-btn__overlay) {
-  border-bottom: 1px solid rgba(var(--v-theme-secondary));
+  border-bottom: 1px solid rgba(var(--v-theme-primary));
   border-radius: 0;
 }
 
 :deep(.underline-btn.v-btn:hover) {
   opacity: 1;
   background: transparent;
-  border-bottom: 1px solid rgba(var(--v-theme-secondary));
+  border-bottom: 1px solid rgba(var(--v-theme-primary-darken-1));
   border-radius: 0;
 }
 

@@ -5,7 +5,13 @@
         <h1>{{ $t('auth.myDashboards') }}</h1>
       </v-col>
       <v-col cols="12">
-        <v-btn @click="createDashboard">{{ $t('dashboard.new') }}</v-btn>
+        <v-btn
+          prepend-icon="mdi-plus"
+          variant="outlined"
+          color="primary"
+          @click="createDashboard"
+          >{{ $t('dashboard.new') }}</v-btn
+        >
       </v-col>
       <v-col cols="12">
         <v-row>
@@ -14,14 +20,22 @@
             :key="dashboard._id"
             class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
           >
-            <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
-            <dashboard-card
-              v-else
-              v-bind="dashboard"
-              :read-only="false"
-              @edit="$router.push(`/editor/dashboard/${dashboard._id}`)"
-              @delete="openConfirmDialog(dashboard._id)"
-            ></dashboard-card>
+            <v-hover>
+              <template #default="{ isHovering, props }">
+                <div v-bind="props" class="bg-secondary rounded">
+                  <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
+                  <dashboard-card
+                    v-else
+                    v-bind="dashboard"
+                    :read-only="false"
+                    :class="{ 'dashboard-hover': isHovering ? true : false }"
+                    :style="{ transition: '0.2s' }"
+                    @edit="$router.push(`/editor/dashboard/${dashboard._id}`)"
+                    @delete="openConfirmDialog(dashboard._id)"
+                  ></dashboard-card>
+                </div>
+              </template>
+            </v-hover>
           </v-col>
         </v-row>
       </v-col>
@@ -129,6 +143,10 @@ onMounted(() => {
 <style lang="scss" scoped>
 .w-250 {
   width: 250px;
+}
+
+.dashboard-hover {
+  transform: translate(5px, -5px);
 }
 </style>
 

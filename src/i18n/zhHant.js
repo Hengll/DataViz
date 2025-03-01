@@ -119,6 +119,7 @@ export default {
     edit: '編輯',
     delete: '刪除',
     deleteSuccess: '刪除成功',
+    updatedAt: '最後更新',
   },
   userPage: {
     userEdit: '編輯個人資訊',

@@ -100,9 +100,9 @@ const lightTheme = {
     'surface-variant': '#E0E0E0',
     'on-surface-variant': '#424242',
     primary: '#FE5300', // 橘紅色
-    'primary-darken-1': '#F49610',
+    'primary-darken-1': '#C44100',
     secondary: '#FBBB11', // 黃色
-    'secondary-darken-1': '#F49610',
+    'secondary-darken-1': '#D08E0A',
     error: '#B00020',
     info: '#2196F3',
     success: '#4CAF50',
@@ -138,9 +138,9 @@ const darkTheme = {
     'surface-variant': '#424242',
     'on-surface-variant': '#A3A3A3',
     primary: '#FE5300', // 橘紅色
-    'primary-darken-1': '#F49610',
+    'primary-darken-1': '#C44100',
     secondary: '#FBBB11', // 黃色
-    'secondary-darken-1': '#F49610',
+    'secondary-darken-1': '#D08E0A',
     error: '#CF6679',
     info: '#2196F3',
     success: '#4CAF50',

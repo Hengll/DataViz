@@ -120,6 +120,10 @@ export default {
     delete: '刪除',
     deleteSuccess: '刪除成功',
     updatedAt: '最後更新',
+    'updatedAt_-1': '更新新⇒舊',
+    updatedAt_1: '更新舊⇒新',
+    'createdAt_-1': '建立新⇒舊',
+    createdAt_1: '建立舊⇒新',
   },
   userPage: {
     userEdit: '編輯個人資訊',

@@ -4,39 +4,110 @@
       <v-col cols="12">
         <h1>{{ $t('auth.myDashboards') }}</h1>
       </v-col>
-      <v-col cols="12">
+      <v-divider></v-divider>
+      <v-col cols="6">
         <v-btn
           prepend-icon="mdi-plus"
-          variant="outlined"
+          variant="elevated"
           color="primary"
           @click="createDashboard"
           >{{ $t('dashboard.new') }}</v-btn
         >
       </v-col>
+      <v-col :cols="6" class="d-flex align-center justify-end">
+        <div class="me-5" :style="{ width: '80px' }">
+          <v-btn-toggle v-model="view" density="compact" divided class="w-100">
+            <v-btn
+              :value="0"
+              variant="outlined"
+              color="primary"
+              class="w-50"
+              icon="mdi-view-grid"
+            ></v-btn>
+            <v-btn
+              :value="1"
+              variant="outlined"
+              color="primary"
+              class="w-50"
+              icon="mdi-menu"
+            ></v-btn>
+          </v-btn-toggle>
+        </div>
+        <div :style="{ width: '100px' }">
+          <v-menu>
+            <template #activator="{ props }">
+              <v-btn variant="outlined" color="primary" v-bind="props"
+                >sort
+                <template #append>
+                  <v-icon
+                    :icon="
+                      props['aria-expanded'] === 'true' ? 'mdi-chevron-up' : 'mdi-chevron-down'
+                    "
+                  ></v-icon>
+                </template>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(sort, index) in sorts"
+                :key="index"
+                class="d-flex align-center"
+                @click="sortBy = sort"
+              >
+                <span>{{ $t('dashboard.' + sort) }}</span>
+                <v-icon v-if="sort === sortBy" icon="mdi-check "></v-icon>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </v-col>
       <v-col cols="12">
         <v-row>
-          <v-col
-            v-for="dashboard in dashboards"
-            :key="dashboard._id"
-            class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
-          >
-            <v-hover>
-              <template #default="{ isHovering, props }">
-                <div v-bind="props" class="bg-secondary rounded">
-                  <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
-                  <dashboard-card
-                    v-else
-                    v-bind="dashboard"
-                    :read-only="false"
-                    :class="{ 'dashboard-hover': isHovering ? true : false }"
-                    :style="{ transition: '0.2s' }"
-                    @edit="$router.push(`/editor/dashboard/${dashboard._id}`)"
-                    @delete="openConfirmDialog(dashboard._id)"
-                  ></dashboard-card>
-                </div>
-              </template>
-            </v-hover>
-          </v-col>
+          <template v-if="view === 0">
+            <v-col
+              v-for="dashboard in dashboards"
+              :key="dashboard._id"
+              class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
+            >
+              <v-hover>
+                <template #default="{ isHovering, props }">
+                  <div v-bind="props" class="bg-secondary rounded">
+                    <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
+                    <dashboard-card
+                      v-else
+                      v-bind="dashboard"
+                      :read-only="false"
+                      :class="{ 'dashboard-hover': isHovering ? true : false }"
+                      :style="{ transition: '0.2s' }"
+                      @edit="$router.push(`/editor/dashboard/${dashboard._id}`)"
+                      @delete="openConfirmDialog(dashboard._id)"
+                    ></dashboard-card>
+                  </div>
+                </template>
+              </v-hover>
+            </v-col>
+          </template>
+          <template v-else>
+            <v-col v-for="dashboard in dashboards" :key="dashboard._id" cols="12">
+              <v-hover>
+                <template #default="{ isHovering, props }">
+                  <div v-bind="props" class="bg-secondary rounded">
+                    <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
+                    <dashboard-card
+                      v-else
+                      v-bind="dashboard"
+                      :read-only="false"
+                      :card-form="false"
+                      :class="{ 'dashboard-hover': isHovering ? true : false }"
+                      :style="{ transition: '0.2s' }"
+                      @edit="$router.push(`/editor/dashboard/${dashboard._id}`)"
+                      @delete="openConfirmDialog(dashboard._id)"
+                    ></dashboard-card>
+                  </div>
+                </template>
+              </v-hover>
+            </v-col>
+          </template>
         </v-row>
       </v-col>
     </v-row>
@@ -60,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useAxios } from '@/composables/axios'
 import DashboardCard from '@/components/DashboardCard.vue'
 import { useI18n } from 'vue-i18n'
@@ -73,7 +144,19 @@ const createSnackbar = useSnackbar()
 const router = useRouter()
 
 const isLoading = ref(true)
+const view = ref(0)
+const sorts = ref(['updatedAt_-1', 'updatedAt_1', 'createdAt_-1', 'createdAt_1'])
+const sortBy = ref('updatedAt_-1')
 const dashboards = ref([])
+
+watch(sortBy, () => {
+  const rule = sortBy.value.split('_')
+
+  dashboards.value.sort((a, b) => {
+    return (new Date(a[rule[0]]).getTime() - new Date(b[rule[0]]).getTime()) * rule[1]
+  })
+})
+
 const confirmDialog = ref({
   isOpen: false,
   id: '',

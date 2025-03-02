@@ -27,6 +27,8 @@ router.beforeEach(async (to, from, next) => {
   const user = useUserStore()
   const editor = useEditorStore()
 
+  i18n.global.locale.value = user.language
+
   if (from === START_LOCATION && user.isLoggedIn) {
     try {
       const { data } = await apiAuth.get('user/profile')

@@ -34,6 +34,7 @@
                   true-value="en"
                   false-value="zhHant"
                   color="primary"
+                  @update:model-value="changeLanguage"
                 >
                   <template #prepend>
                     <v-icon icon="mdi-earth"></v-icon>
@@ -122,6 +123,7 @@
                         true-value="en"
                         false-value="zhHant"
                         color="primary"
+                        @update:model-value="$i18n.locale = user.language"
                       >
                         <template #prepend>
                           <v-icon icon="mdi-earth"></v-icon>
@@ -228,15 +230,16 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { useAxios } from '@/composables/axios'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useSnackbar } from 'vuetify-use-dialog'
 import { useTheme } from 'vuetify'
 import { useDisplay } from 'vuetify'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const user = useUserStore()
 const { apiAuth } = useAxios()
 const router = useRouter()
+const route = useRoute()
 const createSnackbar = useSnackbar()
 const theme = useTheme()
 const { mobile } = useDisplay()
@@ -272,6 +275,13 @@ const toggleTheme = () => {
   theme.global.name.value = user.theme
 }
 toggleTheme()
+
+const changeLanguage = () => {
+  locale.value = user.language
+  if (route.path === '/' || route.path === '/explore' || route.path === '/about') {
+    document.title = t(route.meta.title) + ' - DataViz'
+  }
+}
 </script>
 
 <style lang="scss" scoped>

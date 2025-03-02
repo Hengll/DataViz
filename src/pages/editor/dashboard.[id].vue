@@ -29,7 +29,7 @@
                 @click="resetFormNewChart"
               >
                 <template v-if="menu.icon" #prepend>
-                  <v-icon :icon="menu.icon" color="primary-darken-1"></v-icon>
+                  <v-icon :icon="menu.icon" color="primary"></v-icon>
                 </template>
                 <p :title="$t('editDashboard.' + menu.text)" style="white-space: nowrap">
                   {{ $t('editDashboard.' + menu.text) }}
@@ -93,7 +93,7 @@
             @click="newChart(menu.text, navIndex, menuIndex)"
           >
             <template #prepend>
-              <v-icon :icon="menu.icon" color="primary-darken-1"></v-icon>
+              <v-icon :icon="menu.icon" color="primary"></v-icon>
             </template>
             <p :title="$t('editDashboard.' + menu.text)" style="white-space: nowrap">
               {{ $t('editDashboard.' + menu.text) }}
@@ -126,7 +126,7 @@
       <v-col cols="5">
         <v-btn prepend-icon="mdi-pencil" @click="openDialog">{{ $t('editDashboard.edit') }}</v-btn>
       </v-col>
-      <v-col cols="3" class="ms-auto d-flex justify-end align-center">
+      <v-col cols="4" class="ms-auto d-flex justify-end align-center">
         <v-menu :close-on-content-click="false">
           <template #activator="{ props: prop }">
             <v-btn

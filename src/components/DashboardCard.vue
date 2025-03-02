@@ -72,8 +72,8 @@
         <v-col class="flex-0-0 d-flex align-center w-auto pe-0" :style="{ height: '125px' }">
           <img class="border rounded h-100" :src="image || whiteImg" />
         </v-col>
-        <v-col class="flex-1-1 w-auto" :style="{ height: '125px', minWidth: 0 }">
-          <v-card-title :title="dashboardName">
+        <v-col class="flex-1-1 w-auto px-0 px-xs-3" :style="{ height: '125px', minWidth: 0 }">
+          <v-card-title class="pb-0 pb-xs-2" :title="dashboardName">
             {{ dashboardName }}
           </v-card-title>
           <v-card-subtitle v-if="readOnly">
@@ -115,12 +115,33 @@
         </v-col>
         <v-col class="flex-0-0 w-auto" :style="{ height: '125px' }">
           <v-card-actions class="d-flex flex-column align-end justify-center">
-            <v-btn v-if="!readOnly" variant="outlined" color="primary" @click="$emit('edit')">{{
-              $t('dashboard.edit')
-            }}</v-btn>
-            <v-btn v-if="!readOnly" variant="outlined" @click.prevent="$emit('delete')">{{
-              $t('dashboard.delete')
-            }}</v-btn>
+            <template v-if="name !== 'xs'">
+              <v-btn v-if="!readOnly" variant="outlined" color="primary" @click="$emit('edit')">{{
+                $t('dashboard.edit')
+              }}</v-btn>
+              <v-btn v-if="!readOnly" variant="outlined" @click.prevent="$emit('delete')">{{
+                $t('dashboard.delete')
+              }}</v-btn>
+            </template>
+            <template v-else>
+              <v-btn
+                v-if="!readOnly"
+                min-width="24"
+                variant="outlined"
+                color="primary"
+                @click="$emit('edit')"
+              >
+                <v-icon color="primary" icon="mdi-pencil" size="x-small"></v-icon>
+              </v-btn>
+              <v-btn
+                v-if="!readOnly"
+                min-width="24"
+                variant="outlined"
+                @click.prevent="$emit('delete')"
+              >
+                <v-icon icon="mdi-close" size="x-small"></v-icon>
+              </v-btn>
+            </template>
           </v-card-actions>
         </v-col>
       </v-row>
@@ -129,6 +150,10 @@
 </template>
 
 <script setup>
+import { useDisplay } from 'vuetify'
+
+const { name } = useDisplay()
+
 const whiteImg = new URL('@/assets/white.png', import.meta.url).href
 defineProps({
   // eslint-disable-next-line vue/prop-name-casing

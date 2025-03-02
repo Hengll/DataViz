@@ -64,8 +64,9 @@
               <p>{{ introduction.text }}</p>
             </v-col>
             <v-col
-              class="border bg-light-blue flex-0-1 h-md-50 w-md-50 d-flex justify-center align-center order-md-0 position-relative media"
+              class="pa-0 flex-0-1 h-md-50 w-md-50 d-flex justify-center align-start order-md-0 position-relative"
             >
+              <div :id="'media-' + index" class="media bg-light-blue"></div>
             </v-col>
           </v-col>
         </v-col>
@@ -117,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
@@ -126,6 +127,8 @@ import 'swiper/css/navigation'
 import { Autoplay, Pagination, Navigation } from 'swiper/modules'
 import { useAxios } from '@/composables/axios'
 import { useDisplay } from 'vuetify'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const { t } = useI18n()
 const { api } = useAxios()
@@ -174,6 +177,24 @@ const getDashboards = async () => {
   }
 }
 getDashboards()
+
+gsap.registerPlugin(ScrollTrigger)
+onMounted(() => {
+  gsap.utils.toArray('.media').forEach((el, index) => {
+    gsap.from(el, {
+      opacity: 0,
+      x: index % 2 === 0 ? 100 : -100,
+      duration: 1.2,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 60%',
+        end: 'top 50%',
+        toggleActions: 'play none none none',
+      },
+    })
+  })
+})
 </script>
 
 <style lang="scss" scoped>
@@ -182,7 +203,7 @@ getDashboards()
   padding-top: 6rem;
 
   & .btn-getStarted {
-    width: 200px;
+    width: 250px;
     height: 80px;
     font-size: 2rem;
   }

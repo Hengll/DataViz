@@ -18,7 +18,9 @@
         $t('nav.previewDashboard')
       }}</v-btn>
       <v-btn
-        class="pa-1 h-25 border ms-auto bg-primary"
+        class="pa-1 h-25 border ms-auto"
+        color="primary"
+        variant="flat"
         :loading="editor.saveLoading"
         @click="saveAndBack"
         >{{ $t('nav.saveAndBack') }}</v-btn

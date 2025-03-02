@@ -10,13 +10,18 @@
           }}
         </h1>
       </v-col>
+      <v-divider></v-divider>
       <v-col cols="3"> </v-col>
       <v-col cols="6"> </v-col>
       <v-col cols="2" class="ms-auto d-flex justify-end">
-        <v-btn @click="saveData">{{ $t('linkData.save') }}</v-btn>
+        <v-btn variant="elevated" color="primary" @click="saveData">{{
+          $t('linkData.save')
+        }}</v-btn>
       </v-col>
       <v-col cols="6">
         <v-btn
+          variant="outlined"
+          color="primary"
           prepend-icon="mdi-plus"
           :disabled="!editor.dashboard.dataSet?.data"
           @click="editor.insertRowData"
@@ -25,6 +30,8 @@
       </v-col>
       <v-col cols="6" class="d-flex justify-end">
         <v-btn
+          variant="outlined"
+          color="primary"
           prepend-icon="mdi-pencil"
           :disabled="!editor.dashboard.dataSet?.data"
           @click="openDialogEdit"
@@ -48,25 +55,30 @@
     </v-row>
   </v-container>
 
-  <v-dialog v-model="dialogEdit" persistent class="w-50">
+  <v-dialog v-model="dialogEdit" width="600">
     <v-form :disabled="isSubmittingEdit" @submit.prevent="submitEdit">
       <v-card>
-        <v-card-title>{{ $t('linkData.editDataInfo') }}</v-card-title>
+        <v-card-title class="d-flex align-center">
+          <v-icon icon="mdi-pencil" class="me-1"></v-icon>
+          <span>{{ $t('linkData.editDataInfo') }}</span>
+        </v-card-title>
         <v-card-text>
           <v-text-field
             v-model="dataNameEdit.value.value"
             :error-messages="dataNameEdit.errorMessage.value"
             :label="$t('dataSet.dataName')"
+            variant="outlined"
           ></v-text-field>
           <v-textarea
             v-model="dataInfoEdit.value.value"
             :error-messages="dataInfoEdit.errorMessage.value"
             :label="$t('dataSet.dataInfo')"
+            variant="outlined"
           ></v-textarea>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="border" @click="closeDialogEdit">{{ $t('dataSet.cancel') }}</v-btn>
-          <v-btn class="border" type="submit" :loading="isSubmittingEdit">{{
+          <v-btn @click="closeDialogEdit">{{ $t('dataSet.cancel') }}</v-btn>
+          <v-btn variant="flat" color="primary" type="submit" :loading="isSubmittingEdit">{{
             $t('linkData.edit')
           }}</v-btn>
         </v-card-actions>

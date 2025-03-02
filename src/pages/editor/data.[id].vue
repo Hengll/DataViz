@@ -5,7 +5,7 @@
         <h1 class="text-center">{{ $t('editor.linkData') }}</h1>
       </v-col>
       <v-col cols="3">
-        <v-btn @click="openDialog">{{ $t('linkData.new') }}</v-btn>
+        <v-btn prepend-icon="mdi-upload" @click="openDialog">{{ $t('linkData.new') }}</v-btn>
       </v-col>
       <v-col cols="6">
         <v-select
@@ -20,7 +20,7 @@
         ></v-select>
       </v-col>
       <v-col cols="2" class="ms-auto d-flex justify-end">
-        <v-btn @click="saveData">{{ $t('linkData.save') }}</v-btn>
+        <v-btn color="primary" @click="saveData">{{ $t('linkData.save') }}</v-btn>
       </v-col>
       <v-col cols="6">
         <v-btn
@@ -55,20 +55,25 @@
     </v-row>
   </v-container>
 
-  <v-dialog v-model="dialog" persistent class="w-50">
+  <v-dialog v-model="dialog" width="600">
     <v-form :disabled="isSubmitting" @submit.prevent="submit">
       <v-card>
-        <v-card-title>{{ $t('dataSet.new') }}</v-card-title>
+        <v-card-title class="d-flex align-center">
+          <v-icon icon="mdi-upload" class="me-1"></v-icon>
+          <span>{{ $t('linkData.editDataInfo') }}</span>
+        </v-card-title>
         <v-card-text>
           <v-text-field
             v-model="dataName.value.value"
             :error-messages="dataName.errorMessage.value"
             :label="$t('dataSet.dataName')"
+            variant="outlined"
           ></v-text-field>
           <v-textarea
             v-model="dataInfo.value.value"
             :error-messages="dataInfo.errorMessage.value"
             :label="$t('dataSet.dataInfo')"
+            variant="outlined"
           ></v-textarea>
           <VueFileAgent
             ref="fileAgent"
@@ -82,8 +87,8 @@
           ></VueFileAgent>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="border" @click="closeDialog">{{ $t('dataSet.cancel') }}</v-btn>
-          <v-btn class="border" type="submit" :loading="isSubmitting">{{
+          <v-btn @click="closeDialog">{{ $t('dataSet.cancel') }}</v-btn>
+          <v-btn variant="flat" color="primary" type="submit" :loading="isSubmitting">{{
             $t('dataSet.upload')
           }}</v-btn>
         </v-card-actions>
@@ -91,25 +96,30 @@
     </v-form>
   </v-dialog>
 
-  <v-dialog v-model="dialogEdit" persistent class="w-50">
+  <v-dialog v-model="dialogEdit" width="600">
     <v-form :disabled="isSubmittingEdit" @submit.prevent="submitEdit">
       <v-card>
-        <v-card-title>{{ $t('linkData.editDataInfo') }}</v-card-title>
+        <v-card-title class="d-flex align-center">
+          <v-icon icon="mdi-pencil" class="me-1"></v-icon>
+          <span>{{ $t('linkData.editDataInfo') }}</span>
+        </v-card-title>
         <v-card-text>
           <v-text-field
             v-model="dataNameEdit.value.value"
             :error-messages="dataNameEdit.errorMessage.value"
             :label="$t('dataSet.dataName')"
+            variant="outlined"
           ></v-text-field>
           <v-textarea
             v-model="dataInfoEdit.value.value"
             :error-messages="dataInfoEdit.errorMessage.value"
             :label="$t('dataSet.dataInfo')"
+            variant="outlined"
           ></v-textarea>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="border" @click="closeDialogEdit">{{ $t('dataSet.cancel') }}</v-btn>
-          <v-btn class="border" type="submit" :loading="isSubmittingEdit">{{
+          <v-btn @click="closeDialogEdit">{{ $t('dataSet.cancel') }}</v-btn>
+          <v-btn variant="flat" color="primary" type="submit" :loading="isSubmittingEdit">{{
             $t('linkData.edit')
           }}</v-btn>
         </v-card-actions>

@@ -28,9 +28,13 @@
                   </template>
                 </v-hover>
                 <h2>{{ author.userName }}</h2>
-                <v-btn v-if="isUserPage" variant="text" class="border" @click="openInfoDialog">{{
-                  $t('userPage.userEdit')
-                }}</v-btn>
+                <v-btn
+                  v-if="isUserPage"
+                  prepend-icon="mdi-pencil"
+                  color="primary"
+                  @click="openInfoDialog"
+                  >{{ $t('userPage.userEdit') }}</v-btn
+                >
               </v-col>
               <v-col cols="12">
                 <p>{{ author.userInfo || '...' }}</p>
@@ -39,6 +43,7 @@
           </v-col>
         </v-row>
       </v-col>
+
       <v-col cols="12" class="pa-16">
         <v-row>
           <v-col
@@ -46,7 +51,20 @@
             :key="dashboard._id"
             class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
           >
-            <dashboard-card v-bind="dashboard" :read-only="true"></dashboard-card>
+            <v-hover>
+              <template #default="{ isHovering, props }">
+                <div v-bind="props" class="bg-secondary rounded">
+                  <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
+                  <dashboard-card
+                    v-else
+                    v-bind="dashboard"
+                    :read-only="true"
+                    :class="{ 'dashboard-hover': isHovering ? true : false }"
+                    :style="{ transition: '0.2s' }"
+                  ></dashboard-card>
+                </div>
+              </template>
+            </v-hover>
           </v-col>
         </v-row>
       </v-col>
@@ -55,7 +73,10 @@
 
   <v-dialog v-model="dialog" width="350">
     <v-card>
-      <v-card-title>{{ $t('userPage.uploadAvatar') }}</v-card-title>
+      <v-card-title class="d-flex align-center">
+        <v-icon icon="mdi-upload" class="me-1"></v-icon>
+        <span>{{ $t('userPage.uploadAvatar') }}</span>
+      </v-card-title>
       <v-card-text>
         <VueFileAgent
           ref="fileAgent"
@@ -70,29 +91,38 @@
       </v-card-text>
       <v-card-actions>
         <v-btn @click="closeDialog">{{ $t('userPage.cancel') }}</v-btn>
-        <v-btn :loading="isUpload" @click="upload">{{ $t('userPage.upload') }}</v-btn>
+        <v-btn variant="flat" color="primary" :loading="isUpload" @click="upload">{{
+          $t('userPage.upload')
+        }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 
   <v-dialog v-model="infoDialog" width="600">
     <v-card>
-      <v-card-title>{{ $t('userPage.userEdit') }}</v-card-title>
+      <v-card-title class="d-flex align-center">
+        <v-icon icon="mdi-pencil" class="me-1"></v-icon>
+        <span>{{ $t('userPage.userEdit') }}</span>
+      </v-card-title>
       <v-card-text>
         <v-text-field
           v-model="userName.value.value"
           :error-messages="userName.errorMessage.value"
           :label="$t('userPage.userName')"
+          variant="outlined"
         ></v-text-field>
         <v-textarea
           v-model="userInfo.value.value"
           :error-messages="userInfo.errorMessage.value"
           :label="$t('userPage.userInfo')"
+          variant="outlined"
         ></v-textarea>
       </v-card-text>
       <v-card-actions>
         <v-btn @click="closeInfoDialog">{{ $t('userPage.cancel') }}</v-btn>
-        <v-btn :loading="isSubmitting" @click="submit">{{ $t('userPage.confirm') }}</v-btn>
+        <v-btn variant="flat" color="primary" :loading="isSubmitting" @click="submit">{{
+          $t('userPage.confirm')
+        }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -138,6 +168,7 @@ const closeInfoDialog = () => {
 }
 
 const isUserPage = ref(false)
+const isLoading = ref(true)
 const dashboards = ref([])
 const author = ref({})
 
@@ -158,6 +189,7 @@ const getAuthor = async () => {
     document.title = author.value.userName + ' - DataViz'
     const { data } = await api.get(`/dashboard/public/user/${route.params.id}`)
     dashboards.value = data.result
+    isLoading.value = false
   } catch (err) {
     console.log(err)
     router.push('/')
@@ -250,6 +282,7 @@ const submit = handleSubmit(async (value) => {
 <style lang="scss" scoped>
 .front {
   height: 100px;
+  background-color: rgb(var(--v-theme-secondary));
 }
 
 .user {
@@ -271,6 +304,10 @@ const submit = handleSubmit(async (value) => {
   width: 100%;
   height: 100%;
   cursor: pointer;
+}
+
+.dashboard-hover {
+  transform: translate(5px, -5px);
 }
 </style>
 

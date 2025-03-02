@@ -24,19 +24,24 @@
             <template #activator="{ props }">
               <v-list-item
                 append-icon="mdi-plus"
-                :prepend-icon="menu.icon"
                 class="user-select-none"
-                :title="$t('editDashboard.' + menu.text)"
                 v-bind="props"
                 @click="resetFormNewChart"
-              ></v-list-item>
+              >
+                <template v-if="menu.icon" #prepend>
+                  <v-icon :icon="menu.icon" color="primary-darken-1"></v-icon>
+                </template>
+                <p :title="$t('editDashboard.' + menu.text)" style="white-space: nowrap">
+                  {{ $t('editDashboard.' + menu.text) }}
+                </p>
+              </v-list-item>
             </template>
 
             <v-form
               :disabled="isSubmittingNewChart"
               @submit.prevent="newChart(menu.text, navIndex, menuIndex)"
             >
-              <v-card min-width="300">
+              <v-card width="300">
                 <v-list>
                   <v-list-item
                     :title="$t('editDashboard.' + menu.text)"
@@ -44,32 +49,34 @@
                   ></v-list-item>
                 </v-list>
                 <v-divider></v-divider>
-                <v-list>
-                  <v-list-item>
-                    <v-text-field
-                      v-model="chartTitle.value.value"
-                      :label="$t('editDashboard.chartTitle')"
-                      :error-messages="chartTitle.errorMessage.value"
-                    ></v-text-field>
-                  </v-list-item>
-                  <v-list-item v-for="i in menu.useVarsNum" :key="i">
-                    <v-select
-                      v-model="useVariables.value.value[i - 1]"
-                      :items="editor.dataVariables"
-                      :label="$t(`editDashboard.variables${i}`)"
-                      :error-messages="useVariables.errorMessage.value"
-                    ></v-select>
-                  </v-list-item>
-                </v-list>
+                <v-card-text>
+                  <v-text-field
+                    v-model="chartTitle.value.value"
+                    :label="$t('editDashboard.chartTitle')"
+                    :error-messages="chartTitle.errorMessage.value"
+                    variant="outlined"
+                  ></v-text-field>
+                  <v-select
+                    v-for="i in menu.useVarsNum"
+                    :key="i"
+                    v-model="useVariables.value.value[i - 1]"
+                    :items="editor.dataVariables"
+                    :label="$t(`editDashboard.variables${i}`)"
+                    :error-messages="useVariables.errorMessage.value"
+                    variant="outlined"
+                  ></v-select>
+                </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn variant="text" @click="menu.isOpen = false">取消</v-btn>
+                  <v-btn variant="text" @click="menu.isOpen = false">{{
+                    $t('editDashboard.cancel')
+                  }}</v-btn>
                   <v-btn
                     type="submit"
                     color="primary"
-                    variant="text"
+                    variant="flat"
                     :loading="isSubmittingNewChart"
-                    >新增</v-btn
+                    >{{ $t('editDashboard.new') }}</v-btn
                   >
                 </v-card-actions>
               </v-card>
@@ -81,12 +88,17 @@
             v-for="(menu, menuIndex) in nav.menus"
             :key="menuIndex"
             append-icon="mdi-plus"
-            :prepend-icon="menu.icon"
             class="user-select-none"
-            :title="$t('editDashboard.' + menu.text)"
             :disabled="isSubmittingNewChart"
             @click="newChart(menu.text, navIndex, menuIndex)"
-          ></v-list-item>
+          >
+            <template #prepend>
+              <v-icon :icon="menu.icon" color="primary-darken-1"></v-icon>
+            </template>
+            <p :title="$t('editDashboard.' + menu.text)" style="white-space: nowrap">
+              {{ $t('editDashboard.' + menu.text) }}
+            </p>
+          </v-list-item>
         </template>
 
         <v-divider></v-divider>
@@ -111,13 +123,15 @@
       <v-col cols="12">
         <h1 class="text-center">{{ $t('editor.editDashboard') }}</h1>
       </v-col>
-      <v-col cols="4">
-        <v-btn @click="openDialog">{{ $t('editDashboard.edit') }}</v-btn>
+      <v-col cols="5">
+        <v-btn prepend-icon="mdi-pencil" @click="openDialog">{{ $t('editDashboard.edit') }}</v-btn>
       </v-col>
       <v-col cols="3" class="ms-auto d-flex justify-end align-center">
         <v-menu :close-on-content-click="false">
           <template #activator="{ props: prop }">
-            <div
+            <v-btn
+              variant="flat"
+              :color="editor.dashboard.backgroundColor"
               v-bind="prop"
               class="d-flex align-center justify-center"
               :style="{
@@ -129,11 +143,10 @@
                 marginRight: '1rem',
                 borderRadius: '2px',
                 fontSize: '14px',
-                color: editor.dashboard.backgroundColor === '#000000' ? '#FFFFFF' : '#000000',
               }"
             >
               {{ $t('editDashboard.backgroundColor') }}
-            </div>
+            </v-btn>
           </template>
           <v-color-picker
             v-model="editor.dashboard.backgroundColor"
@@ -142,7 +155,7 @@
           ></v-color-picker>
         </v-menu>
 
-        <v-btn :loading="editor.saveLoading" @click="saveDashboard">{{
+        <v-btn color="primary" :loading="editor.saveLoading" @click="saveDashboard">{{
           $t('editDashboard.save')
         }}</v-btn>
       </v-col>
@@ -165,20 +178,25 @@
     </v-row>
   </v-container>
 
-  <v-dialog v-model="dialog" persistent class="w-50">
+  <v-dialog v-model="dialog" width="600">
     <v-form :disabled="isSubmitting" @submit.prevent="submit">
       <v-card>
-        <v-card-title>{{ $t('editDashboard.edit') }}</v-card-title>
+        <v-card-title class="d-flex align-center">
+          <v-icon icon="mdi-pencil" class="me-1"></v-icon>
+          <span>{{ $t('editDashboard.edit') }}</span>
+        </v-card-title>
         <v-card-text>
           <v-text-field
             v-model="dashboardName.value.value"
             :error-messages="dashboardName.errorMessage.value"
             :label="$t('editDashboard.dashboardName')"
+            variant="outlined"
           ></v-text-field>
           <v-textarea
             v-model="dashboardInfo.value.value"
             :error-messages="dashboardInfo.errorMessage.value"
             :label="$t('editDashboard.dashboardInfo')"
+            variant="outlined"
           ></v-textarea>
           <v-switch
             v-model="dashboardPublic.value.value"
@@ -187,8 +205,8 @@
           ></v-switch>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="border" @click="closeDialog">{{ $t('editDashboard.cancel') }}</v-btn>
-          <v-btn class="border" type="submit" :loading="isSubmitting">{{
+          <v-btn @click="closeDialog">{{ $t('editDashboard.cancel') }}</v-btn>
+          <v-btn color="primary" variant="flat" type="submit" :loading="isSubmitting">{{
             $t('editDashboard.save')
           }}</v-btn>
         </v-card-actions>

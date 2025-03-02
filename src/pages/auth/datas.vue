@@ -4,32 +4,41 @@
       <v-col cols="12">
         <h1>{{ $t('auth.myDataSets') }}</h1>
       </v-col>
+      <v-divider></v-divider>
+      <v-col cols="8" class="d-flex justify-space-between align-center">
+        <v-btn prepend-icon="mdi-upload" variant="elevated" color="primary" @click="openDialog">{{
+          $t('dataSet.new')
+        }}</v-btn>
+      </v-col>
+      <v-col cols="4">
+        <v-text-field
+          v-model="search"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="compact"
+          hide-details
+        ></v-text-field>
+      </v-col>
       <v-col cols="12">
-        <v-data-table :items="items" :headers="headers" :search="search">
-          <template #top>
-            <v-toolbar>
-              <v-btn class="border" @click="openDialog">{{ $t('dataSet.new') }}</v-btn>
-              <v-spacer></v-spacer>
-              <v-text-field
-                v-model="search"
-                class="mr-5 mt-2"
-                prepend-inner-icon="mdi-magnify"
-                variant="underlined"
-              ></v-text-field>
-            </v-toolbar>
-          </template>
+        <v-data-table
+          class="rounded"
+          height="580"
+          :items="items"
+          :headers="headers"
+          :search="search"
+        >
           <template #[`item.createdAt`]="{ value }">
             {{ new Date(value).toLocaleString() }}
           </template>
           <template #[`item.edit`]="{ item }">
             <div class="d-flex justify-end">
               <v-btn
-                class="border"
-                variant="text"
+                color="primary"
+                variant="outlined"
                 @click="$router.push(`/auth/data/${item._id}`)"
                 >{{ $t('dataSet.edit') }}</v-btn
               >
-              <v-btn class="border ms-1" variant="text" @click="openConfirmDialog(item._id)">{{
+              <v-btn class="ms-1" variant="outlined" @click="openConfirmDialog(item._id)">{{
                 $t('dataSet.delete')
               }}</v-btn>
             </div>
@@ -39,20 +48,25 @@
     </v-row>
   </v-container>
 
-  <v-dialog v-model="dialog" persistent class="w-50">
+  <v-dialog v-model="dialog" width="600">
     <v-form :disabled="isSubmitting" @submit.prevent="submit">
       <v-card>
-        <v-card-title>{{ $t('dataSet.new') }}</v-card-title>
+        <v-card-title class="d-flex align-center">
+          <v-icon icon="mdi-upload" class="me-1"></v-icon>
+          <span>{{ $t('dataSet.new') }}</span>
+        </v-card-title>
         <v-card-text>
           <v-text-field
             v-model="dataName.value.value"
             :error-messages="dataName.errorMessage.value"
             :label="$t('dataSet.dataName')"
+            variant="outlined"
           ></v-text-field>
           <v-textarea
             v-model="dataInfo.value.value"
             :error-messages="dataInfo.errorMessage.value"
             :label="$t('dataSet.dataInfo')"
+            variant="outlined"
           ></v-textarea>
           <VueFileAgent
             ref="fileAgent"
@@ -66,8 +80,8 @@
           ></VueFileAgent>
         </v-card-text>
         <v-card-actions>
-          <v-btn class="border" @click="closeDialog">{{ $t('dataSet.cancel') }}</v-btn>
-          <v-btn class="border" type="submit" :loading="isSubmitting">{{
+          <v-btn @click="closeDialog">{{ $t('dataSet.cancel') }}</v-btn>
+          <v-btn color="primary" variant="flat" type="submit" :loading="isSubmitting">{{
             $t('dataSet.upload')
           }}</v-btn>
         </v-card-actions>
@@ -75,13 +89,19 @@
     </v-form>
   </v-dialog>
 
-  <v-dialog v-model="confirmDialog.isOpen" persistent class="w-250">
+  <v-dialog
+    v-model="confirmDialog.isOpen"
+    class="w-250"
+    @keydown.enter.once="deleteDataSet(confirmDialog.id)"
+  >
     <v-card>
-      <v-card-title class="text-center">確認刪除</v-card-title>
+      <v-card-text class="text-center pa-10">{{ $t('dataSet.deleteConfirm') }}</v-card-text>
       <v-divider></v-divider>
       <v-card-actions class="d-flex justify-center">
-        <v-btn class="border" type="text" @click="deleteDataSet(confirmDialog.id)">確定</v-btn>
-        <v-btn class="border" type="text" @click="closeConfirmDialog">取消</v-btn>
+        <v-btn color="primary" variant="flat" @click="deleteDataSet(confirmDialog.id)">{{
+          $t('dataSet.confirm')
+        }}</v-btn>
+        <v-btn variant="text" @click="closeConfirmDialog">{{ $t('dataSet.cancel') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

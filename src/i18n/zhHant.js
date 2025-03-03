@@ -279,7 +279,7 @@ export default {
   about: {
     title: '關於我們 —— 讓數據更有溫度',
     subtitle: '透過視覺化，讓數據更易讀、更易懂、更具洞察力',
-    missionTitle: 'missionTitle',
+    missionTitle: '目標',
     missionText: '我們希望透過視覺化技術，降低數據分析的門檻，讓每個人都能透過直覺的方式理解數據。',
     feature1Title: '管理數據',
     feature1Text: '輕鬆上傳、管理你的數據，支持 CSV、JSON 等格式。',
@@ -288,8 +288,8 @@ export default {
     feature3Title: '視覺化儀表板',
     feature3Text: '用互動式圖表探索數據趨勢，讓決策更有依據。',
     feature4Title: '公開分享',
-    feature4Text: '將數據圖表分享給團隊或社群，支持嵌入與即時更新。',
-    techTitle: '技術實現',
+    feature4Text: '將數據圖表分享給團隊或社群，支持動態更新。',
+    techTitle: '使用技術',
     challengesTitle: '開發過程與挑戰',
     challenge1: '如何確保圖表在不同解析度下都能清晰顯示？',
     challenge2: '如何讓數據導入的速度更快？',
@@ -298,7 +298,6 @@ export default {
     future1: '加入 AI 分析，提供數據趨勢預測',
     future2: '支援更多數據來源（Google Sheets、API 連接）',
     future3: '增加用戶登入功能，支持個人儀表板',
-    contactTitle: '聯絡我們',
   },
   api: {
     userNotFound: '用戶不存在',

@@ -13,17 +13,21 @@
             <h3 class="Subheadline text-h6 font-weight-bold">{{ $t('home.Subheadline') }}</h3>
           </div>
           <div class="w-100 w-sm-50 d-flex flex-column justify-center align-center align-sm-end">
-            <v-btn class="btn-getStarted mt-10 mt-sm-0" color="primary" variant="flat">{{
-              $t('home.getStarted')
-            }}</v-btn>
+            <v-btn
+              class="btn-getStarted mt-10 mt-sm-0"
+              color="primary"
+              variant="flat"
+              @click="$router.push('/auth')"
+              >{{ $t('home.getStarted') }}</v-btn
+            >
           </div>
         </v-col>
         <v-col class="position-relative pt-16">
           <div class="vedio1">
-            <video class="w-100 rounded" muted :src="demo" autoplay loop></video>
+            <video class="w-100 border rounded" muted :src="demo2" autoplay loop></video>
           </div>
           <div class="vedio2">
-            <video class="w-100 rounded" muted :src="demo" autoplay loop></video>
+            <video class="w-100 rounded border" muted :src="demo" autoplay loop></video>
           </div>
         </v-col>
       </v-row>
@@ -44,7 +48,7 @@
         <v-col cols="12" class="flex-1-1 d-flex flex-column position-relative">
           <v-divider
             vertical
-            class="vertical-line border-opacity-100"
+            class="vertical-line border-opacity-25"
             :style="{ left: name === 'xs' || name === 'sm' ? 'calc(28px + 2%)' : '50%' }"
           ></v-divider>
           <v-col
@@ -60,13 +64,20 @@
               }"
               :style="{ width: name === 'xs' || name === 'sm' ? '95%' : 'auto' }"
             >
-              <h1 class="mb-2">{{ introduction.title }}</h1>
+              <v-icon
+                class="border rounded pa-8 text-h3 border-primary border-opacity-100"
+                color="primary"
+                :icon="introduction.icon"
+              ></v-icon>
+              <h1 class="my-5 text-sm-h3 font-weight-bold">{{ introduction.title }}</h1>
               <p>{{ introduction.text }}</p>
             </v-col>
             <v-col
-              class="pa-0 flex-0-1 h-md-50 w-md-50 d-flex justify-center align-start order-md-0 position-relative"
+              class="pa-0 flex-0-1 w-md-50 d-flex justify-center align-start order-md-0 position-relative"
             >
-              <div :id="'media-' + index" class="media bg-light-blue"></div>
+              <div :id="'media-' + index" class="media border rounded border-opacity-25">
+                <v-img :src="introduction.media" class="rounded"></v-img>
+              </div>
             </v-col>
           </v-col>
         </v-col>
@@ -129,39 +140,54 @@ import { useAxios } from '@/composables/axios'
 import { useDisplay } from 'vuetify'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useUserStore } from '@/stores/user'
 
 const { t } = useI18n()
 const { api } = useAxios()
 const { name } = useDisplay()
+const user = useUserStore()
 
 const demo = new URL('@/assets/demo.webm', import.meta.url).href
+const demo2 = new URL('@/assets/demo2.mp4', import.meta.url).href
 const whiteImg = new URL('@/assets/white.png', import.meta.url).href
 
 const introductions = computed(() => {
   return [
     {
-      icon: 'mdi-data',
+      icon: 'mdi-database',
       title: t('home.introductionData'),
       text: t('home.introductionDataText'),
-      media: '',
+      media:
+        user.theme === 'lightTheme'
+          ? new URL('@/assets/introductionData.png', import.meta.url).href
+          : new URL('@/assets/introductionData_dark.png', import.meta.url).href,
     },
     {
       icon: 'mdi-transit-connection-horizontal',
       title: t('home.introductionLinkData'),
       text: t('home.introductionLinkDataText'),
-      media: '',
+      media:
+        user.theme === 'lightTheme'
+          ? new URL('@/assets/introductionLinkData.png', import.meta.url).href
+          : new URL('@/assets/introductionLinkData_dark.png', import.meta.url).href,
     },
     {
       icon: 'mdi-view-dashboard-edit-outline',
       title: t('home.introductionDashboard'),
       text: t('home.introductionDashboardText'),
-      media: '',
+      media:
+        user.theme === 'lightTheme'
+          ? new URL('@/assets/introductionDashboard.png', import.meta.url).href
+          : new URL('@/assets/introductionDashboard_dark.png', import.meta.url).href,
     },
     {
       icon: 'mdi-account-arrow-up-outline',
       title: t('home.introductionPublic'),
       text: t('home.introductionPublicText'),
-      media: '',
+      media:
+        user.theme === 'lightTheme'
+          ? new URL('@/assets/introductionPublic.png', import.meta.url).href
+          : new URL('@/assets/introductionPublic_dark.png', import.meta.url).href,
     },
   ]
 })
@@ -183,7 +209,7 @@ onMounted(() => {
   gsap.utils.toArray('.media').forEach((el, index) => {
     gsap.from(el, {
       opacity: 0,
-      x: index % 2 === 0 ? 100 : -100,
+      x: index % 2 === 0 ? 150 : -150,
       duration: 1.2,
       ease: 'power2.out',
       scrollTrigger: {
@@ -227,11 +253,11 @@ onMounted(() => {
     position: absolute;
     top: 12px;
     height: calc(100% - 24px);
+    border-style: dashed;
   }
 
   & .media {
     width: 100%;
-    aspect-ratio: 16 / 9;
   }
 }
 

@@ -81,15 +81,17 @@
             </template>
             <v-list class="app-menu">
               <v-list-item>
-                <v-btn class="ps-0 justify-start" variant="text" to="/">{{ $t('nav.home') }}</v-btn>
+                <v-btn class="underline-btn ps-0 justify-start" variant="text" to="/">{{
+                  $t('nav.home')
+                }}</v-btn>
               </v-list-item>
               <v-list-item>
-                <v-btn class="ps-0 justify-start" variant="text" to="/explore">{{
+                <v-btn class="underline-btn ps-0 justify-start" variant="text" to="/explore">{{
                   $t('nav.explore')
                 }}</v-btn>
               </v-list-item>
               <v-list-item>
-                <v-btn class="ps-0 justify-start" variant="text" to="/about">{{
+                <v-btn class="underline-btn ps-0 justify-start" variant="text" to="/about">{{
                   $t('nav.about')
                 }}</v-btn>
               </v-list-item>
@@ -105,7 +107,7 @@
                 >
                   <template #activator="{ props }">
                     <v-btn
-                      class="ps-0 justify-start"
+                      class="underline-btn ps-0 justify-start"
                       variant="text"
                       v-bind="props"
                       :append-icon="
@@ -151,10 +153,17 @@
                 </v-menu>
               </v-list-item>
               <v-list-item>
-                <v-btn v-if="!user.isLoggedIn" class="w-100 border" to="/login">{{
-                  $t('nav.login')
+                <v-btn
+                  v-if="!user.isLoggedIn"
+                  color="secondary"
+                  variant="flat"
+                  class="w-100"
+                  to="/login"
+                  >{{ $t('nav.login') }}</v-btn
+                >
+                <v-btn v-else color="secondary" variant="flat" class="w-100" @click="logout">{{
+                  $t('nav.logout')
                 }}</v-btn>
-                <v-btn v-else class="w-100 border" @click="logout">{{ $t('nav.logout') }}</v-btn>
               </v-list-item>
             </v-list>
           </v-menu>

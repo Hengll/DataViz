@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useAxios } from '@/composables/axios'
 
-export const useEditorStore = defineStore('editor', () => {
+export const useDashboardStore = defineStore('dashboard', () => {
   const { api, apiAuth } = useAxios()
 
   const drawer = ref(true)

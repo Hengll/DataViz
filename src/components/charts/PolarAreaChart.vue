@@ -9,7 +9,7 @@
 import { ref, computed } from 'vue'
 import { PolarArea } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, RadialLinearScale } from 'chart.js'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, RadialLinearScale)
 
@@ -24,7 +24,7 @@ const props = defineProps({
   },
 })
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 
 const progress = ref(true)
 editor.saveLoading = true

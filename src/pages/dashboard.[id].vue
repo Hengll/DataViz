@@ -65,7 +65,7 @@ import { useAxios } from '@/composables/axios'
 import { useRoute, useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 import { useUserStore } from '@/stores/user'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import DraggableResizable from '@/components/DraggableResizable.vue'
 
 const { api, apiAuth } = useAxios()
@@ -73,7 +73,7 @@ const route = useRoute()
 const router = useRouter()
 const theme = useTheme()
 const user = useUserStore()
-const dashboard = useEditorStore()
+const dashboard = useDashboardStore()
 
 const getDashboard = async () => {
   try {

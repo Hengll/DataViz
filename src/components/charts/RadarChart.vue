@@ -18,7 +18,7 @@ import {
   LineElement,
   Filler,
 } from 'chart.js'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, Filler, RadialLinearScale)
 
@@ -33,7 +33,7 @@ const props = defineProps({
   },
 })
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 
 const progress = ref(true)
 editor.saveLoading = true

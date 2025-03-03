@@ -55,11 +55,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import DraggableResizable from '@/components/DraggableResizable.vue'
 
 const user = useUserStore()
-const editer = useEditorStore()
+const editer = useDashboardStore()
 
 // 畫布尺寸
 const area = ref(null)

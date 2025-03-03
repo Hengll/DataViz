@@ -217,7 +217,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import { useAxios } from '@/composables/axios'
 import { useI18n } from 'vue-i18n'
 import { useSnackbar } from 'vuetify-use-dialog'
@@ -227,7 +227,7 @@ import DraggableResizable from '@/components/DraggableResizable.vue'
 import EditorBar from '@/components/EditorBar.vue'
 import html2canvas from 'html2canvas'
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 const { apiAuth } = useAxios()
 const { t } = useI18n()
 const createSnackbar = useSnackbar()

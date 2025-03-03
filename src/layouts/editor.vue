@@ -36,7 +36,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import { useDisplay } from 'vuetify'
 import { useRouter } from 'vue-router'
 import { useAxios } from '@/composables/axios'
@@ -46,7 +46,7 @@ import html2canvas from 'html2canvas'
 import { useUserStore } from '@/stores/user'
 import { useTheme } from 'vuetify'
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 const { mobile } = useDisplay()
 const router = useRouter()
 const { apiAuth } = useAxios()

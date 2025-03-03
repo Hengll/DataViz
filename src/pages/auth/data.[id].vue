@@ -89,7 +89,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import { useUserStore } from '@/stores/user'
 import { useAxios } from '@/composables/axios'
 import { useI18n } from 'vue-i18n'
@@ -106,7 +106,7 @@ import {
 import { AgGridVue } from 'ag-grid-vue3'
 import { useRoute, useRouter } from 'vue-router'
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 const user = useUserStore()
 const { apiAuth } = useAxios()
 const { t } = useI18n()

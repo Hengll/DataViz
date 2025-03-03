@@ -374,10 +374,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import { vMaska } from 'maska/vue'
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 
 const props = defineProps({
   indexOfChart: {

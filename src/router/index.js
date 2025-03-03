@@ -11,7 +11,7 @@ import { routes } from 'vue-router/auto-routes'
 import i18n from '@/i18n'
 import { useAxios } from '@/composables/axios'
 import { useUserStore } from '@/stores/user'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import { START_LOCATION } from 'vue-router'
 
 const router = createRouter({
@@ -25,7 +25,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const { apiAuth } = useAxios()
   const user = useUserStore()
-  const editor = useEditorStore()
+  const editor = useDashboardStore()
 
   i18n.global.locale.value = user.language
 

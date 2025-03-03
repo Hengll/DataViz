@@ -9,9 +9,9 @@
 </template>
 
 <script setup>
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 
 defineProps({
   params: {

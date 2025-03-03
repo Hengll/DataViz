@@ -11,7 +11,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 
 const props = defineProps({
   indexOfChart: {
@@ -24,7 +24,7 @@ const props = defineProps({
   },
 })
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 
 const iqr = computed(() => {
   const Variables0 = editor.filterData.map(

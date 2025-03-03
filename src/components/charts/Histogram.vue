@@ -17,7 +17,7 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -32,7 +32,7 @@ const props = defineProps({
   },
 })
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 
 const progress = ref(true)
 editor.saveLoading = true

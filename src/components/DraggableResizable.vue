@@ -46,7 +46,7 @@
 <script setup>
 import { ref, watch, onMounted, markRaw } from 'vue'
 import interact from 'interactjs'
-import { useEditorStore } from '@/stores/editor'
+import { useDashboardStore } from '@/stores/dashboard'
 import BarChart from './charts/BarChart.vue'
 import Histogram from './charts/Histogram.vue'
 import LineChart from './charts/LineChart.vue'
@@ -100,7 +100,7 @@ const props = defineProps({
 
 defineEmits(['edit', 'delete'])
 
-const editor = useEditorStore()
+const editor = useDashboardStore()
 
 const chartCategory = ref(null)
 if (editor.dashboard.charts[props.indexOfChart].category === 'barChart') {

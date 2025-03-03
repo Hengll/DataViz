@@ -58,7 +58,7 @@
             class="flex-1-0-0 d-flex flex-column flex-md-row align-center mb-16 mb-md-auto"
           >
             <v-col
-              class="flex-1-1 h-md-50 w-md-50"
+              class="flex-1-1 h-md-50 w-md-50 pa-md-16"
               :class="{
                 'order-1': index % 2 === 1 || name === 'sm' || name === 'xs' ? true : false,
               }"
@@ -214,7 +214,7 @@ onMounted(() => {
       ease: 'power2.out',
       scrollTrigger: {
         trigger: el,
-        start: 'top 60%',
+        start: 'top 70%',
         end: 'top 50%',
         toggleActions: 'play none none none',
       },

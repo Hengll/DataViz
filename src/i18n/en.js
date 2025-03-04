@@ -297,9 +297,9 @@ export default {
     challenge2: '如何讓數據導入的速度更快？',
     challenge3: '如何設計適合深色與淺色主題的 UI？',
     futureTitle: 'Future Plans',
-    future1: '加入 AI 分析，提供數據趨勢預測',
-    future2: '支援更多數據來源（Google Sheets、API 連接）',
-    future3: '增加用戶登入功能，支持個人儀表板',
+    future1: 'Integrate AI analysis to provide data visualization recommendations.',
+    future2: 'Support more data sources (Google Sheets, API connections).',
+    future3: 'Enhance data preprocessing features for better handling of diverse data.',
   },
   api: {
     userNotFound: 'User Not Found',

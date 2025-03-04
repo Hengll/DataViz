@@ -293,9 +293,10 @@ export default {
       'Share your data visualizations with your team or the community, supporting embedding and real-time updates.',
     techTitle: 'Tech Stack',
     challengesTitle: 'Development & Challenges',
-    challenge1: '如何確保圖表在不同解析度下都能清晰顯示？',
-    challenge2: '如何讓數據導入的速度更快？',
-    challenge3: '如何設計適合深色與淺色主題的 UI？',
+    challenge1: 'Issues with storing compressed JSON or CSV data and reading/decompressing it.',
+    challenge2: 'How to display thumbnails.',
+    challenge3:
+      'Chart.js chart options modification and the issue of charts not updating synchronously.',
     futureTitle: 'Future Plans',
     future1: 'Integrate AI analysis to provide data visualization recommendations.',
     future2: 'Support more data sources (Google Sheets, API connections).',

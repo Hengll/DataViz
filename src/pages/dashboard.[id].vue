@@ -75,6 +75,9 @@ const theme = useTheme()
 const user = useUserStore()
 const dashboard = useDashboardStore()
 
+// 清空store dashboard
+dashboard.clearDashboard()
+
 const getDashboard = async () => {
   try {
     await dashboard.getDashboardWithPublicAPI(route.params.id)

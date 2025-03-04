@@ -1,7 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import UserRole from '@/enums/UserRole'
 
 export const useUserStore = defineStore(
   'user',
@@ -12,16 +11,11 @@ export const useUserStore = defineStore(
     const userName = ref('')
     const userInfo = ref('')
     const avatar = ref('')
-    const role = ref(UserRole.USER)
     const theme = ref('lightTheme')
     const language = ref('zhHant')
 
     const isLoggedIn = computed(() => {
       return token.value.length > 0
-    })
-
-    const isAdmin = computed(() => {
-      return role.value === UserRole.ADMIN
     })
 
     const login = (data) => {
@@ -33,7 +27,6 @@ export const useUserStore = defineStore(
       userName.value = data.userName
       userInfo.value = data.userInfo
       avatar.value = data.avatar
-      role.value = data.role
     }
 
     const logout = () => {
@@ -43,7 +36,6 @@ export const useUserStore = defineStore(
       userName.value = ''
       userInfo.value = ''
       avatar.value = ''
-      role.value = UserRole.USER
     }
 
     const changeTheme = () => {}
@@ -55,11 +47,9 @@ export const useUserStore = defineStore(
       userName,
       userInfo,
       avatar,
-      role,
       theme,
       language,
       isLoggedIn,
-      isAdmin,
       login,
       logout,
       changeTheme,

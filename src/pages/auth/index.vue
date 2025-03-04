@@ -239,7 +239,6 @@ onMounted(() => {
   "meta": {
     "layout": "auth",
     "login": true,
-    "admin": false,
     "title": "auth.myDashboards"
   }
 }

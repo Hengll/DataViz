@@ -309,7 +309,6 @@ const deleteDataSet = async (id) => {
   "meta": {
     "layout": "auth",
     "login": true,
-    "admin": false,
     "title": "auth.myDataSets"
   }
 }

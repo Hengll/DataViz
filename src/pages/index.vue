@@ -75,7 +75,7 @@
             <v-col
               class="pa-0 flex-0-1 w-md-50 d-flex justify-center align-start order-md-0 position-relative"
             >
-              <div :id="'media-' + index" class="media border rounded border-opacity-25">
+              <div class="media border rounded border-opacity-25">
                 <v-img :src="introduction.media" class="rounded"></v-img>
               </div>
             </v-col>
@@ -285,7 +285,6 @@ onMounted(() => {
 {
   "meta": {
     "login": false,
-    "admin": false,
     "title": "nav.home"
   }
 }

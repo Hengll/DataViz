@@ -237,7 +237,6 @@ const saveData = async () => {
   "meta": {
     "layout": "auth",
     "login": true,
-    "admin": false,
     "title": "auth.myDataSets"
   }
 }

@@ -414,7 +414,6 @@ const saveData = async () => {
   "meta": {
     "layout": "editor",
     "login": true,
-    "admin": false,
     "title": "editor.linkData"
   }
 }

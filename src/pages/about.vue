@@ -128,7 +128,6 @@ const features = computed(() => {
 {
   "meta": {
     "login": false,
-    "admin": false,
     "title": "nav.about"
   }
 }

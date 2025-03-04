@@ -156,7 +156,6 @@ const gridSizeDivisor = {
 {
   "meta": {
     "login": false,
-    "admin": false,
     "title": "nav.explore"
   }
 }

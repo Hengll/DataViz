@@ -166,7 +166,6 @@ const submit = handleSubmit(async (value) => {
   "meta": {
     "layout": "login",
     "login": false,
-    "admin": false,
     "title": "nav.register"
   }
 }

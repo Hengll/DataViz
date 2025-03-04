@@ -1,0 +1,1 @@
+import{R as t}from"./index-BV5aMbCu.js";import{b as r}from"./route-block-B_A1xBdJ.js";const o={__name:"index",setup(e){return t().push("/"),(u,n)=>"editor"}};typeof r=="function"&&r(o);export{o as default};

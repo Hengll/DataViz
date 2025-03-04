@@ -202,6 +202,8 @@ export default {
     variables2: '變量2',
     variables3: '變量3',
     all: '全選',
+    chooseCategorical: '請選擇類別變量',
+    chooseContinuous: '請選擇連續變量',
   },
   editDrawer: {
     customOptions: '使用者自訂選項',

@@ -60,6 +60,9 @@
                     v-for="i in menu.useVarsNum"
                     :key="i"
                     v-model="useVariables.value.value[i - 1]"
+                    class="mb-3"
+                    :hint="$t('editDashboard.' + menu.hint[i - 1])"
+                    persistent-hint
                     :items="editor.dataVariables"
                     :label="$t(`editDashboard.variables${i}`)"
                     :error-messages="useVariables.errorMessage.value"
@@ -256,60 +259,70 @@ const navs = ref([
         text: 'barChart',
         icon: 'mdi-chart-bar',
         useVarsNum: 2,
+        hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'histogram',
         icon: 'mdi-chart-histogram',
         useVarsNum: 2,
+        hint: ['chooseContinuous', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'lineChart',
         icon: 'mdi-chart-line',
         useVarsNum: 2,
+        hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'areaChart',
         icon: 'mdi-chart-areaspline-variant',
         useVarsNum: 2,
+        hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'scatterChart',
         icon: 'mdi-chart-scatter-plot',
         useVarsNum: 2,
+        hint: ['chooseContinuous', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'bubbleChart',
         icon: 'mdi-chart-bubble',
         useVarsNum: 3,
+        hint: ['chooseContinuous', 'chooseContinuous', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'pieChart',
         icon: 'mdi-chart-pie',
         useVarsNum: 2,
+        hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'donutChart',
         icon: 'mdi-chart-donut',
         useVarsNum: 2,
+        hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'polarAreaChart',
         icon: 'mdi-chart-donut-variant',
         useVarsNum: 2,
+        hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'radarChart',
         icon: 'mdi-radar',
         useVarsNum: 2,
+        hint: ['chooseCategorical', 'chooseContinuous'],
       },
     ],
   },
@@ -321,42 +334,49 @@ const navs = ref([
         text: 'mean',
         icon: '',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'median',
         icon: '',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'mode',
         icon: '',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'range',
         icon: '',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'IQR',
         icon: '',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'variance',
         icon: '',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
       {
         isOpen: false,
         text: 'standardDeviation',
         icon: '',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
     ],
   },
@@ -368,12 +388,14 @@ const navs = ref([
         text: 'categoryFilter',
         icon: 'mdi-filter-settings',
         useVarsNum: 1,
+        hint: ['chooseCategorical'],
       },
       {
         isOpen: false,
         text: 'rangeFilter',
         icon: 'mdi-filter',
         useVarsNum: 1,
+        hint: ['chooseContinuous'],
       },
     ],
   },

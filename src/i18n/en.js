@@ -202,6 +202,8 @@ export default {
     variables2: 'Variable 2',
     variables3: 'Variable 3',
     all: 'Select All',
+    chooseCategorical: 'Please select a categorical variable',
+    chooseContinuous: 'Please select a continuous variable',
   },
   editDrawer: {
     customOptions: 'Custom Options',

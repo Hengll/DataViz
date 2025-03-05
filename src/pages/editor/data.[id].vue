@@ -154,7 +154,7 @@ const { t } = useI18n()
 const createSnackbar = useSnackbar()
 
 const items = ref([])
-const select = ref(editor.dashboard?.dataSet?.dataName || '')
+const select = ref(editor.dashboard?.dataSet?._id || '')
 
 const dialog = ref(false)
 const openDialog = () => {
@@ -268,7 +268,10 @@ const submit = handleSubmit(async (values) => {
         data: data,
       })
 
-      getDataSets()
+      await getDataSets()
+      await linkData(items.value[items.value.length - 1]._id)
+      select.value = editor.dashboard.dataSet._id
+
       createSnackbar({
         text: t('dataSet.uploadSuccess'),
         snackbarProps: {

@@ -12,6 +12,11 @@
           >
         </p>
       </v-col>
+      <v-col cols="12" class="d-flex justify-end align-center">
+        <span class="mx-1">{{ $t('explore.size') }} : </span>
+        <v-btn class="mx-1" density="compact" icon="mdi-minus" @click="smallerArea"></v-btn>
+        <v-btn class="mx-1" density="compact" icon="mdi-plus" @click="biggerArea"></v-btn>
+      </v-col>
       <v-col cols="12">
         <div id="area" ref="area" :style="{ backgroundColor: dashboard.dashboard.backgroundColor }">
           <DraggableResizable
@@ -130,6 +135,18 @@ const observer = new ResizeObserver((mutations) => {
     areaHeight.value = mutation.contentBoxSize[0].blockSize
   }
 })
+
+const biggerArea = () => {
+  const width = area.value.offsetWidth + 200
+  if (width > 2560) return
+  area.value.style.width = width + 'px'
+}
+
+const smallerArea = () => {
+  const width = area.value.offsetWidth - 200
+  if (width < 200) return
+  area.value.style.width = width + 'px'
+}
 
 onMounted(() => {
   observer.observe(area.value, {

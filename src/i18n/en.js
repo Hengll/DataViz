@@ -86,6 +86,7 @@ export default {
     author: 'Author',
     details: 'Details',
     updatedAt: 'Last Updated',
+    size: 'dashboardSize',
   },
   auth: {
     myDashboards: 'My Dashboards',

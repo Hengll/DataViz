@@ -86,6 +86,7 @@ export default {
     author: '作者',
     details: '詳細資訊',
     updatedAt: '最後更新',
+    size: '儀錶板尺寸',
   },
   auth: {
     myDashboards: '我的儀錶板',

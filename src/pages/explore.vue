@@ -118,9 +118,7 @@ import DashboardCard from '@/components/DashboardCard.vue'
 const { api } = useAxios()
 const route = useRoute()
 
-const isLoading = computed(() => {
-  return dashboards.value.length === 0
-})
+const isLoading = ref(true)
 
 const search = ref('')
 const toggle = computed(() => {
@@ -144,7 +142,8 @@ const getDashboards = async () => {
       `/dashboard/public?page=${route.query.page || 1}&limit=${perPage}&sort=${route.query.sort || 'view'}&search=${route.query.search || ''}`,
     )
     dashboards.value = data.result
-    totalPage.value = Math.ceil(data.numsOfData / perPage)
+    totalPage.value = Math.ceil(dashboards.value.length / perPage)
+    isLoading.value = false
   } catch (err) {
     console.log(err)
   }

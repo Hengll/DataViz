@@ -6,7 +6,11 @@
     >
       <v-row>
         <v-col cols="12" class="pb-0">
-          <v-img class="border ma-1 rounded-t" :src="image || whiteImg"></v-img>
+          <v-img
+            class="border ma-1 rounded-t"
+            :lazy-src="whiteImg"
+            :src="image || whiteImg"
+          ></v-img>
         </v-col>
         <v-col cols="8" class="pt-0">
           <v-card-title :title="dashboardName">
@@ -70,7 +74,7 @@
     >
       <v-row class="d-flex flex-nowrap flex-row pa-1 align-center">
         <v-col class="flex-0-0 d-flex align-center w-auto pe-0" :style="{ height: '125px' }">
-          <img class="border rounded h-100" :src="image || whiteImg" />
+          <img class="border rounded h-100" :lazy-src="whiteImg" :src="image || whiteImg" />
         </v-col>
         <v-col class="flex-1-1 w-auto px-0 px-xs-3" :style="{ height: '125px', minWidth: 0 }">
           <v-card-title class="pb-0 pb-xs-2" :title="dashboardName">

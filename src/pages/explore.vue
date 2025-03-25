@@ -62,26 +62,31 @@
       </v-col>
       <v-col cols="12">
         <v-row>
-          <v-col
-            v-for="dashboard in dashboards"
-            :key="dashboard._id"
-            class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
-          >
-            <v-hover>
-              <template #default="{ isHovering, props }">
-                <div v-bind="props" class="bg-secondary rounded">
-                  <v-skeleton-loader v-if="isLoading" type="image, article"></v-skeleton-loader>
-                  <dashboard-card
-                    v-else
-                    v-bind="dashboard"
-                    :read-only="true"
-                    :class="{ 'dashboard-hover': isHovering ? true : false }"
-                    :style="{ transition: '0.2s' }"
-                  ></dashboard-card>
-                </div>
-              </template>
-            </v-hover>
-          </v-col>
+          <template v-if="isLoading">
+            <v-col v-for="i in 12" :key="i" class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3">
+              <v-skeleton-loader type="image, article"></v-skeleton-loader>
+            </v-col>
+          </template>
+          <template v-else>
+            <v-col
+              v-for="dashboard in dashboards"
+              :key="dashboard._id"
+              class="v-col-12 v-col-sm-6 v-col-md-4 v-col-lg-3"
+            >
+              <v-hover>
+                <template #default="{ isHovering, props }">
+                  <div v-bind="props" class="bg-secondary rounded">
+                    <dashboard-card
+                      v-bind="dashboard"
+                      :read-only="true"
+                      :class="{ 'dashboard-hover': isHovering ? true : false }"
+                      :style="{ transition: '0.2s' }"
+                    ></dashboard-card>
+                  </div>
+                </template>
+              </v-hover>
+            </v-col>
+          </template>
         </v-row>
       </v-col>
       <v-col cols="12">

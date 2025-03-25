@@ -116,9 +116,16 @@
                 </h4>
                 <v-img
                   class="border ma-1 cursor-pointer rounded"
-                  :src="dashboard.image || whiteImg"
+                  :lazy-src="whiteImg"
+                  :src="dashboard.image"
                   @click="$router.push(`/dashboard/${dashboard._id}`)"
-                ></v-img>
+                >
+                  <template #placeholder>
+                    <div class="d-flex align-center justify-center fill-height">
+                      <v-progress-circular indeterminate></v-progress-circular>
+                    </div>
+                  </template>
+                </v-img>
               </v-col>
             </swiper-slide>
           </swiper>
@@ -192,7 +199,7 @@ const introductions = computed(() => {
   ]
 })
 
-const dashboards = ref([])
+const dashboards = ref(['', '', '', '', ''])
 
 const getDashboards = async () => {
   try {

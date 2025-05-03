@@ -76,7 +76,7 @@
               class="overflow-hidden pa-0 flex-0-1 w-md-50 d-flex justify-center align-start order-md-0 position-relative"
             >
               <div class="media border rounded border-opacity-25">
-                <v-img :src="introduction.media" class="rounded"></v-img>
+                <v-img :src="introduction.media" eager class="rounded"></v-img>
               </div>
             </v-col>
           </v-col>

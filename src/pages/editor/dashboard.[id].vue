@@ -63,8 +63,8 @@
                     class="mb-3"
                     :hint="$t('editDashboard.' + menu.hint[i - 1])"
                     persistent-hint
+                    :label="$t('editDashboard.' + menu.label[i - 1])"
                     :items="editor.dataVariables"
-                    :label="$t(`editDashboard.variables${i}`)"
                     :error-messages="useVariables.errorMessage.value"
                     variant="outlined"
                   ></v-select>
@@ -259,6 +259,7 @@ const navs = ref([
         text: 'barChart',
         icon: 'mdi-chart-bar',
         useVarsNum: 2,
+        label: ['x-axis', 'y-axis'],
         hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
@@ -266,6 +267,7 @@ const navs = ref([
         text: 'histogram',
         icon: 'mdi-chart-histogram',
         useVarsNum: 2,
+        label: ['x-axis', 'y-axis'],
         hint: ['chooseContinuous', 'chooseContinuous'],
       },
       {
@@ -273,6 +275,7 @@ const navs = ref([
         text: 'lineChart',
         icon: 'mdi-chart-line',
         useVarsNum: 2,
+        label: ['x-axis', 'y-axis'],
         hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
@@ -280,6 +283,7 @@ const navs = ref([
         text: 'areaChart',
         icon: 'mdi-chart-areaspline-variant',
         useVarsNum: 2,
+        label: ['x-axis', 'y-axis'],
         hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
@@ -287,6 +291,7 @@ const navs = ref([
         text: 'scatterChart',
         icon: 'mdi-chart-scatter-plot',
         useVarsNum: 2,
+        label: ['x-axis', 'y-axis'],
         hint: ['chooseContinuous', 'chooseContinuous'],
       },
       {
@@ -294,6 +299,7 @@ const navs = ref([
         text: 'bubbleChart',
         icon: 'mdi-chart-bubble',
         useVarsNum: 3,
+        label: ['x-axis', 'y-axis', 'size-value'],
         hint: ['chooseContinuous', 'chooseContinuous', 'chooseContinuous'],
       },
       {
@@ -301,6 +307,7 @@ const navs = ref([
         text: 'pieChart',
         icon: 'mdi-chart-pie',
         useVarsNum: 2,
+        label: ['Group(Category)', 'Value(Sum)'],
         hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
@@ -308,6 +315,7 @@ const navs = ref([
         text: 'donutChart',
         icon: 'mdi-chart-donut',
         useVarsNum: 2,
+        label: ['Group(Category)', 'Value(Sum)'],
         hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
@@ -315,6 +323,7 @@ const navs = ref([
         text: 'polarAreaChart',
         icon: 'mdi-chart-donut-variant',
         useVarsNum: 2,
+        label: ['Group(Category)', 'Value(Sum)'],
         hint: ['chooseCategorical', 'chooseContinuous'],
       },
       {
@@ -322,6 +331,7 @@ const navs = ref([
         text: 'radarChart',
         icon: 'mdi-radar',
         useVarsNum: 2,
+        label: ['Group(Category)', 'Value(Sum)'],
         hint: ['chooseCategorical', 'chooseContinuous'],
       },
     ],
@@ -334,6 +344,7 @@ const navs = ref([
         text: 'mean',
         icon: '',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
       {
@@ -341,6 +352,7 @@ const navs = ref([
         text: 'median',
         icon: '',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
       {
@@ -348,6 +360,7 @@ const navs = ref([
         text: 'mode',
         icon: '',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
       {
@@ -355,6 +368,7 @@ const navs = ref([
         text: 'range',
         icon: '',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
       {
@@ -362,6 +376,7 @@ const navs = ref([
         text: 'IQR',
         icon: '',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
       {
@@ -369,6 +384,7 @@ const navs = ref([
         text: 'variance',
         icon: '',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
       {
@@ -376,6 +392,7 @@ const navs = ref([
         text: 'standardDeviation',
         icon: '',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
     ],
@@ -388,6 +405,7 @@ const navs = ref([
         text: 'categoryFilter',
         icon: 'mdi-filter-settings',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseCategorical'],
       },
       {
@@ -395,6 +413,7 @@ const navs = ref([
         text: 'rangeFilter',
         icon: 'mdi-filter',
         useVarsNum: 1,
+        label: ['no-label'],
         hint: ['chooseContinuous'],
       },
     ],

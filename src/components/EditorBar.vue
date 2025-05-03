@@ -143,7 +143,6 @@
               density="compact"
               variant="outlined"
               placeholder="grid"
-              suffix="grid"
               @change="changeNumber(indexOfChart, type, optionKey, $event.target.value * 1)"
             ></v-text-field>
             <!-- 如果是顏色 -->

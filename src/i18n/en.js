@@ -205,6 +205,12 @@ export default {
     all: 'Select All',
     chooseCategorical: 'Please select a categorical variable',
     chooseContinuous: 'Please select a continuous variable',
+    'x-axis': 'x-axis',
+    'y-axis': 'y-axis',
+    'size-value': 'size-value',
+    'Group(Category)': 'Group(Category)',
+    'Value(Sum)': 'Value(Sum)',
+    'no-label': '',
   },
   editDrawer: {
     customOptions: 'Custom Options',

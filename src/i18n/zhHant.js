@@ -205,6 +205,12 @@ export default {
     all: '全選',
     chooseCategorical: '請選擇類別變量',
     chooseContinuous: '請選擇連續變量',
+    'x-axis': 'x軸',
+    'y-axis': 'y軸',
+    'size-value': '氣泡大小',
+    'Group(Category)': '分類依據(種類)',
+    'Value(Sum)': '數值來源(加總)',
+    'no-label': '',
   },
   editDrawer: {
     customOptions: '使用者自訂選項',

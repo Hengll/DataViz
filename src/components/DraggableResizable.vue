@@ -3,7 +3,11 @@
     <div
       v-bind="prop"
       ref="element"
-      :class="{ 'draggable-resizable': true, 'hover-style': isHovering }"
+      :class="{
+        'draggable-resizable': true,
+        'hover-style': isHovering,
+        'touch-action-none': !readOnly,
+      }"
       :style="{
         width: editor.dashboard.charts[indexOfChart].chartWidth * gridWidth + 'px',
         height: editor.dashboard.charts[indexOfChart].chartHeight * gridWidth + 'px',
@@ -264,6 +268,10 @@ watch([() => props.containerWidth, () => props.containerHeight], () => {
 <style lang="scss" scoped>
 .draggable-resizable {
   position: absolute;
+}
+
+.touch-action-none {
+  touch-action: none;
 }
 
 .hover-style {

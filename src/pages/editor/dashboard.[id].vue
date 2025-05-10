@@ -109,7 +109,12 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-navigation-drawer v-model="editDrawer.isOpen" :permanent="true" location="right" width="300">
+  <v-navigation-drawer
+    v-model="editDrawer.isOpen"
+    :permanent="xs ? false : true"
+    location="right"
+    width="300"
+  >
     <EditorBar
       v-if="editDrawer.isOpen && editor.dashboard.charts"
       :index-of-chart="editDrawer.indexOfChart"
@@ -162,20 +167,27 @@
           $t('editDashboard.save')
         }}</v-btn>
       </v-col>
+      <v-col cols="12" class="d-flex justify-end align-center">
+        <span class="mx-1">{{ $t('explore.size') }} : </span>
+        <v-btn class="mx-1" density="compact" icon="mdi-minus" @click="smallerArea"></v-btn>
+        <v-btn class="mx-1" density="compact" icon="mdi-plus" @click="biggerArea"></v-btn>
+      </v-col>
       <v-col cols="12">
-        <div id="area" ref="area" :style="{ backgroundColor: editor.dashboard.backgroundColor }">
-          <DraggableResizable
-            v-for="(chart, index) in editor.dashboard.charts"
-            :key="chart"
-            :container-width="areaWidth"
-            :container-height="areaHeight"
-            :index-of-chart="index"
-            :grid-width="areaWidth / gridSizeDivisor.x"
-            :grid-height="areaHeight / gridSizeDivisor.y"
-            :read-only="false"
-            @edit="openEditDrawer(index)"
-            @delete="deleteChart(index)"
-          ></DraggableResizable>
+        <div class="outer-area">
+          <div id="area" ref="area" :style="{ backgroundColor: editor.dashboard.backgroundColor }">
+            <DraggableResizable
+              v-for="(chart, index) in editor.dashboard.charts"
+              :key="chart"
+              :container-width="areaWidth"
+              :container-height="areaHeight"
+              :index-of-chart="index"
+              :grid-width="areaWidth / gridSizeDivisor.x"
+              :grid-height="areaHeight / gridSizeDivisor.y"
+              :read-only="false"
+              @edit="openEditDrawer(index)"
+              @delete="deleteChart(index)"
+            ></DraggableResizable>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -229,11 +241,13 @@ import * as yup from 'yup'
 import DraggableResizable from '@/components/DraggableResizable.vue'
 import EditorBar from '@/components/EditorBar.vue'
 import html2canvas from 'html2canvas'
+import { useDisplay } from 'vuetify'
 
 const editor = useDashboardStore()
 const { apiAuth } = useAxios()
 const { t } = useI18n()
 const createSnackbar = useSnackbar()
+const { xs } = useDisplay()
 
 // 右側 navbar 開關
 const editDrawer = ref({
@@ -652,6 +666,18 @@ const observer = new ResizeObserver((mutations) => {
   }
 })
 
+const biggerArea = () => {
+  const width = area.value.offsetWidth + 200
+  if (width > 2560) return
+  area.value.style.width = width + 'px'
+}
+
+const smallerArea = () => {
+  const width = area.value.offsetWidth - 200
+  if (width < 200) return
+  area.value.style.width = width + 'px'
+}
+
 onMounted(() => {
   observer.observe(area.value, {
     box: 'content-box',
@@ -696,6 +722,13 @@ defineExpose({
     background: var(--sb-thumb-color);
     border-radius: 5px;
   }
+}
+
+.outer-area {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: auto;
 }
 </style>
 

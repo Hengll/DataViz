@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <div v-if="dashboardLoading" class="loading-mask">
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </div>
     <v-row>
       <v-col cols="12" class="d-flex">
         <p class="me-8">{{ dashboard.dashboard.dashboardName }}</p>
@@ -18,17 +21,23 @@
         <v-btn class="mx-1" density="compact" icon="mdi-plus" @click="biggerArea"></v-btn>
       </v-col>
       <v-col cols="12">
-        <div id="area" ref="area" :style="{ backgroundColor: dashboard.dashboard.backgroundColor }">
-          <DraggableResizable
-            v-for="(chart, index) in dashboard.dashboard.charts"
-            :key="chart"
-            :container-width="areaWidth"
-            :container-height="areaHeight"
-            :index-of-chart="index"
-            :grid-width="areaWidth / gridSizeDivisor.x"
-            :grid-height="areaHeight / gridSizeDivisor.y"
-            :read-only="true"
-          ></DraggableResizable>
+        <div class="outer-area">
+          <div
+            id="area"
+            ref="area"
+            :style="{ backgroundColor: dashboard.dashboard.backgroundColor }"
+          >
+            <DraggableResizable
+              v-for="(chart, index) in dashboard.dashboard.charts"
+              :key="chart"
+              :container-width="areaWidth"
+              :container-height="areaHeight"
+              :index-of-chart="index"
+              :grid-width="areaWidth / gridSizeDivisor.x"
+              :grid-height="areaHeight / gridSizeDivisor.y"
+              :read-only="true"
+            ></DraggableResizable>
+          </div>
         </div>
       </v-col>
       <v-col cols="12">
@@ -79,6 +88,7 @@ const router = useRouter()
 const theme = useTheme()
 const user = useUserStore()
 const dashboard = useDashboardStore()
+const dashboardLoading = ref(true)
 
 // 清空store dashboard
 dashboard.clearDashboard()
@@ -88,6 +98,7 @@ const getDashboard = async () => {
     await dashboard.getDashboardWithPublicAPI(route.params.id)
     await api.patch(`/dashboard/view/${route.params.id}`)
     document.title = dashboard.dashboard.dashboardName + ' - DataViz'
+    dashboardLoading.value = false
   } catch (err) {
     console.log(err)
     router.push('/')
@@ -166,6 +177,26 @@ const gridSizeDivisor = {
   width: 100%;
   aspect-ratio: 16 / 9;
   outline: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.loading-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(3px);
+  padding-top: 480px;
+}
+
+.outer-area {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: auto;
 }
 </style>
 

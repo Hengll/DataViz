@@ -75,7 +75,12 @@
         <div>
           <v-btn v-if="!user.isLoggedIn" to="/register">{{ $t('nav.register') }}</v-btn>
           <v-btn v-else to="/auth">{{ $t('nav.myWorkSpace') }}</v-btn>
-          <v-menu :offset="9" :width="1920" :z-index="0">
+          <v-menu
+            :offset="9"
+            :width="1920"
+            :z-index="0"
+            :close-on-content-click="mobile ? false : true"
+          >
             <template #activator="{ props }">
               <v-btn v-bind="props" icon="mdi-menu"></v-btn>
             </template>
@@ -97,7 +102,7 @@
               </v-list-item>
               <v-list-item>
                 <v-menu
-                  open-on-hover=""
+                  :open-on-hover="mobile ? false : true"
                   transition="slide-x-transition"
                   close-delay="300"
                   open-delay="0"

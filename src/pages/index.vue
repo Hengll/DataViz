@@ -129,7 +129,7 @@
                 >
                   <template #placeholder>
                     <div class="d-flex align-center justify-center fill-height">
-                      <v-progress-circular indeterminate></v-progress-circular>
+                      <v-progress-circular color="primary" indeterminate></v-progress-circular>
                     </div>
                   </template>
                 </v-img>
@@ -161,7 +161,7 @@ const { api } = useAxios()
 const { name } = useDisplay()
 const user = useUserStore()
 
-const demo = new URL('@/assets/demo.webm', import.meta.url).href
+const demo = new URL('@/assets/demo.mp4', import.meta.url).href
 const demo2 = new URL('@/assets/demo2.mp4', import.meta.url).href
 const whiteImg = new URL('@/assets/white.png', import.meta.url).href
 

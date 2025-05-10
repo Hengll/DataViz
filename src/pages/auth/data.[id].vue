@@ -241,3 +241,16 @@ const saveData = async () => {
   }
 }
 </route>
+
+<style scoped lang="scss">
+:deep(.ag-paging-panel) {
+  font-size: 0.6rem;
+  height: auto;
+}
+
+@media (min-width: 600px) {
+  :deep(.ag-paging-panel) {
+    font-size: 1rem;
+  }
+}
+</style>

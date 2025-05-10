@@ -21,9 +21,9 @@ export default {
     myDataSets: '我的資料集',
     myPage: '我的個人頁',
     linkData: '連結資料',
-    editDashboard: '儀錶板編輯',
-    previewDashboard: '儀錶板預覽',
-    saveAndBack: '保存並返回',
+    editDashboard: '儀錶編輯',
+    previewDashboard: '儀錶預覽',
+    saveAndBack: '保存返回',
   },
   footer: {
     slogan: '讓數據說話，讓創意發光',
@@ -107,7 +107,7 @@ export default {
     confirm: '確定',
   },
   fileAgent: {
-    helpText: '點擊或拖曳csv或json檔至此',
+    helpText: '點擊或拖曳csv或是json檔至此',
     errorType: '檔案類型錯誤',
     errorSize: '檔案大小超過限制',
   },
@@ -146,8 +146,8 @@ export default {
   },
   editor: {
     linkData: '連結資料',
-    editDashboard: '儀錶板編輯',
-    previewDashboard: '儀錶板預覽',
+    editDashboard: '儀錶編輯',
+    previewDashboard: '儀錶預覽',
   },
   linkData: {
     newRow: '新增單筆資料',
@@ -162,7 +162,7 @@ export default {
     edit: '修改',
   },
   editDashboard: {
-    edit: '編輯儀錶板資訊',
+    edit: '編輯儀錶資訊',
     dashboardName: '儀錶板名稱',
     dashboardInfo: '儀錶板資訊',
     public: '公開',

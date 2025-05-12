@@ -27,14 +27,7 @@
             <video class="w-100 border rounded" muted :src="demo2" autoplay loop></video>
           </div>
           <div class="vedio2">
-            <video
-              class="w-100 rounded border"
-              muted
-              :src="demo"
-              autoplay
-              loop
-              preload="auto"
-            ></video>
+            <video class="w-100 rounded border" muted :src="demo" autoplay loop></video>
           </div>
         </v-col>
       </v-row>

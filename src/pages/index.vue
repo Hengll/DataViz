@@ -36,7 +36,7 @@
   <div
     class="introduction"
     :style="{
-      paddingTop: name === 'xs' || name === 'sm' ? '5rem' : '25rem',
+      paddingTop: name === 'xs' || name === 'sm' ? '5rem' : '15rem',
       height: name === 'xs' || name === 'sm' ? 'auto' : '400vh',
     }"
   >
@@ -232,7 +232,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .hero-section {
-  height: calc(100vh - 60px);
+  // height: calc(100vh - 60px);
   padding-top: 6rem;
 
   & .btn-getStarted {
